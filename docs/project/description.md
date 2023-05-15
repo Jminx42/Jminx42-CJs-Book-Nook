@@ -2,7 +2,7 @@
 # Description:
 
 
->CJ's Book Nook is an e-commerce website that specializes in selling books online. 
+CJ's Book Nook is an e-commerce website that specializes in selling books online. 
 
 
 The website aims to provide users with a seamless and convenient way to buy books from the comfort of their homes. 
