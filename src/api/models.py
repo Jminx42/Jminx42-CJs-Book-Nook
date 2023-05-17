@@ -1,22 +1,22 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.dialects.mysql import BIGINT
 import enum
 
 db = SQLAlchemy()
 
 class UserCategory(enum.Enum):
-    name = "user_category"
     standard = "standard"
     platinum = "platinum"
 
 class BookCategory(enum.Enum):
-    name = "book_category"
+
     paperback = "paperback"
     hardcover = "hardcover"
     ebook = "ebook"
     audiobook = "audiobook"
 
 class Genre(enum.Enum):
-    name = "genre"
+   
     romance = "romance"
     non_fiction = "non_fiction"
     science_fiction = "science_fiction"
@@ -25,8 +25,7 @@ class Genre(enum.Enum):
     fantasy = "fantasy"
 
 class PaymentMethods(enum.Enum):
-    name = "payment_methods"
-    paypal = "paypal"
+ 
     visa = "visa"
     mastercard = "mastercard"
     american_express = "american_express"
@@ -62,14 +61,16 @@ class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(250), nullable=False)
     author = db.Column(db.String(120), nullable=False)
-    isbn = db.Column(db.Integer, unique=True, nullable=True)
+    isbn = db.Column(BIGINT(unsigned=True), unique=True, nullable=True)
     book_cover = db.Column(db.String(250), nullable=False)
+    book_category = db.Column(db.Enum(BookCategory), server_default=BookCategory.paperback.value)
     genre = db.Column(db.Enum(Genre), server_default=Genre.thrillers.value)
     description = db.Column(db.Text, nullable=True)
     external_reviews = db.relationship("ExternalReview", backref="book")
     wishlist = db.relationship("Wishlist", backref="book")
     reviews = db.relationship("Review", backref="book")
     transactions = db.relationship("Transaction", backref="book")
+    support = db.relationship("Support", backref="book")
 
     def __repr__(self):
         return f'<Book {self.title}>'
@@ -146,6 +147,7 @@ class Transaction(db.Model):
     book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     payment_methods = db.Column(db.Enum(PaymentMethods), server_default=PaymentMethods.visa.value)
+    support = db.relationship("Support", backref="transaction")
 
     def __repr__(self):
         return f'<Transaction {self.id}>'
@@ -155,6 +157,7 @@ class Transaction(db.Model):
             "id": self.id,
             "book_id": self.book_id,
             "user_id": self.user_id,
+            "payment_methods": self.payment_methods.value,
         }
 
 class PaymentMethod(db.Model):
@@ -162,10 +165,11 @@ class PaymentMethod(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    paypal = db.Column(db.Integer, unique=True, nullable=True)
-    visa = db.Column(db.Integer, unique=True, nullable=True)
-    mastercard = db.Column(db.Integer, unique=True, nullable=True)
-    american_express = db.Column(db.Integer, unique=True, nullable=True)
+    payment_methods = db.Column(db.Enum(PaymentMethods), server_default=PaymentMethods.visa.value)
+    card_number = db.Column(BIGINT(unsigned=True), unique=True, nullable=False)
+    card_name = db.Column(db.String(100), unique=False, nullable=False)
+    cvc = db.Column(db.Integer, unique=False, nullable=False)
+    expiry_date = db.Column(db.Date, unique=False, nullable=False)
 
     def __repr__(self):
         return f'<PaymentMethods {self.id}>'
@@ -182,7 +186,8 @@ class Support(db.Model):
     ticket_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     enquiries = db.Column(db.Text, nullable=False)
-    resolved = db.Column(db.Boolean, nullable=False)
+    book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=True)
+    transaction_id = db.Column(db.Integer, db.ForeignKey('transaction.id'), nullable=True)
 
     def __repr__(self):
         return f'<Support {self.ticket_id}>'
@@ -192,5 +197,6 @@ class Support(db.Model):
             "ticket_id": self.ticket_id,
             "user_id": self.user_id,
             "enquiries": self.enquiries,
-            "resolved": self.resolved,
+            "book_id": self.book_id,
+            "transaction_id": self.transaction_id
         }
