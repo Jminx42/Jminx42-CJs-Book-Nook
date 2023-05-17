@@ -43,6 +43,8 @@ class User(db.Model):
     wishlist = db.relationship("Wishlist", backref="user")
     reviews = db.relationship("Review", backref="user")
     transactions = db.relationship("Transaction", backref="user")
+    support = db.relationship("Support", backref="user")
+
 
     def __repr__(self):
         return f'<User {self.email}>'
