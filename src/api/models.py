@@ -177,6 +177,10 @@ class PaymentMethod(db.Model):
     def serialize(self):
         return {
             "id": self.id,
+            "user_id": self.user_id,
+            "payment_methods": self.payment_methods.value,
+            "card_name": self.card_name,
+            "expiry_date": self.expiry_date
             # Serializing the payment methods is probably a security breach, so you can exclude it
         }
 

@@ -166,7 +166,7 @@ def get_all_transactions():
 @api.route("/transaction/<int:user_id>", methods=['GET'])
 def get_one_transaction_by_id(user_id):
     transaction = Transaction.query.get(user_id)
-    print(transaction.payment_methods.value)
+  
     if not transaction:
         return jsonify({"error": "No transaction found for this user id"}), 400
 
@@ -184,3 +184,75 @@ def create_transaction():
     db.session.commit()
 
     return jsonify({"transaction": "created"}), 200
+
+@api.route("/payment-method", methods=['GET'])
+def get_all_payment_methods():
+    payment_methods = PaymentMethod.query.all()
+    serialized_payment_methods = [payment_methods.serialize() for payment_methods in payment_methods]
+
+    return jsonify(serialized_payment_methods), 200  
+
+@api.route("/payment-method/<int:user_id>", methods=['GET'])
+def get_one_payment_method_by_id(user_id):
+    payment_method = PaymentMethod.query.get(user_id)
+
+    if not payment_method:
+        return jsonify({"error": "No payment method found for this user id"}), 400
+
+    return jsonify(payment_method.serialize()), 200 
+
+@api.route("/payment-method", methods=["POST"])
+def create_payment_method():
+    body = request.json
+    new_payment_method = PaymentMethod(
+        user_id=body["user_id"],
+        payment_methods=body["payment_methods"],
+        card_number=body["card_number"],
+        card_name=body["card_name"],
+        cvc=body["cvc"],
+        expiry_date=body["expiry_date"]
+    )
+    db.session.add(new_payment_method)
+    db.session.commit()
+
+    return jsonify({"payment method": "created"}), 200
+
+@api.route("/payment-method/<int:user_id>", methods=["DELETE"])
+def delete_payment_method(user_id):
+    payment_method = PaymentMethod.query.get(user_id)
+    if not payment_method:
+        return jsonify({"error": "No payment method found for this user id"}), 400
+
+    db.session.delete(payment_method)
+    db.session.commit()
+    return jsonify("payment method deleted"), 200
+
+@api.route("/support", methods=['GET'])
+def get_all_support():
+    support = Support.query.all()
+    serialized_support = [support.serialize() for support in support]
+
+    return jsonify(serialized_support), 200  
+
+@api.route("/support/<int:ticket_id>", methods=['GET'])
+def get_one_support_by_id(ticket_id):
+    support = Support.query.get(ticket_id)
+
+    if not support:
+        return jsonify({"error": "No support found for this ticket id"}), 400
+
+    return jsonify(support.serialize()), 200 
+
+@api.route("/support", methods=["POST"])
+def create_support():
+    body = request.json
+    new_support = Support(
+        user_id=body["user_id"],
+        enquiry=body["enquiries"],
+        book_id=body["book_id"],
+        transaction_id=body["transaction_id"]
+    )
+    db.session.add(new_support)
+    db.session.commit()
+
+    return jsonify({"support": "created"}), 200
