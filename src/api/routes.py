@@ -4,8 +4,36 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User, Book, Review, Wishlist, Transaction, Support, PaymentMethod 
 from api.utils import generate_sitemap, APIException
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required
 
 api = Blueprint('api', __name__)
+
+# @api.route("/token", methods=["POST"])
+# def create_token():
+    
+#     if email != "test" or password != "test":
+#         return jsonify({"msg": "Bad email or password"}), 401
+
+    
+
+@api.route("/user", methods=["POST"])
+def create_user():
+    body = request.json
+    email = request.json.get("email", None)
+    password = request.json.get("password", None)
+    full_name = request.json.get("full_name", None)
+    new_user = User(
+        email=body["email"],
+        password=body["password"],
+        full_name=body["full_name"],
+    )
+    db.session.add(new_user)
+    db.session.commit()
+    access_token = create_access_token(identity=email)
+    return jsonify(access_token=access_token), 200
+    # return jsonify({"user": "created"}), 200
 
 
 @api.route("/user", methods=['GET'])
@@ -37,18 +65,7 @@ def update_user(user_id):
     db.session.commit()
     return jsonify("User updated"), 200
 
-@api.route("/user", methods=["POST"])
-def create_user():
-    body = request.json
-    new_user = User(
-        email=body["email"],
-        password=body["password"],
-        full_name=body["full_name"],
-    )
-    db.session.add(new_user)
-    db.session.commit()
 
-    return jsonify({"user": "created"}), 200
 
 @api.route("/book", methods=['GET'])
 def get_all_books():
@@ -119,18 +136,14 @@ def delete_review(review_id):
     db.session.commit()
     return jsonify("review deleted"), 200
 
+
 @api.route("/wishlist", methods=['GET'])
-def get_all_wishlists():
-    wishlists = Wishlist.query.all()
-    serialized_wishlists = [wishlist.serialize() for wishlist in wishlists]
-
-    return jsonify(serialized_wishlists), 200  
-
-@api.route("/wishlist/<int:user_id>", methods=['GET'])
-def get_one_wishlist_by_id(user_id):
+@jwt_required()
+def get_wishlist():
+    user_id = get_jwt_identity()
     wishlist = Wishlist.query.get(user_id)
     if not wishlist:
-        return jsonify({"error": "No wishlist found for this user id"}), 400
+        return jsonify({"error": "No wishlist found"}), 400
 
     return jsonify(wishlist.serialize()), 200 
 
@@ -146,9 +159,10 @@ def create_wishlist():
 
     return jsonify({"wishlist": "created"}), 200
 
-@api.route("/wishlist/<int:user_id>", methods=["DELETE"])
-def delete_wishlist(user_id):
-    wishlist = Wishlist.query.get(user_id)
+@api.route("/wishlist", methods=["DELETE"])
+# @jwt_required()
+def delete_wishlist():
+    wishlist = Wishlist.query.get()
     if not wishlist:
         return jsonify({"error": "No wishlist found for this user id"}), 400
 
@@ -156,14 +170,9 @@ def delete_wishlist(user_id):
     db.session.commit()
     return jsonify("wishlist deleted"), 200
 
+
 @api.route("/transaction", methods=['GET'])
-def get_all_transactions():
-    transactions = Transaction.query.all()
-    serialized_transactions = [transaction.serialize() for transaction in transactions]
-
-    return jsonify(serialized_transactions), 200  
-
-@api.route("/transaction/<int:user_id>", methods=['GET'])
+# @jwt_required()
 def get_one_transaction_by_id(user_id):
     transaction = Transaction.query.get(user_id)
   
@@ -192,16 +201,17 @@ def get_all_payment_methods():
 
     return jsonify(serialized_payment_methods), 200  
 
-@api.route("/payment-method/<int:user_id>", methods=['GET'])
+@api.route("/user/payment-method/<int:user_id>", methods=['GET'])
 def get_one_payment_method_by_id(user_id):
     payment_method = PaymentMethod.query.get(user_id)
+
 
     if not payment_method:
         return jsonify({"error": "No payment method found for this user id"}), 400
 
     return jsonify(payment_method.serialize()), 200 
 
-@api.route("/payment-method", methods=["POST"])
+@api.route("/user/payment-method", methods=["POST"])
 def create_payment_method():
     body = request.json
     new_payment_method = PaymentMethod(
@@ -217,7 +227,7 @@ def create_payment_method():
 
     return jsonify({"payment method": "created"}), 200
 
-@api.route("/payment-method/<int:user_id>", methods=["DELETE"])
+@api.route("/user/payment-method/<int:user_id>", methods=["DELETE"])
 def delete_payment_method(user_id):
     payment_method = PaymentMethod.query.get(user_id)
     if not payment_method:
