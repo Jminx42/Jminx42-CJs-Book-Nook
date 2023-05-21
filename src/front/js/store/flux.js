@@ -3,6 +3,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 		store: {
 			token: "",
 			users: {},
+			email: {},
 		},
 		actions: {
 			get_all_users: async () => {
@@ -10,10 +11,22 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const data = await resp.json()
 				setStore({ users: data })
 				console.log("users received from api: ", getStore().users)
+				setStore({ email: data.map((item) => item.email) })
+				console.log(getStore().email)
 			},
-			validate_register: (email) => {
-				console.log(getStore().users.email)
-				const userEmail = getStore().users.email
+
+			validate_register: async (email) => {
+
+				if (getStore().users && getStore().users !== "" && getStore().users !== undefined) {
+					const users = await getStore().users
+					console.log(users)
+					setStore({ email: users.map((item) => item.email) })
+					console.log(getStore().email)
+
+					// users = getStore().users;
+					// const userEmail = users
+					// console.log(userEmail)
+				}
 
 			},
 
