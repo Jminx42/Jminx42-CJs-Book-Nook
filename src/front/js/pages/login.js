@@ -18,6 +18,7 @@ export const Login = () => {
         // Example: call an API to authenticate user
         console.log('Email:', email);
         console.log('Password:', password);
+
     };
 
     return (
