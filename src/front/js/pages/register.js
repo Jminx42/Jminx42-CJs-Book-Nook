@@ -19,24 +19,21 @@ export const Register = () => {
         ;
 
     }
+
     return (
 
         <div>
-            <div className="container md-w-50">
+            <div className="container md-w-50 bg-light">
                 <div className="d-flex flex-column my-5 align-items-center">
                     <div className="col-md-6 my-2">
-
                         <input type="email" className="form-control" id="inputEmail" placeholder="Email" aria-label="Email" value={email} onChange={(e) => { setEmail(e.target.value) }} />
                     </div>
 
-
                     <div className="col-md-6 my-2">
-
                         <input type="password" className="form-control" id="inputPassword" placeholder="Password" aria-label="Password" value={password} onChange={(e) => { setPassword(e.target.value) }} />
                     </div>
 
                     <div className="col-md-6 my-2">
-
                         <input type="text" className="form-control" id="inputFullname" placeholder="Full name" aria-label="Full name" value={full_name} onChange={(e) => { setFull_name(e.target.value) }} />
                     </div>
 
@@ -48,16 +45,13 @@ export const Register = () => {
                             </button></sup> from CJ's Book Nook.
                         </label>
 
-
-
-
-
                     </div>
                     <div className="col-md-6 ms-auto">
                         <button type="submit" className="btn btn-primary" onClick={handleClick}>Register!</button>
                     </div>
                 </div>
             </div>
+            {/* modal for terms and conditions */}
             <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-dialog-scrollable">
                     <div className="modal-content">
