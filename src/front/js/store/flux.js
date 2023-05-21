@@ -7,28 +7,36 @@ const getState = ({ getStore, getActions, setStore }) => {
 		},
 		actions: {
 			get_all_users: async () => {
-				const resp = await fetch(process.env.BACKEND_URL + '/api/user')
-				const data = await resp.json()
-				setStore({ users: data })
-				console.log("users received from api: ", getStore().users)
-				setStore({ email: data.map((item) => item.email) })
-				console.log(getStore().email)
-			},
-
-			validate_register: async (email) => {
-
-				if (getStore().users && getStore().users !== "" && getStore().users !== undefined) {
-					const users = await getStore().users
-					console.log(users)
-					setStore({ email: users.map((item) => item.email) })
-					console.log(getStore().email)
-
-					// users = getStore().users;
-					// const userEmail = users
-					// console.log(userEmail)
+				try {
+					const resp = await fetch(process.env.BACKEND_URL + '/api/user');
+					const data = await resp.json();
+					setStore({ users: data });
+					console.log("Users received from API:", getStore().users);
+					// Resolve the promise after setting the users in the store
+					return Promise.resolve();
+				} catch (error) {
+					console.error("Error occurred while fetching users:", error);
+					// Reject the promise in case of an error
+					return Promise.reject(error);
 				}
-
+				// setStore({ email: data.map((item) => item.email) })
+				// console.log(getStore().email)
 			},
+
+			// validate_register: async (email) => {
+
+			// 	if (getStore().users && getStore().users !== "" && getStore().users !== undefined) {
+			// 		const users = await getStore().users
+			// 		console.log(users)
+			// 		setStore({ email: users.map((item) => item.email) })
+			// 		console.log(getStore().email)
+
+			// 		// users = getStore().users;
+			// 		// const userEmail = users
+			// 		// console.log(userEmail)
+			// 	}
+
+			// },
 
 			syncTokenFromSessionStore: () => {
 				const token = sessionStorage.getItem("token");

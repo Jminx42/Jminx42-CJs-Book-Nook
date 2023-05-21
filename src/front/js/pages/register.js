@@ -12,10 +12,25 @@ export const Register = () => {
 
     const navigate = useNavigate();
 
+    const validate_register = () => {
+        users = store.users;
+        console.log(users);
+    };
+
     useEffect(() => {
-        actions.get_all_users();
-        actions.validate_register();
+        actions.get_all_users()
+            .then(() => {
+                // Users have been set in the store, perform further actions here
+                console.log("Users have been set:", store.users);
+                validate_register();
+            })
+            .catch((error) => {
+                // Handle any errors that occurred during the API request
+                console.error("Error occurred:", error);
+            });
+
     }, [])
+
 
 
 
