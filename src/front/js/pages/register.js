@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 import "../../styles/navbar.css"
@@ -11,6 +11,12 @@ export const Register = () => {
     const [full_name, setFull_name] = useState("");
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        actions.get_all_users();
+    }, [])
+
+
 
     const handleClick = () => {
         actions.register(email, password, full_name).then(() => {
