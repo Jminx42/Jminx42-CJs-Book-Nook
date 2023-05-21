@@ -14,6 +14,7 @@ export const Register = () => {
 
     useEffect(() => {
         actions.get_all_users();
+        actions.validate_register();
     }, [])
 
 

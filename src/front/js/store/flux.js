@@ -12,6 +12,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 				console.log("users received from api: ", getStore().users)
 			},
 			validate_register: (email) => {
+				console.log(getStore().users.email)
+				const userEmail = getStore().users.email
 
 			},
 
