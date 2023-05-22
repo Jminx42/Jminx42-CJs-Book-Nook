@@ -35,6 +35,29 @@ def create_user():
     return jsonify(access_token=access_token), 200
     # return jsonify({"user": "created"}), 200
 
+@api.route("/user/login", methods=["POST"])
+def login():
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    email = request.json.get("email", None)
+    password = request.json.get("password", None)
+    
+    user = User.query.filter_by(email=email, password=password).first() #gives the whole user, including the id
+
+    if not user:
+        return jsonify ({"error": "invalid credentials"}), 300
+    
+    access_token = create_access_token(identity=user.id)
+    return jsonify({"access_token": access_token}), 200
+
+@api.route("/user/validate", methods=["GET"])
+@jwt_required()
+def validate_user():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify ({"error": "invalid credentials"}), 300
+    return jsonify({"user": user.serialize()})
+    
 
 @api.route("/user", methods=['GET'])
 def get_all_users():
