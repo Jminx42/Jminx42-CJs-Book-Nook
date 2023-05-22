@@ -43,7 +43,7 @@ class User(db.Model):
     reviews = db.relationship("Review", backref="user")
     transactions = db.relationship("Transaction", backref="user")
     support = db.relationship("Support", backref="user")
-    token = db.Column(db.String(250), unique=True, nullable=True)
+    # token = db.Column(db.String(250), unique=True, nullable=True)
 
 
     def __repr__(self):

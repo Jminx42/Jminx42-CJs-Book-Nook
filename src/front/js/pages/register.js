@@ -15,47 +15,37 @@ export const Register = () => {
 
 
     useEffect(() => {
-        actions.get_all_users()
-            .then(() => {
-                // Users have been set in the store, perform further actions here
-                console.log("Users have been set:", store.users);
-
-            })
-            .catch((error) => {
-                // Handle any errors that occurred during the API request
-                console.error("Error occurred:", error);
-            });
-
+       
     }, [])
 
-    const emailExists = (email) => {
-        return store.users.some((item) => item.email === email);
-    };
+    const registerUser = async () => {
+        const opts = {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password,
+                full_name: full_name
+            })
+        };
+        try {
+            const resp = await fetch(process.env.BACKEND_URL + '/api/user', opts)
+            if (resp.status !== 200) {
+                const data = await resp.json()
+                alert(data.error);//show another kind of message instead of the alert
+                return false;
+            }
 
-    const validate_register = (email) => {
-        if (!emailExists(email) && email !== "" && email !== undefined) {
-            console.log("user added to db")
-        } else {
-            console.log("email already exists")
+            return true;
+        }
+        catch (error) {
+            console.error("There has been an error registering")
         }
 
-
-
-        // console.log(users);
-    };
-
-
-
-
-    const handleClick = () => {
-        actions.register(email, password, full_name).then(() => {
-            // if (store.token && store.token !== "" && store.token != undefined) navigate('/')
-
-        });
-        validate_register(email);
-
-
     }
+    
 
     return (
 
@@ -127,7 +117,7 @@ export const Register = () => {
 
                     </div>
                     <div className="col-md-6 ms-auto">
-                        <button type="submit" className="btn btn-primary" onClick={handleClick}>Register!</button>
+                        <button type="submit" className="btn btn-primary" onClick={() => registerUser()}>Register!</button>
                     </div>
                 </div>
             </div>

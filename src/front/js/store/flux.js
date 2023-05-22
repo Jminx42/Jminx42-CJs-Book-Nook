@@ -6,22 +6,22 @@ const getState = ({ getStore, getActions, setStore }) => {
 			email: {},
 		},
 		actions: {
-			get_all_users: async () => {
-				try {
-					const resp = await fetch(process.env.BACKEND_URL + '/api/user');
-					const data = await resp.json();
-					setStore({ users: data });
-					console.log("Users received from API:", getStore().users);
-					// Resolve the promise after setting the users in the store
-					return Promise.resolve();
-				} catch (error) {
-					console.error("Error occurred while fetching users:", error);
-					// Reject the promise in case of an error
-					return Promise.reject(error);
-				}
-				// setStore({ email: data.map((item) => item.email) })
-				// console.log(getStore().email)
-			},
+			// get_all_users: async () => {
+			// 	try {
+			// 		const resp = await fetch(process.env.BACKEND_URL + '/api/user');
+			// 		const data = await resp.json();
+			// 		setStore({ users: data });
+			// 		console.log("Users received from API:", getStore().users);
+			// 		// Resolve the promise after setting the users in the store
+			// 		return Promise.resolve();
+			// 	} catch (error) {
+			// 		console.error("Error occurred while fetching users:", error);
+			// 		// Reject the promise in case of an error
+			// 		return Promise.reject(error);
+			// 	}
+			// 	// setStore({ email: data.map((item) => item.email) })
+			// 	// console.log(getStore().email)
+			// },
 
 			// validate_register: async (email) => {
 
@@ -80,32 +80,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			},
 
-			register: async (email, password, full_name) => {
-				const opts = {
-					method: 'POST',
-					headers: {
-						"Content-Type": "application/json"
-					},
-					body: JSON.stringify({
-						email: email,
-						password: password,
-						full_name: full_name
-					})
-				};
-				try {
-					const resp = await fetch(process.env.BACKEND_URL + '/api/user', opts)
-					if (resp.status !== 200) {
-						alert("There has been some error");
-						return false;
-					}
-
-					return true;
-				}
-				catch (error) {
-					console.error("There has been an error registering")
-				}
-
-			},
+			
 		}
 	};
 };
