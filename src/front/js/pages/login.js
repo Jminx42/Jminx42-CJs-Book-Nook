@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { Context } from "../store/appContext";
+import { useNavigate } from 'react-router-dom';
 
 export const Login = () => {
+    const { store, actions } = useContext(Context);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
     const handleEmailChange = (e) => {
+        //add checks in the function
         setEmail(e.target.value);
     };
 
@@ -12,10 +17,13 @@ export const Login = () => {
         setPassword(e.target.value);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         // Add your login logic here
         // Example: call an API to authenticate user
+        if (await actions.login(email, password)) {
+            navigate("/")
+        }
         console.log('Email:', email);
         console.log('Password:', password);
 
@@ -27,7 +35,7 @@ export const Login = () => {
             <form onSubmit={handleSubmit}>
                 <div>
                     <input
-                        type="email"
+                        // type="email"
                         id="inputEmail"
                         className="form-control"
                         placeholder="Email"
