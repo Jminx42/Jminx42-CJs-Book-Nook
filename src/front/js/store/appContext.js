@@ -22,7 +22,7 @@ const injectContext = PassedComponent => {
 		);
 
 		useEffect(() => {
-			state.actions.syncTokenFromSessionStore();
+			state.actions.validate_user();
 		}, []);
 
 		// The initial value for the context is not null anymore, but the current state of this component,
