@@ -15,7 +15,7 @@ export const Register = () => {
 
 
     useEffect(() => {
-       
+
     }, [])
 
     const registerUser = async () => {
@@ -36,16 +36,20 @@ export const Register = () => {
                 const data = await resp.json()
                 alert(data.error);//show another kind of message instead of the alert
                 return false;
-            }
+            } else {
+                navigate("/login")
 
-            return true;
+                return true
+            };
+
+
         }
         catch (error) {
             console.error("There has been an error registering")
         }
 
     }
-    
+
 
     return (
 
