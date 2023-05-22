@@ -25,7 +25,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					setStore({ user: null })
 					sessionStorage.removeItem("token")
 				}
-
 			},
 
 			logout: () => {
@@ -63,32 +62,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			},
 
-			register: async (email, password, full_name) => {
-				const opts = {
-					method: 'POST',
-					headers: {
-						"Content-Type": "application/json"
-					},
-					body: JSON.stringify({
-						email: email,
-						password: password,
-						full_name: full_name
-					})
-				};
-				try {
-					const resp = await fetch(process.env.BACKEND_URL + '/api/user', opts)
-					if (resp.status !== 200) {
-						alert("There has been some error");
-						return false;
-					}
-
-					return true;
-				}
-				catch (error) {
-					console.error("There has been an error registering")
-				}
-
-			},
+			
 		}
 	};
 };
