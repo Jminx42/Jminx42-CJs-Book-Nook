@@ -50,7 +50,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ token: "" });
 			},
 
-			register: async (email, password) => {
+			login: async (email, password) => {
 				const opts = {
 					method: 'PUT',
 					headers: {
