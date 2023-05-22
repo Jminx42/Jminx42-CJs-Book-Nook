@@ -42,7 +42,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					},
 					body: JSON.stringify({
 						email: email,
-						password: password,
+						password: password, //djihefheiuhfr
 					})
 				};
 				try {
