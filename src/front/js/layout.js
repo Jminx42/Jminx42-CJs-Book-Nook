@@ -8,10 +8,12 @@ import { Demo } from "./pages/demo";
 import { Single } from "./pages/single";
 import { Register } from "./pages/register";
 import { Login } from "./pages/login.js";
+import { ProfilePage } from "./pages/profilePage";
 import injectContext from "./store/appContext";
 
 
 import { Footer } from "./component/footer";
+
 
 //create your first component
 const Layout = () => {
@@ -31,6 +33,7 @@ const Layout = () => {
                         <Route element={<Demo />} path="/demo" />
                         <Route element={<Register />} path="/register" />
                         <Route element={<Login />} path="/login" />
+                        <Route element={<ProfilePage />} path="/profile" />
                         <Route element={<Single />} path="/single/:theid" />
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>

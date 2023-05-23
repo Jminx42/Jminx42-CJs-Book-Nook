@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Context } from "../store/appContext";
 import { useNavigate } from 'react-router-dom';
+import "../../styles/login.css"
+import CJBookNookLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/CJBookNookLogo.png"
 
 
 export const Login = () => {
@@ -18,7 +20,14 @@ export const Login = () => {
     };
 
     return (
-        <div className='container md-w-50 bg-light'>
+
+        <div className='container my-auto login-custom'>
+            <div className='row'>
+                <div className='col-6'>
+                    <img src={CJBookNookLogo} height={"500px"} />
+                </div>
+             
+       
             <h1>Login</h1>
             <form onSubmit={handleSubmit}>
                 <div>
@@ -47,6 +56,7 @@ export const Login = () => {
                 <button type="submit" className="btn btn-primary">Login</button>
 
             </form>
+
         </div>
     );
 };
