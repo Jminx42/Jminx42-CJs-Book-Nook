@@ -22,7 +22,8 @@ const injectContext = PassedComponent => {
 		);
 
 		useEffect(() => {
-			state.actions.validate_user(); // does this has to work everytime the user reloads?
+			state.actions.validate_user(); // does this has to work everytime the user reloads? YES!
+			state.actions.getBooks();
 		}, []);
 
 		// The initial value for the context is not null anymore, but the current state of this component,
