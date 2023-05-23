@@ -8,10 +8,12 @@ import { Profile } from "./pages/profile";
 import { Book } from "./pages/book";
 import { Register } from "./pages/register";
 import { Login } from "./pages/login.js";
+import { ProfilePage } from "./pages/profilePage";
 import injectContext from "./store/appContext";
 
 
 import { Footer } from "./component/footer";
+
 
 //create your first component
 const Layout = () => {
@@ -31,7 +33,12 @@ const Layout = () => {
                         <Route element={<Profile />} path="/profile" />
                         <Route element={<Register />} path="/register" />
                         <Route element={<Login />} path="/login" />
+
                         <Route element={<Book />} path="/book/:theid" />
+
+           
+                      
+
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
                     <Footer />

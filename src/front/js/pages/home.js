@@ -13,6 +13,7 @@ export const Home = () => {
 
 	return (
 		<div>
+
 			<Navbar />
 			<div className="text-center mt-5">
 				{store.books && store.books.length !== 0 ? store.books.map((book) => {
