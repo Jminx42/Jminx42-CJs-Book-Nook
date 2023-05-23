@@ -1,17 +1,9 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			token: "",
 			user: null,
 		},
 		actions: {
-			get_all_users: async () => {
-				const resp = await fetch(process.env.BACKEND_URL + 'api/user')
-				const data = await resp.json()
-				setStore({ users: data })
-				console.log("users received from api: ", getStore().users)
-			},
-
 			validate_user: async () => {
 				const resp = await fetch(process.env.BACKEND_URL + 'api/user/validate', {
 					headers: {
@@ -41,13 +33,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 					},
 					body: JSON.stringify({
 						email: email,
-						password: password, //djihefheiuhfr
+						password: password,
 					})
 				};
 				try {
 					const resp = await fetch(process.env.BACKEND_URL + 'api/user/login', opts)
 					if (resp.status !== 200) {
-						alert("There has been some error");
+						const data = await resp.json()
+						alert(data.error);
 						return false;
 					}
 					const data = await resp.json();
@@ -62,7 +55,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			},
 
-			
+
 		}
 	};
 };

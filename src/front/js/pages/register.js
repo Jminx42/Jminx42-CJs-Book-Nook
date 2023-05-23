@@ -9,6 +9,7 @@ export const Register = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [full_name, setFull_name] = useState("");
+    const [isChecked, setIsChecked] = useState(false);
 
     const navigate = useNavigate();
 
@@ -37,8 +38,9 @@ export const Register = () => {
                 alert(data.error);//show another kind of message instead of the alert
                 return false;
             } else {
+                alert("Your registration was successfull")
                 navigate("/login")
-
+                sessionStorage.removeItem("token");
                 return true
             };
 
@@ -49,80 +51,91 @@ export const Register = () => {
         }
 
     }
+    const handleCheckboxChange = (event) => {
+        setIsChecked(event.target.checked);
+    };
 
+    const handleRegisterSubmit = async (e) => {
+        e.preventDefault()
+        if (!isChecked) {
+            alert('Please check the box to proceed.');
+            return;
+        } else {
+            registerUser();
+        }
 
+    }
     return (
 
         <div>
             <div className="container md-w-50 bg-light">
                 <div className="d-flex flex-column my-5 align-items-center">
                     {/* add validation form from bootstrap?? */}
-                    <div className="col-md-6 my-2">
-                        <input
-                            type="email"
-                            className="form-control"
-                            id="inputEmail"
-                            placeholder="Email"
-                            aria-label="Email"
-                            value={email}
-                            onChange={(e) => { setEmail(e.target.value) }}
-                            required />
-                        <div className="valid-feedback">
-                            Looks good!
+                    <form>
+                        <div className="col-md-6 my-2">
+                            <input
+                                type="email"
+                                className="form-control"
+                                id="inputEmail"
+                                placeholder="Email"
+                                aria-label="Email"
+                                value={email}
+                                onChange={(e) => { setEmail(e.target.value) }}
+                                required />
                         </div>
-                        <div className="invalid-feedback">
-                            Please provide a valid email. For instance, example@gmail.com
-                        </div>
-                    </div>
 
-                    <div className="col-md-6 my-2">
-                        <input
-                            type="password"
-                            className="form-control"
-                            id="inputPassword"
-                            placeholder="Password"
-                            aria-label="Password"
-                            value={password}
-                            onChange={(e) => { setPassword(e.target.value) }}
-                            required />
-                        <div className="valid-feedback">
-                            Looks good!
+                        <div className="col-md-6 my-2">
+                            <input
+                                type="password"
+                                className="form-control"
+                                id="inputPassword"
+                                placeholder="Password"
+                                aria-label="Password"
+                                value={password}
+                                onChange={(e) => { setPassword(e.target.value) }}
+                                required />
                         </div>
-                        <div className="invalid-feedback">
-                            Please provide a valid password. At least 5 characters, including at least one number and one symbol.
+
+                        <div className="col-md-6 my-2">
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="inputFullname"
+                                placeholder="Full name"
+                                aria-label="Full name"
+                                value={full_name}
+                                onChange={(e) => { setFull_name(e.target.value) }}
+                                required />
                         </div>
-                    </div>
 
-                    <div className="col-md-6 my-2">
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="inputFullname"
-                            placeholder="Full name"
-                            aria-label="Full name"
-                            value={full_name}
-                            onChange={(e) => { setFull_name(e.target.value) }}
-                            required />
-                        <div className="valid-feedback">
-                            Looks good!
+                        <div className="form-check col-md-6">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id="gridCheck"
+                                checked={isChecked}
+                                onChange={handleCheckboxChange}
+                                required
+                            />
+                            <label className="form-check-label py-0" htmlFor="gridCheck">
+                                I declare that I have read and accept the
+                                <sup>
+                                    <button
+                                        type="button"
+                                        className="btn btn-link p-0"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal"
+                                    >
+                                        terms and conditions of sale and the privacy policy
+                                    </button>
+                                </sup>
+                                from CJ's Book Nook.
+                            </label>
                         </div>
-                    </div>
-
-                    <div className="form-check col-md-6">
-                        <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id="gridCheck" />
-                        <label className="form-check-label py-0" htmlFor="gridCheck">
-                            I declare that I have read and accept the <sup><button type="button" className="btn btn-link p-0" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                terms and conditions of sale and the privacy policy
-                            </button></sup> from CJ's Book Nook.
-                        </label>
-
-                    </div>
-                    <div className="col-md-6 ms-auto">
-                        <button type="submit" className="btn btn-primary" onClick={() => registerUser()}>Register!</button>
-                    </div>
+                        <div className="col-md-6 ms-auto">
+                            <button type="submit" className="btn btn-primary" onClick={handleRegisterSubmit}>Register!</button>
+                        </div>
+                    </form>
                 </div>
             </div>
             {/* modal for terms and conditions */}
