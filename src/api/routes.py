@@ -24,6 +24,10 @@ def create_user():
     email = request.json.get("email", None)
     password = request.json.get("password", None)
     full_name = request.json.get("full_name", None)
+    if "@" not in email: 
+        return jsonify ({"error": "please enter valid email, example: user@gmail.com"}), 300
+    if len(password) < 5:
+        return jsonify ({"error": "your password must have more than 5 characters"}), 300
     if not email or not password or not full_name:
         return jsonify ({"error": "missing credentials"}), 300
     already_exist = User.query.filter_by(email = email).first()
@@ -36,8 +40,6 @@ def create_user():
     )
     db.session.add(new_user)
     db.session.commit()
-    # access_token = create_access_token(identity=email)
-    # return jsonify(access_token=access_token), 200
     return jsonify({"user": "created"}), 200
 
 @api.route("/user/login", methods=["POST"])
