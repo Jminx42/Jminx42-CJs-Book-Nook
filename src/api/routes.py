@@ -8,15 +8,7 @@ from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 
-api = Blueprint('api', __name__)
-
-# @api.route("/token", methods=["POST"])
-# def create_token():
-    
-#     if email != "test" or password != "test":
-#         return jsonify({"msg": "Bad email or password"}), 401
-
-    
+api = Blueprint('api', __name__)    
 
 @api.route("/user", methods=["POST"])
 def create_user():
@@ -74,7 +66,9 @@ def get_all_users():
     return jsonify(serialized_users), 200  
 
 @api.route("/user/<int:user_id>", methods=['GET'])
+# @jwt_required()
 def get_one_user_by_id(user_id):
+    # user_id = get_jwt_identity()
     user = User.query.get(user_id)
     if not user:
         return jsonify({"error": "No user found with this id"}), 400
@@ -82,7 +76,9 @@ def get_one_user_by_id(user_id):
     return jsonify(user.serialize()), 200 
 
 @api.route("/user/<int:user_id>", methods=["PUT"])
-def update_user(user_id):
+@jwt_required()
+def update_user():
+    user_id = get_jwt_identity() # Is this the same of using "user_id" as a parameter for the function?
     body = request.json
     user = User.query.get(user_id)
     if not user:

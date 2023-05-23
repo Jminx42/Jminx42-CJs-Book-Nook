@@ -18,6 +18,7 @@ class BookCategory(enum.Enum):
 class Genre(enum.Enum):
    
     romance = "romance"
+    fiction = "fiction"
     non_fiction = "non_fiction"
     science_fiction = "science_fiction"
     mystery_crime = "mystery_crime"
@@ -31,7 +32,6 @@ class PaymentMethods(enum.Enum):
     american_express = "american_express"
 
 class User(db.Model):
-    __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -57,7 +57,6 @@ class User(db.Model):
         }
 
 class Book(db.Model):
-    __tablename__ = 'book'
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(250), nullable=False)
@@ -67,6 +66,8 @@ class Book(db.Model):
     book_category = db.Column(db.Enum(BookCategory), server_default=BookCategory.paperback.value)
     genre = db.Column(db.Enum(Genre), server_default=Genre.thrillers.value)
     description = db.Column(db.Text, nullable=True)
+    year = db.Column(db.Integer, unique=False, nullable=False)
+    price = db.Column(db.Float, unique=False, nullable=True)
     external_reviews = db.relationship("ExternalReview", backref="book")
     wishlist = db.relationship("Wishlist", backref="book")
     reviews = db.relationship("Review", backref="book")
@@ -87,7 +88,6 @@ class Book(db.Model):
         }
 
 class Review(db.Model):
-    __tablename__ = 'review'
 
     id = db.Column(db.Integer, primary_key=True)
     review = db.Column(db.Text, nullable=True)
@@ -108,7 +108,6 @@ class Review(db.Model):
         }
 
 class ExternalReview(db.Model):
-    __tablename__ = 'external_review'
 
     id = db.Column(db.Integer, primary_key=True)
     external_review = db.Column(db.Text, nullable=True)
@@ -125,7 +124,6 @@ class ExternalReview(db.Model):
         }
 
 class Wishlist(db.Model):
-    __tablename__ = 'wishlist'
 
     id = db.Column(db.Integer, primary_key=True)
     book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
@@ -142,7 +140,6 @@ class Wishlist(db.Model):
         }
 
 class Transaction(db.Model):
-    __tablename__ = 'transaction'
 
     id = db.Column(db.Integer, primary_key=True)
     book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
@@ -162,7 +159,6 @@ class Transaction(db.Model):
         }
 
 class PaymentMethod(db.Model):
-    __tablename__ = 'payment_method'
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -186,7 +182,6 @@ class PaymentMethod(db.Model):
         }
 
 class Support(db.Model):
-    __tablename__ = 'support'
 
     ticket_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
