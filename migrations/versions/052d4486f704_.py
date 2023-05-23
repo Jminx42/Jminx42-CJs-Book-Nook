@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: a40170e60ff5
+Revision ID: 052d4486f704
 Revises: 
-Create Date: 2023-05-17 18:43:54.065614
+Create Date: 2023-05-23 13:51:59.755080
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import mysql
 
 # revision identifiers, used by Alembic.
-revision = 'a40170e60ff5'
+revision = '052d4486f704'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -25,8 +25,9 @@ def upgrade():
     sa.Column('isbn', mysql.BIGINT(unsigned=True), nullable=True),
     sa.Column('book_cover', sa.String(length=250), nullable=False),
     sa.Column('book_category', sa.Enum('paperback', 'hardcover', 'ebook', 'audiobook', name='bookcategory'), server_default='paperback', nullable=True),
-    sa.Column('genre', sa.Enum('romance', 'non_fiction', 'science_fiction', 'mystery_crime', 'thrillers', 'fantasy', name='genre'), server_default='thrillers', nullable=True),
+    sa.Column('genre', sa.Enum('romance', 'fiction', 'non_fiction', 'science_fiction', 'mystery_crime', 'thrillers', 'fantasy', name='genre'), server_default='thrillers', nullable=True),
     sa.Column('description', sa.Text(), nullable=True),
+    sa.Column('price', sa.Float(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('isbn')
     )
@@ -36,8 +37,10 @@ def upgrade():
     sa.Column('password', sa.String(length=80), nullable=False),
     sa.Column('full_name', sa.String(length=120), nullable=True),
     sa.Column('user_category', sa.Enum('standard', 'platinum', name='usercategory'), server_default='standard', nullable=True),
+    sa.Column('profile_picture', sa.String(length=250), nullable=True),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('email')
+    sa.UniqueConstraint('email'),
+    sa.UniqueConstraint('profile_picture')
     )
     op.create_table('external_review',
     sa.Column('id', sa.Integer(), nullable=False),

@@ -13,12 +13,26 @@ export const Navbar = () => {
 					<span className="navbar-brand mb-0 h1"><img src={CJBookNookLogo} height={"80px"} /></span>
 				</Link>
 				<div className="ml-auto">
-					{!sessionStorage.getItem("token") ?
-						<Link to="/login">
-							<button className="btn btn-primary">Login</button>
-						</Link> :
 
-						<button className="btn btn-primary" onClick={() => actions.logout()}>Log out</button>
+					{!sessionStorage.getItem("token") ?
+						<div>
+							<Link to="/register">
+								<button className="btn btn-primary me-2">Register</button>
+							</Link>
+							<Link to="/login">
+								<button className="btn btn-primary">Login</button>
+							</Link>
+						</div> :
+						<div>
+							<button className="btn btn-primary me-2" onClick={() => actions.logout()}>Log out</button>
+							<Link to="/profile">
+								<button className="btn btn-primary me-2">Profile</button>
+							</Link>
+						</div>
+
+
+
+
 
 					}
 				</div>

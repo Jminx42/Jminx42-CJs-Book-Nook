@@ -2,6 +2,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			user: null,
+			books: {},
 		},
 		actions: {
 			validate_user: async () => {
@@ -55,7 +56,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			},
 
-
+			getBooks: async () => {
+				const resp = await fetch(process.env.BACKEND_URL + 'api/book')
+				const data = await resp.json()
+				if (resp.status !== 200) {
+					alert(data.error)
+				} else {
+					setStore({ books: data.books })
+				}
+			}
 		}
 	};
 };
