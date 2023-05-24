@@ -71,6 +71,12 @@ export const Register = () => {
             <div className="container md-w-50 bg-light">
                 <div className="d-flex flex-column my-5 align-items-center">
                     {/* add validation form from bootstrap?? */}
+                    <div className="text-center">
+                        Already registered?{" "}
+                        <span className="link-primary" onClick={changeAuthMode}>
+                            Sign In
+                        </span>
+                    </div>
                     <form>
                         <div className="col-md-6 my-2">
                             <input

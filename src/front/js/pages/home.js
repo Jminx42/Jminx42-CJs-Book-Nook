@@ -16,9 +16,9 @@ export const Home = () => {
 
 			<Navbar />
 			<div className="text-center mt-5">
-				{store.books && store.books.length !== 0 ? store.books.map((book) => {
+				{/* {store.books && store.books.length !== 0 ? store.books.map((book) => {
 					return <Card key={book.id} item={book} />
-				}) : null}
+				}) : null} */}
 
 
 			</div>
