@@ -40,7 +40,7 @@ export const Profile = () => {
 		})
 		if (response.ok) {
 			await actions.getOneUser();
-			alert("Profile successfully updated");
+			alert("Profile successfully updated"); // I hate git
 		}
 	}
 
