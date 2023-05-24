@@ -73,7 +73,7 @@ def get_one_user_by_id(user_id):
     if not user:
         return jsonify({"error": "No user found with this id"}), 400
 
-    return jsonify(user.serialize()), 200 
+    return jsonify({"user": user.serialize()}), 200 
 
 @api.route("/user/<int:user_id>", methods=["PUT"])
 @jwt_required()
@@ -98,7 +98,7 @@ def get_all_books():
     books = Book.query.all()
     serialized_books = [book.serialize() for book in books]
 
-    return jsonify(serialized_books), 200  
+    return jsonify({"books": serialized_books}), 200  
 
 @api.route("/book/<int:book_id>", methods=['GET'])
 def get_one_book_by_id(book_id):

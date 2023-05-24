@@ -2,7 +2,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			user: null,
-			books: {},
+			books: [],
 		},
 		actions: {
 			validate_user: async () => {
