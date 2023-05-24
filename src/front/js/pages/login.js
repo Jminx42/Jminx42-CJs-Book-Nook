@@ -26,36 +26,37 @@ export const Login = () => {
                 <div className='col-6'>
                     <img src={CJBookNookLogo} height={"500px"} />
                 </div>
-             
-       
-            <h1>Login</h1>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <input
-                        type="email"
-                        id="inputEmail"
-                        className="form-control"
-                        placeholder="Email"
-                        aria-label="Email"
-                        value={email}
-                        onChange={(e) => { setEmail(e.target.value) }}
-                    />
-                </div>
-                <div>
-                    <input
-                        type="password"
-                        className="form-control"
-                        id="inputPassword"
-                        placeholder="Password"
-                        aria-label="Password"
-                        value={password}
-                        onChange={(e) => { setPassword(e.target.value) }}
-                    />
-                </div>
 
-                <button type="submit" className="btn btn-primary">Login</button>
 
-            </form>
+                <h1>Login</h1>
+                <form onSubmit={handleSubmit}>
+                    <div>
+                        <input
+                            type="email"
+                            id="inputEmail"
+                            className="form-control"
+                            placeholder="Email"
+                            aria-label="Email"
+                            value={email}
+                            onChange={(e) => { setEmail(e.target.value) }}
+                        />
+                    </div>
+                    <div>
+                        <input
+                            type="password"
+                            className="form-control"
+                            id="inputPassword"
+                            placeholder="Password"
+                            aria-label="Password"
+                            value={password}
+                            onChange={(e) => { setPassword(e.target.value) }}
+                        />
+                    </div>
+
+                    <button type="submit" className="btn btn-primary">Login</button>
+
+                </form>
+            </div>
 
         </div>
     );
