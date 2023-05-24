@@ -36,7 +36,6 @@ def create_user():
 
 @api.route("/user/login", methods=["POST"])
 def login():
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@")
     email = request.json.get("email", None)
     password = request.json.get("password", None)
     
@@ -58,24 +57,24 @@ def validate_user():
     return jsonify({"user": user.serialize()})
     
 
-@api.route("/user", methods=['GET'])
+@api.route("/user/all", methods=['GET'])
 def get_all_users():
     users = User.query.all()
     serialized_users = [user.serialize() for user in users]
 
     return jsonify(serialized_users), 200  
 
-@api.route("/user/<int:user_id>", methods=['GET'])
-# @jwt_required()
-def get_one_user_by_id(user_id):
-    # user_id = get_jwt_identity()
+@api.route("/user", methods=['GET'])
+@jwt_required()
+def get_one_user_by_id():
+    user_id = get_jwt_identity()
     user = User.query.get(user_id)
     if not user:
         return jsonify({"error": "No user found with this id"}), 400
 
     return jsonify({"user": user.serialize()}), 200 
 
-@api.route("/user/<int:user_id>", methods=["PUT"])
+@api.route("/user", methods=["PUT"])
 @jwt_required()
 def update_user():
     user_id = get_jwt_identity() # Is this the same of using "user_id" as a parameter for the function?
@@ -106,7 +105,7 @@ def get_one_book_by_id(book_id):
     if not book:
         return jsonify({"error": "No book found with this id"}), 400
 
-    return jsonify(book.serialize()), 200 
+    return jsonify({"book": book.serialize()}), 200 
 
 @api.route("/review", methods=['GET'])
 def get_all_reviews():
@@ -126,7 +125,7 @@ def get_one_review_by_id(review_id):
 @api.route("/review/<int:review_id>", methods=["PUT"])
 def update_review(review_id):
     body = request.json
-    review = Review.query.get(review_id)
+    review = Review.query.get(review_id) #check if user who edits review is same
     if not review:
         return jsonify({"error": "No review found with this id"}), 400
 

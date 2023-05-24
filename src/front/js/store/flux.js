@@ -3,6 +3,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 		store: {
 			user: null,
 			books: [],
+			book: {},
 		},
 		actions: {
 			validate_user: async () => {
@@ -64,6 +65,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 				} else {
 					setStore({ books: data.books })
 				}
+			},
+
+			getOneBook: async (id) => {
+				const response = await fetch(process.env.BACKEND_URL + 'api/book/' + id);
+				const data = await response.json();
+				setStore({ book: data.book })
+
 			}
 		}
 	};

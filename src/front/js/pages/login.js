@@ -28,6 +28,7 @@ export const Login = () => {
                         className="form-control"
                         placeholder="Email"
                         aria-label="Email"
+                        autoComplete="email"
                         value={email}
                         onChange={(e) => { setEmail(e.target.value) }}
                     />
