@@ -16,11 +16,14 @@ export const Input = () => {
         body.append("profile_image", files[0]);
         const options = {
             body,
-            method: "POST"
+            method: "POST",
+            headers: {
+                Authorization: "Bearer " + sessionStorage.getItem("token")
+            },
         };
         // you need to have the user_id in the localStorage
-        const currentUserId = 1;
-        fetch(`${process.env.BACKEND_URL}api/users/${currentUserId}/image`, options)
+
+        fetch(`${process.env.BACKEND_URL}api/user/image`, options)
             .then(resp => resp.json())
             .then(data => console.log("Success!!!!", data))
             .catch(error => console.error("ERRORRRRRR!!!", error));

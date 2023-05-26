@@ -8,9 +8,6 @@ export const Book = () => {
 	const params = useParams();
 	const { store, actions } = useContext(Context);
 
-
-
-
 	useEffect(() => {
 		actions.getOneBook(params.theid)
 

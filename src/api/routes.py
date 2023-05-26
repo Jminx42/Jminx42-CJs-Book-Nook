@@ -92,50 +92,29 @@ def update_user():
     db.session.commit()
     return jsonify("User updated"), 200
 
-@api.route('/m/image', methods=['POST'])
+@api.route('/user/image', methods=['POST'])
+@jwt_required()
 def handle_upload():
-
+    user_id = get_jwt_identity()
     # validate that the front-end request was built correctly
-    # if 'profile_image' in request.files:
-    #     # upload file to uploadcare
-    #     result = cloudinary.uploader.upload(request.files['profile_image'])
+    if 'profile_image' in request.files:
+        # upload file to uploadcare
+        result = cloudinary.uploader.upload(request.files['profile_image'])
 
-    #     # fetch for the user
-    #     user1 = User.query.get(user_id)
-    #     # update the user with the given cloudinary image URL
-    #     user1.profile_image_url = result['secure_url']
+        # fetch for the user
+        user1 = User.query.get(user_id)
+        print("AAAAAAAAAAAAAAA")
+        print(user1)
+        # update the user with the given cloudinary image URL
+        user1.profile_picture = result['secure_url']
+        print(user1.profile_picture)
+        
+       
+        db.session.commit()
 
-    #     db.session.add(user1)
-    #     db.session.commit()
-
-    #     return jsonify(user1.serialize()), 200
-    # else:
-    raise APIException('Missing profile_image on the FormData')
-
-# @api.route('/user/image', methods=['POST'])
-# # @jwt_required
-# def handle_upload():
-#     # user_id = get_jwt_identity()
-#     # validate that the front-end request was built correctly
-#     # if 'profile_picture' in request.files:
-#     #     # upload file to uploadcare
-#     #     print(request.files)
-#     #     result = cloudinary.uploader.upload(request.files['profile_picture'])
-
-#     #     # fetch for the user
-#     #     user = User.query.get(user_id)
-#     #     # update the user with the given cloudinary image URL
-#     #     print(user)
-#     #     print(result)
-#     #     user.profile_picture = result['secure_url']
-
-#     #     db.session.add(user)
-#     #     db.session.commit()
-
-#     #     return jsonify(user.serialize()), 200
-#     # else:
-#     raise APIException('Missing profile_image on the FormData')
-
+        return jsonify(user1.serialize()), 200
+    else:
+        raise APIException('Missing profile_image on the FormData')
 
 @api.route("/book", methods=['GET'])
 def get_all_books():
