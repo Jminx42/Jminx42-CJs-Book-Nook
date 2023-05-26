@@ -32,7 +32,7 @@ export const Register = () => {
             })
         };
         try {
-            const resp = await fetch(process.env.BACKEND_URL + '/api/user', opts)
+            const resp = await fetch(process.env.BACKEND_URL + 'api/user', opts)
             if (resp.status !== 200) {
                 const data = await resp.json()
                 alert(data.error);//show another kind of message instead of the alert

@@ -7,6 +7,8 @@ from api.utils import generate_sitemap, APIException
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
+import cloudinary
+import cloudinary.uploader
 
 api = Blueprint('api', __name__)    
 
@@ -75,7 +77,7 @@ def get_one_user_by_id():
     return jsonify({"user": user.serialize()}), 200 
 
 @api.route("/user", methods=["PUT"])
-@jwt_required()
+# @jwt_required()
 def update_user():
     user_id = get_jwt_identity() # Is this the same of using "user_id" as a parameter for the function?
     body = request.json
@@ -90,6 +92,49 @@ def update_user():
     db.session.commit()
     return jsonify("User updated"), 200
 
+@api.route('/m/image', methods=['POST'])
+def handle_upload():
+
+    # validate that the front-end request was built correctly
+    # if 'profile_image' in request.files:
+    #     # upload file to uploadcare
+    #     result = cloudinary.uploader.upload(request.files['profile_image'])
+
+    #     # fetch for the user
+    #     user1 = User.query.get(user_id)
+    #     # update the user with the given cloudinary image URL
+    #     user1.profile_image_url = result['secure_url']
+
+    #     db.session.add(user1)
+    #     db.session.commit()
+
+    #     return jsonify(user1.serialize()), 200
+    # else:
+    raise APIException('Missing profile_image on the FormData')
+
+# @api.route('/user/image', methods=['POST'])
+# # @jwt_required
+# def handle_upload():
+#     # user_id = get_jwt_identity()
+#     # validate that the front-end request was built correctly
+#     # if 'profile_picture' in request.files:
+#     #     # upload file to uploadcare
+#     #     print(request.files)
+#     #     result = cloudinary.uploader.upload(request.files['profile_picture'])
+
+#     #     # fetch for the user
+#     #     user = User.query.get(user_id)
+#     #     # update the user with the given cloudinary image URL
+#     #     print(user)
+#     #     print(result)
+#     #     user.profile_picture = result['secure_url']
+
+#     #     db.session.add(user)
+#     #     db.session.commit()
+
+#     #     return jsonify(user.serialize()), 200
+#     # else:
+#     raise APIException('Missing profile_image on the FormData')
 
 
 @api.route("/book", methods=['GET'])

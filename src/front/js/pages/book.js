@@ -10,9 +10,14 @@ export const Book = () => {
 
 
 
+
 	useEffect(() => {
 		actions.getOneBook(params.theid)
 
+
+		const url = "https:\/\/storage.googleapis.com\/du-prd\/books\/images\/9780593441275.jpg";
+		const cleanedUrl = url.replace(/\\/g, "");
+		console.log(cleanedUrl);
 	}, [])
 
 	return (
