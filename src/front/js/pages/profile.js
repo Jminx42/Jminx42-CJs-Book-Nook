@@ -8,7 +8,7 @@ export const Profile = () => {
 	const { store, actions } = useContext(Context);
 	const [user, setUser] = useState("");
 	const [editClicked, setEditClicked] = useState(false);
-	const [selectedFile, setSelectedFile] = useState(null);
+	const [files, setFiles] = useState(null);
 
 	const getOneUser = async () => {
 		const resp = await fetch(process.env.BACKEND_URL + 'api/user/', {
@@ -22,41 +22,26 @@ export const Profile = () => {
 		}
 	};
 
-	const handleFileChange = (event) => {
-		const file = event.target.files[0];
-		setSelectedFile(file);
-	};
 
-	const handleUpload = async () => {
-		if (selectedFile) {
-			const formData = new FormData();
-			formData.append("profile_picture", selectedFile);
+	const uploadImage = evt => {
+		evt.preventDefault();
+		// we are about to send this to the backend.
+		console.log("These are the files", files);
+		let body = new FormData();
+		body.append("profile_image", files[0]);
+		const options = {
+			body,
+			method: "POST",
+			headers: {
+				Authorization: "Bearer " + sessionStorage.getItem("token")
+			},
+		};
+		// you need to have the user_id in the localStorage
 
-			const options = {
-				method: "POST",
-				headers: {
-					Authorization: "Bearer " + sessionStorage.getItem("token")
-				},
-				body: formData
-			};
-			console.log(formData)
-			try {
-				const resp = await fetch(process.env.BACKEND_URL + 'api/user/image', options);
-				console.log(2)
-				console.log(resp)
-				const data = await resp.json();
-				console.log(3)
-				if (data) {
-					console.log("Success!!!!", data);
-					// Update the user object with the new profile picture URL
-					setUser({ ...user, profile_picture: data.user.profile_picture });
-				} else {
-					console.error("ERRORRRRRR!!!", error);
-				}
-			} catch (e) {
-				console.log(e)
-			}
-		}
+		fetch(`${process.env.BACKEND_URL}api/user/image`, options)
+			.then(resp => resp.json())
+			.then(data => console.log("Success!!!!", data))
+			.catch(error => console.error("ERRORRRRRR!!!", error));
 	};
 
 	useEffect(() => {
@@ -96,12 +81,14 @@ export const Profile = () => {
 					) : (
 						<div>
 							<h3>Image Upload</h3>
-							<input
-								type="file"
-								accept="image/jpeg, image/png, image/jpg"
-								onChange={handleFileChange}
-							/>
-							<button onClick={handleUpload}>Upload</button>
+							<form onSubmit={uploadImage}>
+								<input
+									type="file"
+									accept="image/jpeg, image/png, image/jpg"
+									onChange={e => setFiles(e.target.files)}
+								/>
+								<button>Upload</button>
+							</form>
 						</div>
 					)}
 

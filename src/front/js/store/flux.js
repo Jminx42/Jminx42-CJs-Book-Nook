@@ -4,8 +4,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 			user: null,
 			books: [],
 			book: {},
+			externalBooks: [],
+			search: ""
 		},
 		actions: {
+			handleSearch: (word) => {
+				setStore({ search: word })
+			},
 			validate_user: async () => {
 				const resp = await fetch(process.env.BACKEND_URL + 'api/user/validate', {
 					headers: {
@@ -64,6 +69,36 @@ const getState = ({ getStore, getActions, setStore }) => {
 					alert(data.error)
 				} else {
 					setStore({ books: data.books })
+				}
+			},
+
+			getGoogleBooks: async (search_text) => {
+				const resp = await fetch('https://www.googleapis.com/books/v1/volumes?q=' + search_text + '&key=AIzaSyAhG7q0MvYbiWzXeuSBlhqNATkUVSKhFq0')
+				const data = await resp.json()
+				if (resp.status !== 200) {
+					alert(data.error)
+				} else {
+					setStore({ externalBooks: data })
+				}
+			},
+
+			getNYTBooks: async () => {
+				const resp = await fetch('https://api.nytimes.com/svc/books/v3/lists/full-overview.json?api-key=emRJGQrXQ32EXbl6ThvjL8JdJcoicGWf')
+				console.log("response", resp)
+				const data = await resp.json()
+				console.log("data", data)
+				if (resp.status !== 200) {
+					alert(data.error)
+				} else {
+					let externalBooks = []
+					for (let x in data.results.lists) {
+						console.log(data.results.lists[x])
+						// if (data.results.lists[x].books)
+						externalBooks = externalBooks.concat(data.results.lists[x].books)
+					}
+					console.log(externalBooks)
+					setStore({ externalBooks: externalBooks })
+
 				}
 			},
 
