@@ -5,7 +5,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 			books: [],
 			book: {},
 			externalBooks: [],
-			search: ""
+			search: "",
+			oneGoogleBook: {},
+			nytReview: {}
 		},
 		actions: {
 			handleSearch: (word) => {
@@ -82,6 +84,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
+			getOneGoogleBook: async (isbn) => {
+				const resp = await fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:' + isbn + '&key=AIzaSyAhG7q0MvYbiWzXeuSBlhqNATkUVSKhFq0')
+				const data = await resp.json()
+				if (resp.status !== 200) {
+					alert(data.error)
+				} else {
+					setStore({ oneGoogleBook: data })
+				}
+			},
+
 			getNYTBooks: async () => {
 				const resp = await fetch('https://api.nytimes.com/svc/books/v3/lists/full-overview.json?api-key=emRJGQrXQ32EXbl6ThvjL8JdJcoicGWf')
 				console.log("response", resp)
@@ -92,13 +104,27 @@ const getState = ({ getStore, getActions, setStore }) => {
 				} else {
 					let externalBooks = []
 					for (let x in data.results.lists) {
-						console.log(data.results.lists[x])
-						// if (data.results.lists[x].books)
+						//console.log(data.results.lists[x])
 						externalBooks = externalBooks.concat(data.results.lists[x].books)
 					}
-					console.log(externalBooks)
-					setStore({ externalBooks: externalBooks })
+					const uniqueBooks = externalBooks.filter(
+						(book, index, self) => index === self.findIndex((b) => b.primary_isbn13 === book.primary_isbn13)
+					);
+					// filtering the duplicates with "uniqueBooks"
+					//console.log(uniqueBooks);
+					setStore({ externalBooks: uniqueBooks });
 
+				}
+			},
+			getNYTReview: async (isbn13) => {
+				const resp = await fetch('https://api.nytimes.com/svc/books/v3/reviews.json?isbn=' + isbn13 + '&api-key=emRJGQrXQ32EXbl6ThvjL8JdJcoicGWf')
+				console.log("response", resp)
+				const data = await resp.json()
+				console.log("data", data)
+				if (resp.status !== 200) {
+					alert(data.error)
+				} else {
+					setStore({ nytReview: data.results });
 				}
 			},
 
