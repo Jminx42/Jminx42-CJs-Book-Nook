@@ -21,10 +21,12 @@ export const Login = () => {
 
     return (
 
+
         <div className='container my-auto login-custom'>
             <div className='row'>
                 <div className='col-6'>
                     <img src={CJBookNookLogo} height={"500px"} />
+
                 </div>
 
 

@@ -54,6 +54,7 @@ class User(db.Model):
             "id": self.id,
             "email": self.email,
             "full_name": self.full_name,
+            "profile_picture": self.profile_picture,
         }
 
 class Book(db.Model):
