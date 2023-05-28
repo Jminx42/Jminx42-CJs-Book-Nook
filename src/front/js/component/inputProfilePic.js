@@ -1,0 +1,64 @@
+import React, { useState, useEffect } from "react";
+
+
+export const InputProfilePic = () => {
+
+    const [files, setFiles] = useState(null);
+    const [user, setUser] = useState("");
+
+    useEffect(() => {
+        getOneUser();
+    }, []);
+
+    const getOneUser = async () => {
+        const resp = await fetch(process.env.BACKEND_URL + 'api/user/', {
+            headers: {
+                Authorization: "Bearer " + sessionStorage.getItem("token")
+            }
+        });
+        const data = await resp.json();
+        if (resp.status === 200) {
+            setUser(data.user);
+        }
+    };
+
+    const uploadImage = evt => {
+        evt.preventDefault();
+        // we are about to send this to the backend.
+        console.log("These are the files", files);
+
+        let body = new FormData();
+        body.append("profile_image", files[0]);
+        const options = {
+            body,
+            method: "POST",
+            headers: {
+                Authorization: "Bearer " + sessionStorage.getItem("token")
+            },
+        };
+        // you need to have the user_id in the localStorage
+
+        fetch(`${process.env.BACKEND_URL}api/user/image`, options)
+            .then(resp => resp.json())
+            .then(data => console.log("Success!!!!", data))
+            .catch(error => console.error("ERRORRRRRR!!!", error));
+    };
+
+
+    return (
+        <div>
+            <form onSubmit={uploadImage}>
+                <input
+                    type="file"
+                    id="profile-pic-upload"
+                    onChange={e => setFiles(e.target.files)} />
+                {files == null ?
+                    <img src={user.profile_picture} className="card-img-top" alt="saved profile picture" /> :
+                    <img src={URL.createObjectURL(files[0])} className="card-img-top" alt="new profile picture" />}
+
+                <button>Upload</button>
+            </form>
+        </div>
+    )
+}
+

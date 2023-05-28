@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
 import { Navbar } from "../component/navbar";
 
 import { Context } from "../store/appContext";
+import { InputProfilePic } from "../component/inputProfilePic";
 
 export const Profile = () => {
 	const { store, actions } = useContext(Context);
 	const [user, setUser] = useState("");
 	const [editClicked, setEditClicked] = useState(false);
-	const [files, setFiles] = useState(null);
+
 
 	const getOneUser = async () => {
 		const resp = await fetch(process.env.BACKEND_URL + 'api/user/', {
@@ -22,36 +22,14 @@ export const Profile = () => {
 		}
 	};
 
-
-	const uploadImage = evt => {
-		evt.preventDefault();
-		// we are about to send this to the backend.
-		console.log("These are the files", files);
-		let body = new FormData();
-		body.append("profile_image", files[0]);
-		const options = {
-			body,
-			method: "POST",
-			headers: {
-				Authorization: "Bearer " + sessionStorage.getItem("token")
-			},
-		};
-		// you need to have the user_id in the localStorage
-
-		fetch(`${process.env.BACKEND_URL}api/user/image`, options)
-			.then(resp => resp.json())
-			.then(data => console.log("Success!!!!", data))
-			.catch(error => console.error("ERRORRRRRR!!!", error));
-	};
-
 	useEffect(() => {
 		getOneUser();
 	}, []);
 
-	const handleSave = async () => {
+	const handleSave = async (user) => {
 		setEditClicked(false);
 
-		const response = await fetch(process.env.BACKEND_URL + 'api/user/' + store.user.id, {
+		const response = await fetch(process.env.BACKEND_URL + 'api/user/update', {
 			method: "PUT",
 			headers: {
 				Authorization: "Bearer " + sessionStorage.getItem("token"),
@@ -62,6 +40,8 @@ export const Profile = () => {
 		if (response.ok) {
 			await actions.getOneUser();
 			alert("Profile successfully updated");
+		} else {
+			alert("uh-oh, something went wrong!")
 		}
 	};
 
@@ -80,22 +60,17 @@ export const Profile = () => {
 						/>
 					) : (
 						<div>
-							<h3>Image Upload</h3>
-							<form onSubmit={uploadImage}>
-								<input
-									type="file"
-									accept="image/jpeg, image/png, image/jpg"
-									onChange={e => setFiles(e.target.files)}
-								/>
-								<button>Upload</button>
-							</form>
+							<InputProfilePic />
 						</div>
 					)}
 
-					<div className="card-body" style={{ height: "250px", position: "relative" }}>
+					<div className="card-body" style={{ height: "300px", position: "relative" }}>
+						<label className="card-text text-start">Email: </label>
+						<p> {user.email}</p>
+
 						<label className="card-text text-start">Name: </label>
 						{!editClicked ? (
-							<span> {user.full_name}</span>
+							<p> {user.full_name}</p>
 						) : (
 							<input
 								className="form-control"
@@ -105,9 +80,11 @@ export const Profile = () => {
 								onChange={(e) => setUser({ ...user, full_name: e.target.value })}
 							/>
 						)}
-						<label className="card-text text-start">Email: </label>
+
+
+						<label className="card-text text-start">Password: </label>
 						{!editClicked ? (
-							<span> {user.email}</span>
+							<p>###############</p>
 						) : (
 							<input
 								className="form-control"

@@ -12,7 +12,7 @@ import cloudinary.uploader
 
 api = Blueprint('api', __name__)    
 
-@api.route("/user", methods=["POST"])
+@api.route("/create/user", methods=["POST"])
 def create_user():
     body = request.json
     email = request.json.get("email", None)
@@ -76,8 +76,8 @@ def get_one_user_by_id():
 
     return jsonify({"user": user.serialize()}), 200 
 
-@api.route("/user", methods=["PUT"])
-# @jwt_required()
+@api.route("/user/update", methods=["PUT"])
+@jwt_required()
 def update_user():
     user_id = get_jwt_identity() # Is this the same of using "user_id" as a parameter for the function?
     body = request.json
@@ -85,7 +85,6 @@ def update_user():
     if not user:
         return jsonify({"error": "No user found with this id"}), 400
 
-    user.email = body["email"]
     user.password = body["password"]
     user.full_name = body["full_name"]
 
