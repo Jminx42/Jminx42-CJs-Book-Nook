@@ -21,10 +21,12 @@ export const Login = () => {
 
     return (
 
+
         <div className='container my-auto login-custom'>
             <div className='row'>
                 <div className='col-md-6'>
                     <img src={CJBookNookLogo} height={"500px"} />
+
                 </div>
                 <div className='col-md-6 d-flex flex-column align-items-center justify-content-center border'>
                     <h1 className='align-self-center my-3'>Login</h1>
