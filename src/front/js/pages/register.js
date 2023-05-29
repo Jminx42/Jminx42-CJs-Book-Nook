@@ -1,23 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Context } from "../store/appContext";
-import "../../styles/navbar.css"
+
 import CJBookNookLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/CJBookNookLogoSmall.png";
 
 export const Register = () => {
-    const { store, actions } = useContext(Context);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [full_name, setFull_name] = useState("");
     const [isChecked, setIsChecked] = useState(false);
 
     const navigate = useNavigate();
-
-
-
-    useEffect(() => {
-
-    }, [])
 
     const registerUser = async () => {
         const opts = {
@@ -67,48 +59,56 @@ export const Register = () => {
     }
     return (
 
-        <div>
-            <div className="container md-w-50 bg-light">
-                <div className="d-flex flex-column my-5 align-items-center">
-                    {/* add validation form from bootstrap?? */}
-                    <form>
-                        <div className="col-md-6 my-2">
+        <div className="Auth-form container p-5">
+            <div className="card p-5">
+                <form className="Auth-form">
+                    <div className="Auth-form-content">
+                        <h3 className="Auth-form-title text-center">Sign Up</h3>
+                        <div className="text-center">
+                            Already registered?{" "}
+                            <Link to="/login">
+                                <span className="link-primary">
+                                    Login
+                                </span>
+                            </Link>
+                        </div>
+                        <div className="form-group mt-3">
+                            <label>Full Name</label>
+                            <input
+                                type="text"
+                                className="form-control mt-1"
+                                placeholder="e.g Jane Doe"
+                                aria-label="Full name"
+                                value={full_name}
+                                onChange={(e) => { setFull_name(e.target.value) }}
+                                required
+                            />
+                        </div>
+                        <div className="form-group mt-3">
+                            <label>Email address</label>
                             <input
                                 type="email"
-                                className="form-control"
-                                id="inputEmail"
-                                placeholder="Email"
+                                className="form-control mt-1"
+                                placeholder="Email Address"
                                 aria-label="Email"
                                 value={email}
                                 onChange={(e) => { setEmail(e.target.value) }}
-                                required />
+                                required
+                            />
                         </div>
-
-                        <div className="col-md-6 my-2">
+                        <div className="form-group mt-3">
+                            <label>Password</label>
                             <input
                                 type="password"
-                                className="form-control"
-                                id="inputPassword"
+                                className="form-control mt-1"
                                 placeholder="Password"
                                 aria-label="Password"
                                 value={password}
                                 onChange={(e) => { setPassword(e.target.value) }}
-                                required />
+                                required
+                            />
                         </div>
-
-                        <div className="col-md-6 my-2">
-                            <input
-                                type="text"
-                                className="form-control"
-                                id="inputFullname"
-                                placeholder="Full name"
-                                aria-label="Full name"
-                                value={full_name}
-                                onChange={(e) => { setFull_name(e.target.value) }}
-                                required />
-                        </div>
-
-                        <div className="form-check col-md-6">
+                        <div className="form-check col-md-6 mt-3">
                             <input
                                 className="form-check-input"
                                 type="checkbox"
@@ -132,11 +132,14 @@ export const Register = () => {
                                 from CJ's Book Nook.
                             </label>
                         </div>
-                        <div className="col-md-6 ms-auto">
-                            <button type="submit" className="btn btn-primary" onClick={handleRegisterSubmit}>Register!</button>
+                        <div className="d-grid gap-2 mt-3">
+                            <button type="submit" className="btn btn-primary" onClick={handleRegisterSubmit}>
+                                Submit
+                            </button>
                         </div>
-                    </form>
-                </div>
+
+                    </div>
+                </form>
             </div>
             {/* modal for terms and conditions */}
             <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
