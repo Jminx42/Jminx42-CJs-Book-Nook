@@ -19,20 +19,20 @@ export const Home = () => {
 		<div>
 
 			<Navbar />
-			<div className="text-center mt-5">
+			<div className="container text-center mt-5">
 
-				<div>
+				<div className="row">
 					{store.books && store.books.length !== 0 ? store.books.map((book) => {
 						return <Card key={book.id} item={book} />
 					}) : null}
 				</div>
 
-
-				{store.externalBooks && store.externalBooks.length !== 0 ? store.externalBooks.filter((book) => book.title.toLowerCase().includes(store.search)).map((book) => {
-					return <ExternalCard key={book.amazon_product_url
-					} item={book} />
-				}) : null}
-
+				<div className="row">
+					{store.externalBooks && store.externalBooks.length !== 0 ? store.externalBooks.filter((book) => book.title.toLowerCase().includes(store.search)).map((book) => {
+						return <ExternalCard key={store.externalBooks.index(book) + book.title
+						} item={book} />
+					}) : null}
+				</div>
 			</div>
 		</div>
 	);
