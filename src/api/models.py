@@ -86,6 +86,10 @@ class Book(db.Model):
             "isbn": self.isbn,
             "book_cover": self.book_cover,
             "description": self.description,
+            "book_category": self.book_category.value,
+            "genre": self.genre.value,
+            "year": self.year,
+            "price": self.price,
         }
 
 class Review(db.Model):

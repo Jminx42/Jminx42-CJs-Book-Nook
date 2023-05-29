@@ -8,30 +8,29 @@ import { ExternalCard } from "../component/externalCard";
 
 export const Home = () => {
 	const { store, actions } = useContext(Context);
-	console.log(store.books) // the books array is not being populated by the fetch perfomed by getBooks()
+	console.log(store.books)
 
 	useEffect(() => {
 		actions.getNYTBooks();
-		console.log(store.externalBooks)
+
 	}, []);
 
 	return (
 		<div>
 
 			<Navbar />
-			<div className="container text-center mt-5">
 
-				<div className="row">
+			<div className="container text-center mt-5">
+				<div className="row d-flex g-2">
+
 					{store.books && store.books.length !== 0 ? store.books.map((book) => {
 						return <Card key={book.id} item={book} />
 					}) : null}
-				</div>
 
-				<div className="row">
+				</div>
+				<div className="row d-flex g-2">
 					{store.externalBooks && store.externalBooks.length !== 0 ? store.externalBooks.filter((book) => book.title.toLowerCase().includes(store.search)).map((book) => {
-						return <ExternalCard key={store.externalBooks.index(book) + book.title
-						} item={book} />
-					}) : null}
+						return <ExternalCard key={book.primary_isbn13} item={book} />}) : null}
 				</div>
 			</div>
 		</div>
