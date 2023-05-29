@@ -1,32 +1,22 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Navbar } from "../component/navbar";
+import { Link } from "react-router-dom";
 
 import { Context } from "../store/appContext";
 import { InputProfilePic } from "../component/inputProfilePic";
 
 export const Profile = () => {
 	const { store, actions } = useContext(Context);
-	const [user, setUser] = useState("");
+	const [user, setUser] = useState(store.user);
 	const [editClicked, setEditClicked] = useState(false);
 
 
-	const getOneUser = async () => {
-		const resp = await fetch(process.env.BACKEND_URL + 'api/user/', {
-			headers: {
-				Authorization: "Bearer " + sessionStorage.getItem("token")
-			}
-		});
-		const data = await resp.json();
-		if (resp.status === 200) {
-			setUser(data.user);
-		}
-	};
-
 	useEffect(() => {
-		getOneUser();
-	}, []);
+		setUser(store.user)
 
-	const handleSave = async (user) => {
+	}, [store.user]);
+
+	const handleSave = async () => {
 		setEditClicked(false);
 
 		const response = await fetch(process.env.BACKEND_URL + 'api/user/update', {
@@ -35,13 +25,14 @@ export const Profile = () => {
 				Authorization: "Bearer " + sessionStorage.getItem("token"),
 				"Content-Type": "application/json"
 			},
-			body: JSON.stringify({ user })
+			body: JSON.stringify(user)
 		});
 		if (response.ok) {
-			await actions.getOneUser();
+			await actions.validate_user()
 			alert("Profile successfully updated");
 		} else {
-			alert("uh-oh, something went wrong!")
+			const data = await response.json()
+			alert(data.error)
 		}
 	};
 
@@ -88,10 +79,10 @@ export const Profile = () => {
 						) : (
 							<input
 								className="form-control"
-								id="email"
-								aria-describedby="email"
-								value={user.email}
-								onChange={(e) => setUser({ ...user, email: e.target.value })}
+								id="password"
+								aria-describedby="password"
+								value={user.password}
+								onChange={(e) => setUser({ ...user, password: e.target.value })}
 							/>
 						)}
 						{!editClicked ? (
@@ -102,7 +93,13 @@ export const Profile = () => {
 							<button className="btn btn-primary mt-3" onClick={handleSave}>
 								Save
 							</button>
+
 						)}
+						<Link to="/profile" >
+							<button className="btn btn-primary mt-3">
+								Close
+							</button>
+						</Link>
 					</div>
 				</div>
 			</div>

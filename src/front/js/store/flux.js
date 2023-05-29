@@ -1,7 +1,7 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			user: null,
+			user: {},
 			books: [],
 			book: {},
 			externalBooks: [],
@@ -90,7 +90,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				if (resp.status !== 200) {
 					alert(data.error)
 				} else {
-					setStore({ oneGoogleBook: data })
+					setStore({ oneGoogleBook: data.items[0].volumeInfo })
 				}
 			},
 
@@ -124,7 +124,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				if (resp.status !== 200) {
 					alert(data.error)
 				} else {
-					setStore({ nytReview: data.results });
+					setStore({ nytReview: data.results[0] });
 				}
 			},
 

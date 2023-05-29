@@ -8,85 +8,84 @@ import rigoImageUrl from "../../img/rigo-baby.jpg";
 export const Book = () => {
 	const params = useParams();
 	const { store, actions } = useContext(Context);
+	// const url = store.nytReview.url;
+	// const cleanedUrl = url.replace(/\\/g, "");
+	// console.log(cleanedUrl);
 
 	useEffect(() => {
-		// actions.getOneBook(params.theid)
 		actions.getOneGoogleBook(params.theisbn)
-		console.log(params.theisbn)
 		actions.getNYTReview(params.theisbn)
 
-		const url = store.nytReview.url;
-		const cleanedUrl = url.replace(/\\/g, "");
-		console.log(cleanedUrl);
 	}, [])
 
 	return (
 
-    	
+
 
 
 		<div>
 			<Navbar />
-    <div className="container">
-			{/* <div>
-				<h1> {store.book.title}</h1>
-				<p>Author: {store.book.author}</p>
-				<p>ISBN: {store.book.isbn}</p>
-				<img src={store.book.book_cover} />
-				<p>Book Category: {store.book.book_category}</p>
-				<p>Genre: {store.book.genre}</p>
-				<p>Publication date: {store.book.year}</p>
-				<p>Price: {store.book.price}</p>
-			</div> */}
-			<div>
-				<h1> {store.oneGoogleBook.title}</h1>
-				<p>Author: {store.oneGoogleBook.author}</p>
-				<p>ISBN: {store.oneGoogleBook.primary_isbn13}</p>
-				<p>book cover {store.oneGoogleBook.book_cover}</p>
-				{/* <p>Book Category {store.oneGoogleBook.category}</p>
-				<p>Genre {store.book.genre}</p>
-				<p>Publication date {store.book.year}</p>
-				<p>Price {store.book.price}</p> */}
-				<p>Review link {cleanedUrl}</p>
-			</div>
+			<div className="container">
+				<div>
+					<h1> {store.oneGoogleBook.title}</h1>
+					<p>Author: {store.oneGoogleBook.authors && store.oneGoogleBook.authors.join(", ")}</p>
+					<p>Publisher: {store.oneGoogleBook.publisher}</p>
+					<p>Published Date: {store.oneGoogleBook.publishedDate}</p>
+					<p>ISBN: {params.theisbn}</p>
+					<p>Pages: {store.oneGoogleBook.pageCount == 0 ? "Not available" : store.oneGoogleBook.pageCount}</p>
+					<p>Genre: {store.oneGoogleBook.categories && store.oneGoogleBook.categories.join("& ")}</p>
+					<p>Description: {store.oneGoogleBook.description}</p>
 
-		</div> 
-			<div className="card container mt-3">
-				<div class="p-5 text-center bg-body-tertiary rounded-3">
+					<img src={store.oneGoogleBook.imageLinks && store.oneGoogleBook.imageLinks.thumbnail} className="img-thumbnail w-25 float-start" alt="..." />
+					<p>Preview: {store.oneGoogleBook.previewLink}</p>
+
+					{store.nytReview ?
+						<div>
+							<h4>Reviews</h4>
+							<p>{store.nytReview.byline}</p>
+							<p>Reviewed in: {store.nytReview.publication_dt}</p>
+							<p>Excerpt: {store.nytReview.summary}</p>
+							<p>Review Link: <a href={store.nytReview.url} target="_blank" rel="noopener noreferrer">Click here</a></p>
+						</div> : null}
+				</div>
+
+			</div>
+			{/* <div className="card container mt-3">
+				<div className="p-5 text-center bg-body-tertiary rounded-3">
 					<img src={store.book.book_cover} className="img-thumbnail w-25 float-start" alt="..." />
 					<div>
-						<h1 class=" display-3">{store.book.title}</h1>
+						<h1 className=" display-3">{store.book.title}</h1>
 						<p className="display-6">{store.book.author}</p>
 						<div className="row text-start">
-							<p class="lead">
-								<div className="row">
-									<div className="col-4">Book Category:</div>
-									<div className="col-5">{store.book.category}</div>
-								</div>
-								<div className="row">
-									<div className="col-4">Genre:</div>
-									<div className="col-5">{store.book.genre}</div>
-								</div>
-								<div className="row">
-									<div className="col-4">Publication Date:</div>
-									<div className="col-5">{store.book.year}</div>
-								</div>
-								<div className="row">
-									<div className="col-4">Price:</div>
-									<div className="col-5">{store.book.price}</div>
-								</div>
-								<div className="row">
-									<div className="col-4">ISBN:</div>
-									<div className="col-5">{store.book.isbn}</div>
-								</div>
-							</p>
+							{/* <p className="lead"> 
+							<div className="row">
+								<div className="col-4">Book Category:</div>
+								<div className="col-5">{store.book.book_category}</div>
+							</div>
+							<div className="row">
+								<div className="col-4">Genre:</div>
+								<div className="col-5">{store.book.genre}</div>
+							</div>
+							<div className="row">
+								<div className="col-4">Publication Date:</div>
+								<div className="col-5">{store.book.year}</div>
+							</div>
+							<div className="row">
+								<div className="col-4">Price:</div>
+								<div className="col-5">{store.book.price}</div>
+							</div>
+							<div className="row">
+								<div className="col-4">ISBN:</div>
+								<div className="col-5">{store.book.isbn}</div>
+							</div>
+							 </p> 
 						</div>
 
 					</div>
 
 				</div >
 
-			</div >
+			</div > */}
 		</div >
 
 	);

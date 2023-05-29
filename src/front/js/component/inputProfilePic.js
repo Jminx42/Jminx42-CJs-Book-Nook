@@ -1,26 +1,9 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useState, useEffect, useContext } from "react";
+import { Context } from "../store/appContext";
 
 export const InputProfilePic = () => {
-
+    const { store, actions } = useContext(Context);
     const [files, setFiles] = useState(null);
-    const [user, setUser] = useState("");
-
-    useEffect(() => {
-        getOneUser();
-    }, []);
-
-    const getOneUser = async () => {
-        const resp = await fetch(process.env.BACKEND_URL + 'api/user/', {
-            headers: {
-                Authorization: "Bearer " + sessionStorage.getItem("token")
-            }
-        });
-        const data = await resp.json();
-        if (resp.status === 200) {
-            setUser(data.user);
-        }
-    };
 
     const uploadImage = evt => {
         evt.preventDefault();
@@ -40,7 +23,7 @@ export const InputProfilePic = () => {
 
         fetch(`${process.env.BACKEND_URL}api/user/image`, options)
             .then(resp => resp.json())
-            .then(data => console.log("Success!!!!", data))
+            .then(data => { actions.validate_user(); console.log("Success!!!!", data) })
             .catch(error => console.error("ERRORRRRRR!!!", error));
     };
 
@@ -53,7 +36,7 @@ export const InputProfilePic = () => {
                     id="profile-pic-upload"
                     onChange={e => setFiles(e.target.files)} />
                 {files == null ?
-                    <img src={user.profile_picture} className="card-img-top" alt="saved profile picture" /> :
+                    <img src={store.user.profile_picture} className="card-img-top" alt="saved profile picture" /> :
                     <img src={URL.createObjectURL(files[0])} className="card-img-top" alt="new profile picture" />}
 
                 <button>Upload</button>

@@ -53,7 +53,7 @@ export const ExternalCard = ({ item }) => {
                     }}>
                         {/* <FontAwesomeIcon icon={heartIcon} /> */}
                     </button>
-                    <Link to={`/book/${item.amazon_product_url
+                    <Link to={`/book/${item.primary_isbn13
                         }`}>
                         <button className="btn btn-primary">Read More</button>
                     </Link>

@@ -84,8 +84,13 @@ def update_user():
     user = User.query.get(user_id)
     if not user:
         return jsonify({"error": "No user found with this id"}), 400
-
-    user.password = body["password"]
+    print(1111111111111111111111111111111)
+    print(body)
+    if "password" in body:
+        password = body["password"]
+        if password.strip() == "" and len(password) > 5:
+            return jsonify({"error": "Your password should be at least 5 characters and not contain only whitespaces"}), 400
+      
     user.full_name = body["full_name"]
 
     db.session.commit()
