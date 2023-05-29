@@ -9,7 +9,7 @@ import { Book } from "./pages/book";
 import { Register } from "./pages/register";
 import { Login } from "./pages/login.js";
 
-import { Auth } from "./pages/auth.js";
+
 
 import injectContext from "./store/appContext";
 
@@ -33,14 +33,13 @@ const Layout = () => {
                     <Routes>
                         <Route element={<Home />} path="/" />
                         <Route element={<Profile />} path="/profile" />
-                        <Route path="/auth" element={<Auth />} />
+
                         <Route element={<Register />} path="/register" />
                         <Route element={<Login />} path="/login" />
-                    
                         <Route element={<Book />} path="/book/:theid" />
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
-                    <Footer />
+
                 </ScrollToTop>
             </BrowserRouter>
         </div>
