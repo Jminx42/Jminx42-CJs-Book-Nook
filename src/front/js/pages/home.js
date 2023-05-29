@@ -20,11 +20,13 @@ export const Home = () => {
 
 			<Navbar />
 			<div className="text-center mt-5">
+
 				<div>
 					{store.books && store.books.length !== 0 ? store.books.map((book) => {
 						return <Card key={book.id} item={book} />
 					}) : null}
 				</div>
+
 
 				{store.externalBooks && store.externalBooks.length !== 0 ? store.externalBooks.filter((book) => book.title.toLowerCase().includes(store.search)).map((book) => {
 					return <ExternalCard key={book.amazon_product_url
