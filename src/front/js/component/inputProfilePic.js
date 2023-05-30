@@ -38,8 +38,12 @@ export const InputProfilePic = () => {
                 {files == null ?
                     <img src={store.user.profile_picture} className="card-img-top" alt="saved profile picture" /> :
                     <img src={URL.createObjectURL(files[0])} className="card-img-top" alt="new profile picture" />}
+                <div className="mt-2 d-flex justify-content-end">
+                    <div className="me-2">
+                        <button className="btn btn-primary">Upload image</button>
+                    </div>
+                </div>
 
-                <button>Upload</button>
             </form>
         </div>
     )

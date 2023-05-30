@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Navbar } from "../component/navbar";
 import { Link } from "react-router-dom";
+import "../../styles/profile.css"
 
 import { Context } from "../store/appContext";
 import { InputProfilePic } from "../component/inputProfilePic";
@@ -40,14 +41,14 @@ export const Profile = () => {
 		<div>
 			<Navbar />
 			<div className="container">
-				<h1>My Profile</h1>
-				<div className="card mx-2" style={{ width: "18rem" }}>
+				<h1 className="display-3">My Profile</h1>
+				<div className="card" style={{ width: "18rem" }}>
 					{!editClicked ? (
 						<img
 							src={user.profile_picture}
 							className="card-img-top"
 							id="profile-picture"
-							alt="profile picture"
+							alt="Profile Picture"
 						/>
 					) : (
 						<div>
@@ -55,7 +56,7 @@ export const Profile = () => {
 						</div>
 					)}
 
-					<div className="card-body" style={{ height: "300px", position: "relative" }}>
+					<div className="card-body">
 						<label className="card-text text-start">Email: </label>
 						<p> {user.email}</p>
 
@@ -85,21 +86,27 @@ export const Profile = () => {
 								onChange={(e) => setUser({ ...user, password: e.target.value })}
 							/>
 						)}
+
+
+					</div>
+					<div className="card-footer">
 						{!editClicked ? (
-							<button className="btn btn-primary mt-3" onClick={() => setEditClicked(true)}>
+
+							<button className="btn btn-secondary profile-custom-button" onClick={() => setEditClicked(true)}>
 								Edit
 							</button>
+
 						) : (
-							<button className="btn btn-primary mt-3" onClick={handleSave}>
-								Save
-							</button>
+							<div className="d-flex">
+								<button className="btn btn-secondary me-2 profile-custom-button" onClick={handleSave}>
+									Save
+								</button>
+								<button className="btn btn-secondary" onClick={() => setEditClicked(false)}>
+									Close
+								</button>
+							</div>
 
 						)}
-						<Link to="/profile" >
-							<button className="btn btn-primary mt-3">
-								Close
-							</button>
-						</Link>
 					</div>
 				</div>
 			</div>

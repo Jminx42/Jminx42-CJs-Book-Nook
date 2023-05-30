@@ -40,26 +40,36 @@ export const ExternalCard = ({ item }) => {
     return (
 
         <div className="card mx-2 mb-2 p-0" style={{ width: "18rem" }}>
-            <img src={item.book_image} className="card-img-top h-75" alt="..." />
-            <div className="card-body" >
-
-                <h5 className="card-text text-start">Title: {item.title}</h5>
-                <p className="card-text text-start">Author: {item.author}</p>
-                <p className="card-text text-start">Price: {item.price}</p>
-
-                <div className="d-flex justify-content-evenly" >
-                    <button className="btn btn-white" onClick={() => {
-                        // actions.setFavorites(item.name)
-                        // toggleHeart()
-                    }}>
-                        {/* <FontAwesomeIcon icon={heartIcon} /> */}
-                    </button>
-                    <Link to={`/book/${item.primary_isbn13
-                        }`}>
-                        <button className="btn btn-secondary card-custom-button">Read More</button>
-                    </Link>
+            <div className="image-container" style={{ height: "320px", overflow: "hidden" }}>
+                <img src={item.book_image} className="card-img-top w-100 h-100" alt="Book Cover" />
+            </div>
+            <div className="card-body text-start">
+                <div className="row">
+                    <h5 className="card-title">{item.title}</h5>
                 </div>
 
+                <div className="row">
+                    <p className="card-text">{item.author}</p>
+                </div>
+
+                <div className="row">
+                    <p className="card-text">Price: {item.price}</p>
+                </div>
+
+
+                {/* <div className="d-flex justify-content-evenly"> */}
+                {/* Add your favorite/heart icon here */}
+                {/* <button className="btn btn-white" >*/}
+                {/* <FontAwesomeIcon icon={heartIcon} /> */}
+                {/*</button> */}
+
+                {/* </div> */}
+            </div>
+            <div className="card-footer">
+                <Link to={`/book/${item.primary_isbn13}`}>
+                    <button className="btn btn-secondary card-custom-button me-2">Read More</button>
+                </Link>
+                <button className="btn btn-secondary card-custom-button">Add to Wishlist</button>
             </div>
         </div>
     )
