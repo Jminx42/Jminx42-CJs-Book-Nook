@@ -18,20 +18,20 @@ export const Navbar = () => {
 					<img src={CJBookNookLogo} height={80} alt="CJBookNookLogo" />
 				</Link>
 				<div className="ml-auto d-flex align-items-center">
-					<div class="input-group me-2">
-						<div class="form-outline">
+					<div className="input-group me-2">
+						<div className="form-outline">
 							<input
 								type="search"
 								id="search"
-								class="form-control"
+								className="form-control"
 								aria-describedby="search-field"
 								value={search}
 								onChange={(e) => setSearch(e.target.value)}
 								placeholder="Search" />
 
 						</div>
-						<button type="button" class="btn btn-secondary navbar-custom-button" onClick={() => actions.handleSearch(search)}>
-							<i class="fas fa-search"></i>
+						<button type="button" className="btn btn-secondary navbar-custom-button" onClick={() => actions.handleSearch(search)}>
+							<i className="fas fa-search"></i>
 						</button>
 					</div>
 

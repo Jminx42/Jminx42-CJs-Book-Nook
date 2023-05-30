@@ -20,17 +20,19 @@ export const Home = () => {
 
 			<Navbar />
 
-			<div className="container text-center mt-5">
-				<div className="row d-flex g-2">
+
+			{/* <div className="row d-flex g-2">
 
 					{store.books && store.books.length !== 0 ? store.books.map((book) => {
 						return <Card key={book.id} item={book} />
 					}) : null}
 
-				</div>
-				<div className="row d-flex g-2">
+				</div> */}
+			<div className="container text-center mt-5">
+				<div className="row d-flex justify-content-center">
 					{store.externalBooks && store.externalBooks.length !== 0 ? store.externalBooks.filter((book) => book.title.toLowerCase().includes(store.search)).map((book) => {
-						return <ExternalCard key={book.primary_isbn13} item={book} />}) : null}
+						return <ExternalCard key={book.primary_isbn13} item={book} />
+					}) : <p>No external books found.</p>}
 				</div>
 			</div>
 		</div>

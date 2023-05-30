@@ -39,8 +39,8 @@ export const ExternalCard = ({ item }) => {
 
     return (
 
-        <div className="card mx-2" style={{ width: "18rem" }}>
-            <img src={item.book_image} className="card-img-top" alt="..." />
+        <div className="card mx-2 mb-2 p-0" style={{ width: "18rem" }}>
+            <img src={item.book_image} className="card-img-top h-75" alt="..." />
             <div className="card-body" >
 
                 <h5 className="card-text text-start">Title: {item.title}</h5>
