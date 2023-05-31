@@ -3,10 +3,12 @@ import PropTypes from "prop-types";
 import { Link, useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Navbar } from "../component/navbar";
-import rigoImageUrl from "../../img/rigo-baby.jpg";
+import { GoogleBooksViewer } from "../component/googleBooksViewer";
 
 export const Book = () => {
 	const params = useParams();
+	const [review, setReview] = useState({})
+	const [preview, setPreview] = useState(false)
 	const { store, actions } = useContext(Context);
 	// const url = store.nytReview.url;
 	// const cleanedUrl = url.replace(/\\/g, "");
@@ -18,11 +20,25 @@ export const Book = () => {
 
 	}, [])
 
+	const submitReview = async (id) => {
+		const response = await fetch(process.env.BACKEND_URL + 'api/review', {
+			method: "POST",
+			headers: {
+				Authorization: "Bearer " + sessionStorage.getItem("token"),
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify(review)
+		});
+		if (response.ok) {
+			await actions.validate_user()
+			alert("Review added successfully");
+		} else {
+			const data = await response.json()
+			alert(data.error)
+		}
+	};
+
 	return (
-
-
-
-
 		<div>
 			<Navbar />
 			{/* <div className="container">
@@ -86,23 +102,65 @@ export const Book = () => {
 								<div className="col-2">Description:</div>
 								<div className="col-10">{store.oneGoogleBook.description}</div>
 							</div>
+							<div className="row">
+								<p className="mt-3 fs-5 text-center">Preview:</p>
+								{/* <button className="btn profile-custom-button text-white mt-3" onClick={() => setPreview(true)}>
+									Click here
+								</button> */}
+							</div>
 
 						</div>
 
 					</div>
-
-					<p>Preview: {store.oneGoogleBook.previewLink}</p>
+					<GoogleBooksViewer isbn={params.theisbn} />
+					{/* I'm trying to hide the viewer with the button but it stops working when I do the ternary... I don't know why! */}
+					{/* {preview ? <div><GoogleBooksViewer isbn={params.theisbn} /> </div> : null} */}
 
 				</div >
+			</div >
+			<div className="container">
 				{store.nytReview ?
-					<div>
+					<div className="row mb-3 mt-3">
 						<h4>Reviews</h4>
 						<p>{store.nytReview.byline}</p>
 						<p>Reviewed in: {store.nytReview.publication_dt}</p>
 						<p>Excerpt: {store.nytReview.summary}</p>
 						<p>Review Link: <a href={store.nytReview.url} target="_blank" rel="noopener noreferrer">Click here</a></p>
-					</div> : null}
-			</div >
+					</div> : <div className="row mb-3 mt-3">
+						<h4>Reviews</h4>
+						<p>Be the first to review!</p>
+						<form>
+							<label>Name</label>
+							<input
+								className="form-control"
+								id="name"
+								aria-describedby="name"
+								value={review.name || ""}
+								onChange={(e) => setReview({ ...review, name: e.target.value })}
+							/>
+							<label>Rating</label>
+							<input
+								className="form-control"
+								id="rating"
+								aria-describedby="rating"
+								value={review.rating || ""}
+								onChange={(e) => setReview({ ...review, rating: e.target.value })}
+							/>
+							<label>Review</label>
+							<textarea
+								className="form-control"
+								id="review"
+								aria-describedby="review"
+								rows="5"
+								value={review.review || ""}
+								onChange={(e) => setReview({ ...review, review: e.target.value })}
+							/>
+							<button className="btn profile-custom-button text-white mt-3" onClick={() => submitReview(params.theisbn)}>
+								Submit
+							</button>
+						</form>
+					</div>}
+			</div>
 
 		</div >
 

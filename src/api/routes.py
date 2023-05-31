@@ -166,13 +166,15 @@ def update_review(review_id):
     return jsonify("review updated"), 200
 
 @api.route("/review", methods=["POST"])
+@jwt_required()
 def create_review():
+    user_id = get_jwt_identity()
     body = request.json
     new_review = Review(
         review=body["review"],
         rating=body["rating"],
         book_id=body["book_id"],
-        user_id=body["user_id"]
+        user_id=user_id
     )
     db.session.add(new_review)
     db.session.commit()
