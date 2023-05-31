@@ -18,9 +18,6 @@ export const GoogleBooksViewer = ({ isbn }) => {
       viewer.load("ISBN:" + isbn);
     }
 
-    return () => {
-      document.head.removeChild(script);
-    };
   }, []);
 
   return (
