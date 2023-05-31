@@ -90,6 +90,7 @@ export const Book = () => {
 						</div>
 
 					</div>
+
 					<p>Preview: {store.oneGoogleBook.previewLink}</p>
 
 				</div >
@@ -102,6 +103,7 @@ export const Book = () => {
 						<p>Review Link: <a href={store.nytReview.url} target="_blank" rel="noopener noreferrer">Click here</a></p>
 					</div> : null}
 			</div >
+
 		</div >
 
 	);

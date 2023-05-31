@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import "../../styles/register.css"
 
 import CJBookNookLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/CJBookNookLogoSmall.png";
 
@@ -133,7 +134,7 @@ export const Register = () => {
                             </label>
                         </div>
                         <div className="d-grid gap-2 mt-3">
-                            <button type="submit" className="btn btn-primary" onClick={handleRegisterSubmit}>
+                            <button type="submit" className="btn btn-secondary register-custom-button" onClick={handleRegisterSubmit}>
                                 Submit
                             </button>
                         </div>

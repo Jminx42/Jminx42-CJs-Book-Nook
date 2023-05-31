@@ -13,36 +13,49 @@ export const Navbar = () => {
 
 	return (
 		<nav className="navbar navbar-custom">
-			<div className="container ms-5">
-				<Link to="/">
-					<span className="navbar-brand mb-0 h1"><img src={CJBookNookLogo} height={"80px"} /></span>
+			<div className="container">
+				<Link to="/" className="navbar-brand">
+					<img src={CJBookNookLogo} height={80} alt="CJBookNookLogo" />
 				</Link>
-				<div className="ml-auto">
-					<input
-						className="form-control"
-						id="search"
-						aria-describedby="search field"
-						value={search}
-						onChange={(e) => setSearch(e.target.value)} />
-					<button onClick={(search) => actions.handleSearch(search)}>Search</button>
-					{!sessionStorage.getItem("token") ?
-						<div>
+				<div className="ml-auto d-flex align-items-center">
+					<div className="input-group me-2">
+						<div className="form-outline">
+							<input
+								type="search"
+								id="search"
+								className="form-control"
+								aria-describedby="search-field"
+								value={search}
+								onChange={(e) => setSearch(e.target.value)}
+								placeholder="Search" />
+
+						</div>
+						<button type="button" className="btn btn-secondary navbar-custom-button" onClick={() => actions.handleSearch(search)}>
+							<i className="fas fa-search"></i>
+						</button>
+					</div>
+
+					{!sessionStorage.getItem("token") ? (
+						<div className="d-flex">
 							<Link to="/register">
-								<button className="btn btn-primary me-2">Register</button>
+								<button className="btn btn-secondary me-2 navbar-custom-button">Register</button>
 							</Link>
 							<Link to="/login">
-								<button className="btn btn-primary">Login</button>
-							</Link>
-						</div> :
-						<div>
-							<button className="btn btn-primary me-2" onClick={() => actions.logout()}>Log out</button>
-							<Link to="/profile">
-								<button className="btn btn-primary me-2">Profile</button>
+								<button className="btn btn-secondary navbar-custom-button">Login</button>
 							</Link>
 						</div>
-					}
-				</div>
+					) : (
+						<div>
+							<button className="btn btn-secondary me-2 navbar-custom-button" onClick={() => actions.logout()}>
+								Log out
+							</button>
+							<Link to="/profile">
+								<button className="btn btn-secondary me-2 navbar-custom-button">Profile</button>
+							</Link>
 
+						</div>
+					)}
+				</div>
 			</div>
 		</nav>
 	);

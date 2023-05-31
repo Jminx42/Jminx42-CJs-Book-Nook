@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
+import "../../styles/externalCard.css"
 // import { library, config } from '@fortawesome/fontawesome-svg-core';
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
@@ -38,8 +39,8 @@ export const ExternalCard = ({ item }) => {
 
     return (
 
-        <div className="card mx-2" style={{ width: "18rem" }}>
-            <img src={item.book_image} className="card-img-top" alt="..." />
+        <div className="card mx-2 mb-2 p-0" style={{ width: "18rem" }}>
+            <img src={item.book_image} className="card-img-top h-75" alt="..." />
             <div className="card-body" >
 
                 <h5 className="card-text text-start">Title: {item.title}</h5>
@@ -55,7 +56,7 @@ export const ExternalCard = ({ item }) => {
                     </button>
                     <Link to={`/book/${item.primary_isbn13
                         }`}>
-                        <button className="btn btn-primary">Read More</button>
+                        <button className="btn btn-secondary card-custom-button">Read More</button>
                     </Link>
                 </div>
 
