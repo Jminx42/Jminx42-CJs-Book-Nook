@@ -18,6 +18,7 @@ export const Book = () => {
 		actions.getOneGoogleBook(params.theisbn)
 		actions.getNYTReview(params.theisbn)
 
+
 	}, [])
 
 	const submitReview = async (id) => {
@@ -126,40 +127,42 @@ export const Book = () => {
 						<p>Reviewed in: {store.nytReview.publication_dt}</p>
 						<p>Excerpt: {store.nytReview.summary}</p>
 						<p>Review Link: <a href={store.nytReview.url} target="_blank" rel="noopener noreferrer">Click here</a></p>
-					</div> : <div className="row mb-3 mt-3">
-						<h4>Reviews</h4>
-						<p>Be the first to review!</p>
-						<form>
-							<label>Name</label>
-							<input
-								className="form-control"
-								id="name"
-								aria-describedby="name"
-								value={review.name || ""}
-								onChange={(e) => setReview({ ...review, name: e.target.value })}
-							/>
-							<label>Rating</label>
-							<input
-								className="form-control"
-								id="rating"
-								aria-describedby="rating"
-								value={review.rating || ""}
-								onChange={(e) => setReview({ ...review, rating: e.target.value })}
-							/>
-							<label>Review</label>
-							<textarea
-								className="form-control"
-								id="review"
-								aria-describedby="review"
-								rows="5"
-								value={review.review || ""}
-								onChange={(e) => setReview({ ...review, review: e.target.value })}
-							/>
-							<button className="btn profile-custom-button text-white mt-3" onClick={() => submitReview(params.theisbn)}>
-								Submit
-							</button>
-						</form>
-					</div>}
+					</div> : null}
+				<div className="row mb-3 mt-3">
+					<h4>Reviews</h4>
+					<p>Be the first to review!</p>
+
+					<form>
+						<label>Name</label>
+						<input
+							className="form-control"
+							id="name"
+							aria-describedby="name"
+							value={review.name || ""}
+							onChange={(e) => setReview({ ...review, name: e.target.value })}
+						/>
+						<label>Rating</label>
+						<input
+							className="form-control"
+							id="rating"
+							aria-describedby="rating"
+							value={review.rating || ""}
+							onChange={(e) => setReview({ ...review, rating: e.target.value })}
+						/>
+						<label>Review</label>
+						<textarea
+							className="form-control"
+							id="review"
+							aria-describedby="review"
+							rows="5"
+							value={review.review || ""}
+							onChange={(e) => setReview({ ...review, review: e.target.value })}
+						/>
+						<button className="btn profile-custom-button text-white mt-3" onClick={() => submitReview(params.theisbn)}>
+							Submit
+						</button>
+					</form>
+				</div>
 			</div>
 
 		</div >
