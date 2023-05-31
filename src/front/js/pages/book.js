@@ -22,14 +22,17 @@ export const Book = () => {
 	}, [])
 
 	const submitReview = async (id) => {
+
 		const response = await fetch(process.env.BACKEND_URL + 'api/review', {
 			method: "POST",
 			headers: {
 				Authorization: "Bearer " + sessionStorage.getItem("token"),
 				"Content-Type": "application/json"
 			},
-			body: JSON.stringify(review)
+
+			body: JSON.stringify({ review })
 		});
+		console.log(review)
 		if (response.ok) {
 			await actions.validate_user()
 			alert("Review added successfully");
@@ -129,39 +132,66 @@ export const Book = () => {
 						<p>Review Link: <a href={store.nytReview.url} target="_blank" rel="noopener noreferrer">Click here</a></p>
 					</div> : null}
 				<div className="row mb-3 mt-3">
-					<h4>Reviews</h4>
-					<p>Be the first to review!</p>
+					<h4>Submit your review</h4>
+					{sessionStorage.getItem("token") ?
+						<div>
+							<form onSubmit={(e) => e.preventDefault()}>
+								{/* <div>{store.user.full_name}</div> */}
+								<label>Book_id</label>
+								<input
+									className="form-control"
+									id="book_id"
+									aria-describedby="book_id"
+									value={review.book_id || ""}
+									onChange={(e) => setReview({ ...review, book_id: e.target.value })}
+								/>
+								<label>User_id</label>
+								<input
+									className="form-control"
+									id="user_id"
+									aria-describedby="user_id"
+									value={review.user_id || ""}
+									onChange={(e) => setReview({ ...review, user_id: e.target.value })}
+								/>
+								<label>Rating</label>
+								<input
+									className="form-control"
+									id="rating"
+									aria-describedby="rating"
+									value={review.rating || ""}
+									onChange={(e) => setReview({ ...review, rating: e.target.value })}
+								/>
+								<label>Review</label>
+								<textarea
+									className="form-control"
+									id="review"
+									aria-describedby="review"
+									rows="5"
+									value={review.review || ""}
+									onChange={(e) => setReview({ ...review, review: e.target.value })}
+								/>
+								<button className="btn profile-custom-button text-white mt-3" onClick={() => {
+									setReview({ ...review, book_id: params.theisbn })
+									submitReview(params.theisbn)
+								}
+								} type="submit">
+									Submit
+								</button>
+							</form>
+						</div> : <div>
+							<p>Want to submit your review?&nbsp;
+								<Link to="/login">
+									<sup><button
+										type="button"
+										className="btn btn-link p-0"
+									>Login
+									</button></sup></Link>
+								&nbsp;first!</p>
 
-					<form>
-						<label>Name</label>
-						<input
-							className="form-control"
-							id="name"
-							aria-describedby="name"
-							value={review.name || ""}
-							onChange={(e) => setReview({ ...review, name: e.target.value })}
-						/>
-						<label>Rating</label>
-						<input
-							className="form-control"
-							id="rating"
-							aria-describedby="rating"
-							value={review.rating || ""}
-							onChange={(e) => setReview({ ...review, rating: e.target.value })}
-						/>
-						<label>Review</label>
-						<textarea
-							className="form-control"
-							id="review"
-							aria-describedby="review"
-							rows="5"
-							value={review.review || ""}
-							onChange={(e) => setReview({ ...review, review: e.target.value })}
-						/>
-						<button className="btn profile-custom-button text-white mt-3" onClick={() => submitReview(params.theisbn)}>
-							Submit
-						</button>
-					</form>
+						</div>
+
+					}
+
 				</div>
 			</div>
 
