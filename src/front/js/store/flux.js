@@ -7,7 +7,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			externalBooks: [],
 			search: "",
 			oneGoogleBook: {},
-			nytReview: {}
+			nytReview: {},
+			wishlist: []
 		},
 		actions: {
 			handleSearch: (word) => {
@@ -133,7 +134,18 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const data = await response.json();
 				setStore({ book: data.book })
 
+			},
+			setWishlist: (isbn) => {
+				const wish = getStore().wishlist;
+				if (!wish.includes(isbn)) {
+					setStore({ wishlist: [...wish, isbn] });
+				} else {
+					setStore({ wishlist: wish.filter((wish) => wish !== isbn) });
+				}
+				sessionStorage.setItem("wishlist", getStore().wishlist)
+
 			}
+
 		}
 	};
 };
