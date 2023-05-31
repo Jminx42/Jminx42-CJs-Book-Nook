@@ -3,7 +3,7 @@ import { Context } from "../store/appContext";
 import rigoImageUrl from "../../img/rigo-baby.jpg";
 import "../../styles/home.css";
 import { Navbar } from "../component/navbar";
-import { Card } from "../component/card";
+
 import { ExternalCard } from "../component/externalCard";
 
 export const Home = () => {

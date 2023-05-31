@@ -135,14 +135,21 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ book: data.book })
 
 			},
-			setWishlist: (isbn) => {
+			setWishlist: (isbn, cover, title, author) => {
 				const wish = getStore().wishlist;
-				if (!wish.includes(isbn)) {
-					setStore({ wishlist: [...wish, isbn] });
+				const newItem = { isbn, cover, title, author };
+
+				const updatedWishlist = [...wish];
+				const existingItemIndex = updatedWishlist.findIndex(item => item.isbn === isbn);
+
+				if (existingItemIndex === -1) {
+					updatedWishlist.push(newItem);
 				} else {
-					setStore({ wishlist: wish.filter((wish) => wish !== isbn) });
+					updatedWishlist[existingItemIndex] = newItem;
 				}
-				sessionStorage.setItem("wishlist", getStore().wishlist)
+
+				setStore({ wishlist: updatedWishlist });
+				sessionStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
 
 			}
 

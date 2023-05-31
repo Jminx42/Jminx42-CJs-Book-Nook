@@ -14,9 +14,10 @@ import "../../styles/home.css";
 
 export const ExternalCard = ({ item }) => {
     const { store, actions } = useContext(Context);
+    const wishlist = JSON.parse(sessionStorage.getItem("wishlist"));
 
 
-    // useEffect (() => {
+    // useEffect(() => {
 
     // }, [])
 
@@ -42,33 +43,27 @@ export const ExternalCard = ({ item }) => {
                         <p className="card-text">Price: {item.price}</p>
                     </div>
 
-
-                    {/* <div className="d-flex justify-content-evenly"> */}
-                    {/* Add your favorite/heart icon here */}
-                    {/* <button className="btn btn-white" >*/}
-                    {/* <FontAwesomeIcon icon={heartIcon} /> */}
-                    {/*</button> */}
-
-                    {/* </div> */}
-                </div>
-                <div className="card-footer">
-
-
-                    <Link to={`/wishlist`}>
-                        <button
-                            type="button"
-                            className="btn text-white card-custom-button"
-                            onClick={() => actions.setWishlist(item.primary_isbn13)}
-                        >
-                            {store.wishlist.includes(item.primary_isbn13) ? (
-                                <i className="fa-solid fa-heart"></i>
-                            ) : (
-                                <i className="fa-regular fa-heart"></i>
-                            )}
-                        </button>
-                    </Link>
                 </div>
             </Link >
+            <div className="card-footer">
+
+
+
+                <button
+                    type="button"
+                    className="btn text-white card-custom-button"
+                    onClick={() => actions.setWishlist(item.primary_isbn13, item.book_image, item.title, item.author)}
+                >
+                    {store.wishlist.includes(item.isbn, item.book_image, item.title, item.author) ? (
+                        <i className="fa-solid fa-heart"></i>
+                    ) : (
+                        <i className="fa-regular fa-heart"></i>
+                    )}
+                </button>
+                {/* This button isn't working... it adds to the wishlist correctly but it doesn't toggle between solid and regular */}
+
+            </div>
+
         </div>
 
     )
