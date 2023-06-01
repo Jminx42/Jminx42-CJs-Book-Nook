@@ -1,29 +1,38 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 
 export const GoogleBooksViewer = ({ isbn }) => {
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
 
-    const script = document.createElement("script");
-    script.id = "preview" + isbn
-    script.src = "https://www.google.com/books/jsapi.js";
-    script.async = true;
-    script.onload = () => {
-      google.books.load({ "language": "en" });
-      google.books.setOnLoadCallback(initialize);
+    const scriptTag = document.createElement("script");
+    scriptTag.src = "https://www.google.com/books/jsapi.js";
+    scriptTag.addEventListener("load", () => setLoaded(true));
+    scriptTag.id = "google-script";
+    document.body.appendChild(scriptTag);
 
+    return () => {
+      document.body.removeChild(scriptTag);
     };
-    document.body.appendChild(script);
+  }, []);
 
-    function initialize() {
-      const viewer = new google.books.DefaultViewer(document.getElementById("viewerCanvas"));
-      console.log(isbn)
-      viewer.load("ISBN:" + isbn);
-
+  useEffect(() => {
+    if (loaded) {
+      if (window.viewer) {
+        const viewer = new window.google.books.DefaultViewer(document.getElementById("viewerCanvas"));
+        viewer.load("ISBN:" + isbn);
+      } else {
+        window.google.books.load({ language: "en" });
+        window.google.books.setOnLoadCallback(() => {
+          const viewer = new window.google.books.DefaultViewer(document.getElementById("viewerCanvas"));
+          window.viewer = viewer;
+          viewer.load("ISBN:" + isbn);
+        });
+      }
     }
+  }, [loaded, isbn]);
 
-  }, [isbn]);
 
   return (
     <div className="d-flex justify-content-end mt-4 mb-4">

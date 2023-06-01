@@ -45,7 +45,7 @@ export const ExternalCard = ({ item }) => {
 
                 </div>
             </Link >
-            <div className="card-footer">
+            <div className="ms-auto p-1">
 
 
 
@@ -61,7 +61,9 @@ export const ExternalCard = ({ item }) => {
                     )}
                 </button>
                 {/* This button isn't working... it adds to the wishlist correctly but it doesn't toggle between solid and regular */}
-
+                <button type="button" className="btn text-white card-custom-button ms-2">
+                    Add to cart
+                </button>
             </div>
 
         </div>

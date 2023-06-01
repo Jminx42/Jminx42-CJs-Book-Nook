@@ -10,24 +10,16 @@ export const Card = ({ item }) => {
 
     return (
 
-        <div className="card mx-2" style={{ width: "18rem" }}>
-            <img src={item.cover} className="card-img-top" alt="..." />
+        <div className="card mx-2 border-0" style={{ width: "18rem" }}>
+            <Link to={`/book/${item.isbn}`}>
+                <img src={item.cover} className="card-img-top" alt="..." />
+            </Link>
             <div className="card-body" >
-
                 <h5 className="card-text text-start">Title: {item.title}</h5>
                 <p className="card-text text-start">Author: {item.author}</p>
-
-
-                <div className="card-footer">
-                    <Link to={`/book/${item.isbn}`}>
-                        <button className="btn btn-secondary card-custom-button me-2">Read More</button>
-                    </Link>
-                </div>
-
             </div>
         </div>
-    )
-        ;
+    );
 }
 
 export default Card
