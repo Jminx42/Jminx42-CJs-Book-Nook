@@ -2,6 +2,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			user: {},
+			//see if this is needed
 			books: [],
 			book: {},
 			externalBooks: [],
@@ -10,6 +11,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			nytReview: {},
 			wishlist: [],
 			checkout: [],
+			price: null,
+
 		},
 		actions: {
 			handleSearch: (word) => {
@@ -32,6 +35,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			logout: () => {
 				sessionStorage.removeItem("token");
+				sessionStorage.removeItem("wishlist");
+				sessionStorage.removeItem("checkout");
 				console.log("Logging out");
 				setStore({ user: null });
 			},
@@ -65,7 +70,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 
 			},
-
+			// see if this is needed
 			getBooks: async () => {
 				const resp = await fetch(process.env.BACKEND_URL + 'api/book')
 				const data = await resp.json()
@@ -172,8 +177,21 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ checkout: updatedCart });
 				sessionStorage.setItem("checkout", JSON.stringify(updatedCart));
 
-			}
+			},
 
+			setPrice: (weeks_on_list) => {
+				let price = null;
+				if (weeks_on_list <= 10) {
+					price = 18.99;
+				} else if (weeks_on_list > 11 && weeks_on_list <= 30) {
+					price = 16.99;
+				} else if (weeks_on_list > 31 && weeks_on_list <= 60) {
+					price = 14.99;
+				} else {
+					price = 12.99;
+				}
+				setStore({ price });
+			}
 
 		}
 	};

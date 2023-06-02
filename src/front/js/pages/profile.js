@@ -63,12 +63,19 @@ export const Profile = () => {
 						<div className="row">
 							<div className="col-6">
 								{!editClicked ? (
-									<img
-										src={user.profile_picture}
-										className="card-img-top"
-										id="profile-picture"
-										alt="Profile Picture"
-									/>
+									!user.profile_picture
+										?
+										<img
+											src="https://placehold.co/600x400.png"
+											className="card-img-top"
+											alt="Profile Picture" />
+										:
+										<img
+											src={user.profile_picture}
+											className="card-img-top"
+											id="profile-picture"
+											alt="Profile Picture"
+										/>
 								) : (
 									<div>
 										<InputProfilePic />
@@ -76,7 +83,7 @@ export const Profile = () => {
 								)}
 							</div>
 							<div className="col-6">
-								<label className="text-start">Email: </label>
+								<label className="">Email: </label>
 								<p> {user.email}</p>
 
 								<label className="text-start">Name: </label>

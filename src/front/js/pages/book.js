@@ -15,6 +15,8 @@ export const Book = () => {
 	// const cleanedUrl = url.replace(/\\/g, "");
 	// console.log(cleanedUrl);
 
+
+
 	useEffect(() => {
 		actions.getOneGoogleBook(params.theisbn)
 		actions.getNYTReview(params.theisbn)
@@ -23,7 +25,7 @@ export const Book = () => {
 	}, [])
 
 	const submitReview = async (id) => {
-
+		console.log(review)
 		const response = await fetch(process.env.BACKEND_URL + 'api/review', {
 			method: "POST",
 			headers: {
