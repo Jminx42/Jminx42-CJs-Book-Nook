@@ -34,7 +34,11 @@ export const Navbar = () => {
 							<i className="fas fa-search"></i>
 						</button>
 					</div>
-
+					<Link to="/checkout">
+						<button type="button" className="btn btn-secondary me-2 navbar-custom-button">
+							<i className="fas fa-shopping-cart"></i>
+						</button>
+					</Link>
 					{!sessionStorage.getItem("token") ? (
 						<div className="d-flex">
 							<Link to="/register">
@@ -46,22 +50,19 @@ export const Navbar = () => {
 						</div>
 					) : (
 						<div className="d-flex">
+							<Link to="/profile">
+								<button className="btn btn-secondary me-2 navbar-custom-button">Profile</button>
+							</Link>
 							<Link to="/">
-								<button className="btn btn-secondary me-2 navbar-custom-button" onClick={() => actions.logout()}>
+								<button className="btn btn-secondary  navbar-custom-button" onClick={() => actions.logout()}>
 									Logout
 								</button>
 							</Link>
-							<Link to="/profile">
-								<button className="btn btn-secondary navbar-custom-button">Profile</button>
-							</Link>
+
 
 						</div>
 					)}
-					<Link to="/checkout">
-						<button type="button" className="btn btn-secondary ms-2 navbar-custom-button">
-							<i className="fas fa-shopping-cart"></i>
-						</button>
-					</Link>
+
 				</div>
 			</div>
 		</nav>

@@ -7,7 +7,6 @@ export const InputProfilePic = () => {
 
     const uploadImage = evt => {
         evt.preventDefault();
-        // we are about to send this to the backend.
         console.log("These are the files", files);
 
         let body = new FormData();
@@ -19,7 +18,6 @@ export const InputProfilePic = () => {
                 Authorization: "Bearer " + sessionStorage.getItem("token")
             },
         };
-        // you need to have the user_id in the localStorage
 
         fetch(`${process.env.BACKEND_URL}api/user/image`, options)
             .then(resp => resp.json())
@@ -35,9 +33,20 @@ export const InputProfilePic = () => {
                     type="file"
                     id="profile-pic-upload"
                     onChange={e => setFiles(e.target.files)} />
-                {files == null ?
-                    <img src={store.user.profile_picture} className="card-img-top" alt="saved profile picture" /> :
-                    <img src={URL.createObjectURL(files[0])} className="card-img-top" alt="new profile picture" />}
+                {
+                    !store.user.profile_picture
+                        ?
+                        <img
+                            src="https://placehold.co/600x400.png"
+                            className="card-img-top"
+                            alt="Profile Picture" />
+                        :
+                        files == null ?
+                            <img src={store.user.profile_picture} className="card-img-top" alt="saved profile picture" />
+                            :
+                            <img src={URL.createObjectURL(files[0])} className="card-img-top" alt="new profile picture" />
+                }
+
                 <div className="mt-2 d-flex justify-content-end">
                     <div className="me-2">
                         <button className="btn btn-primary">Upload image</button>

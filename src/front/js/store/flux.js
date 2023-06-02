@@ -32,6 +32,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			logout: () => {
 				sessionStorage.removeItem("token");
+				sessionStorage.removeItem("wishlist");
+				sessionStorage.removeItem("checkout");
 				console.log("Logging out");
 				setStore({ user: null });
 			},
