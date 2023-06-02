@@ -1,18 +1,32 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
 import "../../styles/externalCard.css";
 import "../../styles/home.css";
+import CJBookNookLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/CJBookNookLogo.png";
 
 export const ExternalCard = ({ item }) => {
     const { store, actions } = useContext(Context);
+    const price = item.weeks_on_list ? store.price : "Free";
+
+    useEffect(() => {
+        actions.setPrice(item.weeks_on_list);
+    }, [item.weeks_on_list]);
 
     return (
         <div className="card d-flex flex-column m-2 p-0" style={{ width: "18rem" }}>
             <Link to={`/book/${item.primary_isbn13}`} className="card-body-custom flex-grow-1">
-                <div className="image-container" style={{ height: "320px", overflow: "hidden" }}>
-                    <img src={item.book_image} className="card-img-top w-100 h-100" alt="Book Cover" />
-                </div>
+                {item.book_image == null || item.book_image == ""
+                    ?
+                    <div className="image-container" style={{ height: "320px", overflow: "hidden" }}>
+                        <img src={CJBookNookLogo} className="card-img-top w-100 h-100" alt="Book Cover" />
+                    </div>
+                    :
+                    <div className="image-container" style={{ height: "320px", overflow: "hidden" }}>
+                        <img src={item.book_image} className="card-img-top w-100 h-100" alt="Book Cover" />
+                    </div>
+                }
+
                 <div className="card-body text-start">
 
                     <div className="row">
@@ -24,7 +38,7 @@ export const ExternalCard = ({ item }) => {
                     <div className="row">
                         <p className="card-text">
                             <span className="fw-bold">Price: </span>
-                            {item.price}
+                            {price}
                         </p>
                     </div>
 
