@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Navbar } from "../component/navbar";
 import { GoogleBooksViewer } from "../component/googleBooksViewer";
+import { GoogleViewer2 } from "../component/googleViewer2";
 
 export const Book = () => {
 	const params = useParams();
@@ -107,7 +108,9 @@ export const Book = () => {
 								<div className="col-10">{store.oneGoogleBook.description}</div>
 							</div>
 							<div className="row">
-								<p className="mt-3 fs-5 text-center">Preview:</p>
+								<Link to={`/googlePreview/${params.theisbn}`}>
+									<p className="mt-3 fs-5">Click here to preview the book</p>
+								</Link>
 								{/* <button className="btn profile-custom-button text-white mt-3" onClick={() => setPreview(true)}>
 									Click here
 								</button> */}
@@ -116,7 +119,7 @@ export const Book = () => {
 						</div>
 
 					</div>
-					<GoogleBooksViewer isbn={params.theisbn} />
+					{/* <GoogleBooksViewer isbn={params.theisbn} /> */}
 					{/* I'm trying to hide the viewer with the button but it stops working when I do the ternary... I don't know why! */}
 					{/* {preview ? <div><GoogleBooksViewer isbn={params.theisbn} /> </div> : null} */}
 

@@ -2,3 +2,8 @@
     background-color: #68B0AB;
     border-color: #68B0AB;
 }
+
+.card-custom-button:hover {
+    background-color: #128179;
+    border-color: #128179;
+}

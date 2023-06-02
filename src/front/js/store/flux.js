@@ -7,7 +7,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			externalBooks: [],
 			search: "",
 			oneGoogleBook: {},
-			nytReview: {}
+			nytReview: {},
+			wishlist: []
 		},
 		actions: {
 			handleSearch: (word) => {
@@ -133,7 +134,25 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const data = await response.json();
 				setStore({ book: data.book })
 
+			},
+			setWishlist: (isbn, cover, title, author) => {
+				const wish = getStore().wishlist;
+				const newItem = { isbn, cover, title, author };
+
+				const updatedWishlist = [...wish];
+				const existingItemIndex = updatedWishlist.findIndex(item => item.isbn === isbn);
+
+				if (existingItemIndex === -1) {
+					updatedWishlist.push(newItem);
+				} else {
+					updatedWishlist[existingItemIndex] = newItem;
+				}
+
+				setStore({ wishlist: updatedWishlist });
+				sessionStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
+
 			}
+
 		}
 	};
 };

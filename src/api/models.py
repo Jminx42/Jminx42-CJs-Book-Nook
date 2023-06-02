@@ -72,7 +72,6 @@ class Book(db.Model):
     price = db.Column(db.Float, unique=False, nullable=True)
     external_reviews = db.relationship("ExternalReview", backref="book")
     wishlist = db.relationship("Wishlist", backref="book")
-    reviews = db.relationship("Review", backref="book")
     transactions = db.relationship("Transaction", backref="book")
     support = db.relationship("Support", backref="book")
 
