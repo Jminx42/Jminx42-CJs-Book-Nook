@@ -136,12 +136,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ book: data.book })
 
 			},
-			setWishlist: (isbn, cover, title, author) => {
-				const wish = getStore().wishlist;
-				const newItem = { isbn, cover, title, author };
 
+			setWishlist: (primary_isbn13, cover, title, author) => {
+				const wish = getStore().wishlist;
+
+				const newItem = { primary_isbn13, cover, title, author };
+				console.log(newItem);
 				const updatedWishlist = [...wish];
-				const existingItemIndex = updatedWishlist.findIndex(item => item.isbn === isbn);
+				const existingItemIndex = updatedWishlist.findIndex(item => item.primary_isbn13 === primary_isbn13);
 
 				if (existingItemIndex === -1) {
 					updatedWishlist.push(newItem);
@@ -153,12 +155,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 				sessionStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
 
 			},
-			setCheckout: (isbn, cover, title, author, price) => {
+
+			setCheckout: (primary_isbn13, cover, title, author, price) => {
 				const cart = getStore().checkout;
-				const newCart = { isbn, cover, title, author, price };
+				const newCart = { primary_isbn13, cover, title, author, price };
 
 				const updatedCart = [...cart];
-				const existingCartIndex = updatedCart.findIndex(item => item.isbn === isbn);
+				const existingCartIndex = updatedCart.findIndex(item => item.primary_isbn13 === primary_isbn13);
 
 				if (existingCartIndex === -1) {
 					updatedCart.push(newCart);

@@ -7,3 +7,9 @@
     background-color: #128179;
     border-color: #128179;
 }
+
+.card-body-custom {
+    text-decoration: none;
+    color: black;
+}
+
