@@ -35,8 +35,9 @@ export const GoogleBooksViewer = ({ isbn }) => {
 
 
   return (
-    <div className="d-flex justify-content-end mt-4 mb-4">
+    <div className="d-flex justify-content-center mt-4 mb-4">
       <div id="viewerCanvas" style={{ width: "800px", height: "500px" }}></div>
+      {/* we need to work on making this responsive... */}
 
     </div>
   );

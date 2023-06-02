@@ -3,22 +3,22 @@ import PropTypes from "prop-types";
 import { Link, useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Navbar } from "../component/navbar";
-import { GoogleBooksViewer } from "../component/googleBooksViewer";
 import { Card } from "../component/card";
 
-export const GooglePreview = () => {
-    const params = useParams();
+export const Checkout = () => {
     const { store, actions } = useContext(Context);
-
+    const checkout = JSON.parse(sessionStorage.getItem("checkout"));
 
     return (
         <div>
             <Navbar />
             <div className="container mt-4">
 
-                <h1 className="text-center">Where Magic Happens!</h1>
+                <h1>Checkout</h1>
                 <div className="row d-flex justify-content-center">
-                    <GoogleBooksViewer isbn={params.theisbn} />
+                    {checkout && checkout.length !== 0 ? checkout.filter((book) => book.title.toLowerCase().includes(store.search)).map((book) => {
+                        return <Card key={book.isbn} item={book} />
+                    }) : null}
                 </div>
 
 

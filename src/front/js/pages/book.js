@@ -73,7 +73,7 @@ export const Book = () => {
 			</div> */}
 			<div className="card container mt-3">
 				<div className="p-4 text-center bg-body-tertiary rounded-3">
-					<img src={store.oneGoogleBook.imageLinks && store.oneGoogleBook.imageLinks.thumbnail} className="img-thumbnail w-25 float-start" alt="..." />
+					<img src={store.oneGoogleBook.imageLinks && store.oneGoogleBook.imageLinks.thumbnail} className=" w-25 float-start" alt="..." />
 					<div>
 						<h1 className=" display-3">{store.oneGoogleBook.title}</h1>
 						<p className="display-6">{store.oneGoogleBook.authors && store.oneGoogleBook.authors.join(", ")}</p>
