@@ -8,7 +8,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			search: "",
 			oneGoogleBook: {},
 			nytReview: {},
-			wishlist: []
+			wishlist: [],
+			checkout: [],
 		},
 		actions: {
 			handleSearch: (word) => {
@@ -151,7 +152,25 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ wishlist: updatedWishlist });
 				sessionStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
 
+			},
+			setCheckout: (isbn, cover, title, author, price) => {
+				const cart = getStore().checkout;
+				const newCart = { isbn, cover, title, author, price };
+
+				const updatedCart = [...cart];
+				const existingCartIndex = updatedCart.findIndex(item => item.isbn === isbn);
+
+				if (existingCartIndex === -1) {
+					updatedCart.push(newCart);
+				} else {
+					updatedCart[existingCartIndex] = newCart;
+				}
+
+				setStore({ checkout: updatedCart });
+				sessionStorage.setItem("checkout", JSON.stringify(updatedCart));
+
 			}
+
 
 		}
 	};

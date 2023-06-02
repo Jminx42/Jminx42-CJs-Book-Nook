@@ -61,8 +61,9 @@ export const ExternalCard = ({ item }) => {
                     )}
                 </button>
                 {/* This button isn't working... it adds to the wishlist correctly but it doesn't toggle between solid and regular */}
-                <button type="button" className="btn text-white card-custom-button ms-2">
-                    Add to cart
+                <button type="button" className="btn text-white card-custom-button ms-2" onClick={() => actions.setCheckout(item.primary_isbn13, item.book_image, item.title, item.author, item.price)}>
+                    <i className="fas fa-shopping-cart"></i>
+                    {/* I want to make this toggle between solid and regular, but need help! */}
                 </button>
             </div>
 

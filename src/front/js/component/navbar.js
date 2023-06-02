@@ -57,6 +57,11 @@ export const Navbar = () => {
 
 						</div>
 					)}
+					<Link to="/checkout">
+						<button type="button" className="btn btn-secondary ms-2 navbar-custom-button">
+							<i className="fas fa-shopping-cart"></i>
+						</button>
+					</Link>
 				</div>
 			</div>
 		</nav>

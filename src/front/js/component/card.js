@@ -17,6 +17,7 @@ export const Card = ({ item }) => {
             <div className="card-body" >
                 <h5 className="card-text text-start">Title: {item.title}</h5>
                 <p className="card-text text-start">Author: {item.author}</p>
+                <p className="card-text text-start">Price: {item.price}</p>
             </div>
         </div>
     );
