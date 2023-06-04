@@ -103,9 +103,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			getNYTBooks: async () => {
 				const resp = await fetch('https://api.nytimes.com/svc/books/v3/lists/full-overview.json?api-key=emRJGQrXQ32EXbl6ThvjL8JdJcoicGWf')
-				console.log("response", resp)
+
 				const data = await resp.json()
-				console.log("data", data)
+
 				if (resp.status !== 200) {
 					alert(data.error)
 				} else {
@@ -125,9 +125,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			getNYTReview: async (isbn13) => {
 				const resp = await fetch('https://api.nytimes.com/svc/books/v3/reviews.json?isbn=' + isbn13 + '&api-key=emRJGQrXQ32EXbl6ThvjL8JdJcoicGWf')
-				console.log("response", resp)
+
 				const data = await resp.json()
-				console.log("data", data)
+
 				if (resp.status !== 200) {
 					alert(data.error)
 				} else {

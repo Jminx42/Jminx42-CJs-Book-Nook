@@ -19,13 +19,13 @@ export const Book = () => {
 
 	useEffect(() => {
 		actions.getOneGoogleBook(params.theisbn)
-		actions.getNYTReview(params.theisbn)
+		// actions.getNYTReview(params.theisbn)
 
 
-	}, [])
+	}, [store.oneGoogleBook])
 
 	const submitReview = async (id) => {
-		console.log(review)
+
 		const response = await fetch(process.env.BACKEND_URL + 'api/review', {
 			method: "POST",
 			headers: {
@@ -35,7 +35,7 @@ export const Book = () => {
 
 			body: JSON.stringify({ review })
 		});
-		console.log(review)
+
 		if (response.ok) {
 			await actions.validate_user()
 			alert("Review added successfully");
@@ -48,31 +48,7 @@ export const Book = () => {
 	return (
 		<div>
 			<Navbar />
-			{/* <div className="container">
-				<div>
-					<h1> {store.oneGoogleBook.title}</h1>
-					<p>Author: {store.oneGoogleBook.authors && store.oneGoogleBook.authors.join(", ")}</p>
-					<p>Publisher: {store.oneGoogleBook.publisher}</p>
-					<p>Published Date: {store.oneGoogleBook.publishedDate}</p>
-					<p>ISBN: {params.theisbn}</p>
-					<p>Pages: {store.oneGoogleBook.pageCount == 0 ? "Not available" : store.oneGoogleBook.pageCount}</p>
-					<p>Genre: {store.oneGoogleBook.categories && store.oneGoogleBook.categories.join("& ")}</p>
-					<p>Description: {store.oneGoogleBook.description}</p>
 
-					<img src={store.oneGoogleBook.imageLinks && store.oneGoogleBook.imageLinks.thumbnail} className="img-thumbnail w-25 float-start" alt="..." />
-					<p>Preview: {store.oneGoogleBook.previewLink}</p>
-
-					{store.nytReview ?
-						<div>
-							<h4>Reviews</h4>
-							<p>{store.nytReview.byline}</p>
-							<p>Reviewed in: {store.nytReview.publication_dt}</p>
-							<p>Excerpt: {store.nytReview.summary}</p>
-							<p>Review Link: <a href={store.nytReview.url} target="_blank" rel="noopener noreferrer">Click here</a></p>
-						</div> : null}
-				</div>
-
-			</div> */}
 			<div className="card container mt-3">
 				<div className="p-4 text-center bg-body-tertiary rounded-3">
 					<img src={store.oneGoogleBook.imageLinks && store.oneGoogleBook.imageLinks.thumbnail} className=" w-25 float-start" alt="..." />
@@ -128,14 +104,14 @@ export const Book = () => {
 				</div >
 			</div >
 			<div className="container">
-				{store.nytReview ?
+				{/* {store.nytReview ?
 					<div className="row mb-3 mt-3">
 						<h4>Reviews</h4>
 						<p>{store.nytReview.byline}</p>
 						<p>Reviewed in: {store.nytReview.publication_dt}</p>
 						<p>Excerpt: {store.nytReview.summary}</p>
 						<p>Review Link: <a href={store.nytReview.url} target="_blank" rel="noopener noreferrer">Click here</a></p>
-					</div> : null}
+					</div> : null} */}
 				<div className="row mb-3 mt-3">
 					<h4>Submit your review</h4>
 					{sessionStorage.getItem("token") ?

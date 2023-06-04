@@ -8,12 +8,12 @@ import { ExternalCard } from "../component/externalCard";
 
 export const Home = () => {
 	const { store, actions } = useContext(Context);
-	console.log(store.books)
+
 
 	useEffect(() => {
 		actions.getNYTBooks();
 
-	}, []);
+	}, [store.externalBooks]);
 
 	return (
 		<div>
