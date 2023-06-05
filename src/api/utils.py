@@ -1,4 +1,6 @@
 from flask import jsonify, url_for
+import requests
+from api.models import Book
 
 class APIException(Exception):
     status_code = 400
@@ -39,3 +41,17 @@ def generate_sitemap(app):
         <p>Start working on your project by following the <a href="https://start.4geeksacademy.com/starters/full-stack" target="_blank">Quick Start</a></p>
         <p>Remember to specify a real endpoint path like: </p>
         <ul style="text-align: left;">"""+links_html+"</ul></div>"
+
+def retrieve_books ():
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    result = requests.get('https://api.nytimes.com/svc/books/v3/lists/full-overview.json?api-key=emRJGQrXQ32EXbl6ThvjL8JdJcoicGWf')
+    data = result.json()
+    booklist = data["results"]["lists"][0]["books"]
+    print(booklist[0])
+    result_google = requests.get('https://www.googleapis.com/books/v1/volumes?q=isbn:' + booklist[0]["primary_isbn13"] + '&key=AIzaSyAhG7q0MvYbiWzXeuSBlhqNATkUVSKhFq0')
+    data_google = result_google.json()
+    book = Book(title = booklist[0]["title"], author = booklist[0]["author"], isbn = booklist[0]["primary_isbn13"], book_cover = booklist[0]["book_image"], description = booklist[0]["description"], year = data_google["items"][0]["volumeInfo"]["publishedDate"])
+    print(book)
+
+
+   
