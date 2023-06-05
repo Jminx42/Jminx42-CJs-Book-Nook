@@ -3,3 +3,18 @@
     border-color: #68B0AB;
     
 }
+
+.register-custom-button:hover {
+    background-color: #128179;
+    border-color: #128179;
+}
+
+.link-like {
+    color: #68B0AB;
+    text-decoration: underline;
+   
+  }
+
+  .register-custom-bg-img {
+    background-color: #68B0AB;
+  }

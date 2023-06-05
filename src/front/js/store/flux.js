@@ -12,12 +12,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 			wishlist: [],
 			checkout: [],
 			price: null,
+			loading: true,
 
 		},
 		actions: {
 			handleSearch: (word) => {
 				setStore({ search: word })
 			},
+
 			validate_user: async () => {
 				const resp = await fetch(process.env.BACKEND_URL + 'api/user/validate', {
 					headers: {
@@ -70,6 +72,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 
 			},
+
 			// see if this is needed
 			getBooks: async () => {
 				const resp = await fetch(process.env.BACKEND_URL + 'api/book')
@@ -91,13 +94,29 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
+			// getOneGoogleBook: async (isbn) => {
+			// 	const resp = await fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:' + isbn + '&key=AIzaSyAhG7q0MvYbiWzXeuSBlhqNATkUVSKhFq0')
+			// 	const data = await resp.json()
+			// 	if (resp.status !== 200) {
+			// 		alert(data.error)
+			// 	} else {
+			// 		setStore({ oneGoogleBook: data.items[0].volumeInfo })
+			// 	}
+			// },
 			getOneGoogleBook: async (isbn) => {
-				const resp = await fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:' + isbn + '&key=AIzaSyAhG7q0MvYbiWzXeuSBlhqNATkUVSKhFq0')
-				const data = await resp.json()
-				if (resp.status !== 200) {
-					alert(data.error)
-				} else {
-					setStore({ oneGoogleBook: data.items[0].volumeInfo })
+				try {
+					setStore({ oneGoogleBook: {}, loading: true });
+					const resp = await fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:' + isbn + '&key=AIzaSyAhG7q0MvYbiWzXeuSBlhqNATkUVSKhFq0');
+					if (!resp.ok) {
+						throw new Error('Error fetching book data');
+					}
+					const data = await resp.json();
+					const bookData = data.items[0].volumeInfo;
+					setStore({ oneGoogleBook: bookData, loading: false });
+				} catch (error) {
+					console.error(error);
+					setStore({ oneGoogleBook: {}, loading: false });
+
 				}
 			},
 
