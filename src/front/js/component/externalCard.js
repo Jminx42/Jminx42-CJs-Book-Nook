@@ -38,7 +38,7 @@ export const ExternalCard = ({ item }) => {
                     <div className="row">
                         <p className="card-text">
                             <span className="fw-bold">Price: </span>
-                            {price}
+                            {price}€
                         </p>
                     </div>
 

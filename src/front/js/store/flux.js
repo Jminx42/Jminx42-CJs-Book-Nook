@@ -12,6 +12,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			wishlist: [],
 			checkout: [],
 			price: null,
+			bookPrice: null,
 
 		},
 		actions: {
@@ -191,6 +192,29 @@ const getState = ({ getStore, getActions, setStore }) => {
 					price = 12.99;
 				}
 				setStore({ price });
+			},
+			setBookPrice: (publishedDate) => {
+
+				if (!publishedDate) {
+					console.error('Invalid published date');
+					return;
+				}
+
+				const year = new Date(publishedDate).getFullYear();
+				console.log(year);
+				let bookPrice = 0;
+
+				if (year >= 2023) {
+					bookPrice = 18.99;
+				} else if (year >= 2020) {
+					bookPrice = 16.99;
+				} else if (year >= 2015) {
+					bookPrice = 14.99;
+				} else {
+					bookPrice = 12.99;
+				}
+
+				setStore({ bookPrice });
 			}
 
 		}

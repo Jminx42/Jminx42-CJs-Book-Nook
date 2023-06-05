@@ -53,6 +53,7 @@ def login():
 @jwt_required()
 def validate_user():
     user_id = get_jwt_identity()
+    print(user_id)
     user = User.query.get(user_id)
     if not user:
         return jsonify ({"error": "invalid credentials"}), 300
@@ -170,9 +171,9 @@ def update_review(review_id):
 def create_review():
     user_id = get_jwt_identity()
     body = request.json
-    # review = request.json.get("review", None)
-    # rating = request.json.get("rating", None)
-    # book_isbn = request.json.get("book_isbn", None)
+    review = request.json.get("review", None)
+    rating = request.json.get("rating", None)
+    book_isbn = request.json.get("book_isbn", None)
        
     new_review = Review(
         review=body["review"],
