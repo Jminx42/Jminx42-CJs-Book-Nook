@@ -19,14 +19,14 @@ def create_user():
     password = request.json.get("password", None)
     full_name = request.json.get("full_name", None)
     if "@" not in email: 
-        return jsonify ({"error": "please enter valid email, example: user@gmail.com"}), 300
+        return jsonify ({"error": "Please enter valid email, example: user@gmail.com"}), 300
     if len(password) < 5:
-        return jsonify ({"error": "your password must have more than 5 characters"}), 300
+        return jsonify ({"error": "Your password must have more than 5 characters"}), 300
     if not email or not password or not full_name:
-        return jsonify ({"error": "missing credentials"}), 300
+        return jsonify ({"error": "Missing credentials"}), 300
     already_exist = User.query.filter_by(email = email).first()
     if already_exist:
-        return jsonify({"error": "email already exists in the database"}), 300
+        return jsonify({"error": "Email already exists in the database"}), 300
     new_user = User(
         email=body["email"],
         password=body["password"],

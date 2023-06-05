@@ -16,15 +16,14 @@ export const Book = () => {
 	// console.log(cleanedUrl);
 
 
-
 	useEffect(() => {
-		actions.getOneGoogleBook(params.theisbn)
+		actions.getOneGoogleBook(params.theisbn);
 		// actions.getNYTReview(params.theisbn)
 
+	}, [params.theisbn]);
 
-	}, [store.oneGoogleBook])
 
-	const submitReview = async (id) => {
+	const submitReview = async () => {
 
 		const response = await fetch(process.env.BACKEND_URL + 'api/review', {
 			method: "POST",
@@ -48,61 +47,71 @@ export const Book = () => {
 	return (
 		<div>
 			<Navbar />
+			{store.loading
+				?
+				(
+					// Render a loading indicator or placeholder
+					<div>Loading...</div>
+				)
+				:
+				(
+					<>
+						<div className="card container mt-3">
+							<div className="p-4 text-center bg-body-tertiary rounded-3">
+								<img src={store.oneGoogleBook.imageLinks && store.oneGoogleBook.imageLinks.thumbnail} className=" w-25 float-start" alt="..." />
+								<div>
+									<h1 className=" display-3">{store.oneGoogleBook.title}</h1>
+									<p className="display-6">{store.oneGoogleBook.authors && store.oneGoogleBook.authors.join(", ")}</p>
+									<div className="row text-start">
 
-			<div className="card container mt-3">
-				<div className="p-4 text-center bg-body-tertiary rounded-3">
-					<img src={store.oneGoogleBook.imageLinks && store.oneGoogleBook.imageLinks.thumbnail} className=" w-25 float-start" alt="..." />
-					<div>
-						<h1 className=" display-3">{store.oneGoogleBook.title}</h1>
-						<p className="display-6">{store.oneGoogleBook.authors && store.oneGoogleBook.authors.join(", ")}</p>
-						<div className="row text-start">
-
-							<div className="row">
-								<div className="col-2">Publisher:</div>
-								<div className="col-10">{store.oneGoogleBook.publisher}</div>
-							</div>
-							<div className="row">
-								<div className="col-2">Published Date:</div>
-								<div className="col-10">{store.oneGoogleBook.publishedDate}</div>
-							</div>
-							<div className="row">
-								<div className="col-2">Genre:</div>
-								<div className="col-10">{store.oneGoogleBook.categories && store.oneGoogleBook.categories.join("& ")}</div>
-							</div>
-							<div className="row">
-								<div className="col-2">Pages:</div>
-								<div className="col-10">{store.oneGoogleBook.pageCount == 0 ? "Not available" : store.oneGoogleBook.pageCount}</div>
-							</div>
-							<div className="row">
-								<div className="col-2">Price:</div>
-								<div className="col-10">put price here!!!!!</div>
-							</div>
-							<div className="row">
-								<div className="col-2">ISBN:</div>
-								<div className="col-10">{params.theisbn}</div>
-							</div>
-							<div className="row">
-								<div className="col-2">Description:</div>
-								<div className="col-10">{store.oneGoogleBook.description}</div>
-							</div>
-							<div className="row">
-								<Link to={`/googlePreview/${params.theisbn}`}>
-									<p className="mt-3 fs-5">Click here to preview the book</p>
-								</Link>
-								{/* <button className="btn profile-custom-button text-white mt-3" onClick={() => setPreview(true)}>
+										<div className="row">
+											<div className="col-2">Publisher:</div>
+											<div className="col-10">{store.oneGoogleBook.publisher}</div>
+										</div>
+										<div className="row">
+											<div className="col-2">Published Date:</div>
+											<div className="col-10">{store.oneGoogleBook.publishedDate}</div>
+										</div>
+										<div className="row">
+											<div className="col-2">Genre:</div>
+											<div className="col-10">{store.oneGoogleBook.categories && store.oneGoogleBook.categories.join("& ")}</div>
+										</div>
+										<div className="row">
+											<div className="col-2">Pages:</div>
+											<div className="col-10">{store.oneGoogleBook.pageCount == 0 ? "Not available" : store.oneGoogleBook.pageCount}</div>
+										</div>
+										<div className="row">
+											<div className="col-2">Price:</div>
+											<div className="col-10">put price here!!!!!</div>
+										</div>
+										<div className="row">
+											<div className="col-2">ISBN:</div>
+											<div className="col-10">{params.theisbn}</div>
+										</div>
+										<div className="row">
+											<div className="col-2">Description:</div>
+											<div className="col-10">{store.oneGoogleBook.description}</div>
+										</div>
+										<div className="row">
+											<Link to={`/googlePreview/${params.theisbn}`}>
+												<p className="mt-3 fs-5">Click here to preview the book</p>
+											</Link>
+											{/* <button className="btn profile-custom-button text-white mt-3" onClick={() => setPreview(true)}>
 									Click here
 								</button> */}
-							</div>
+										</div>
 
-						</div>
+									</div>
 
-					</div>
-					{/* <GoogleBooksViewer isbn={params.theisbn} /> */}
-					{/* I'm trying to hide the viewer with the button but it stops working when I do the ternary... I don't know why! */}
-					{/* {preview ? <div><GoogleBooksViewer isbn={params.theisbn} /> </div> : null} */}
+								</div>
+								{/* <GoogleBooksViewer isbn={params.theisbn} /> */}
+								{/* I'm trying to hide the viewer with the button but it stops working when I do the ternary... I don't know why! */}
+								{/* {preview ? <div><GoogleBooksViewer isbn={params.theisbn} /> </div> : null} */}
 
-				</div >
-			</div >
+							</div >
+						</div >
+					</>
+				)}
 			<div className="container">
 				{/* {store.nytReview ?
 					<div className="row mb-3 mt-3">

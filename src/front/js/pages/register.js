@@ -1,158 +1,248 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../../styles/register.css"
+import { toast } from "react-toastify";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "../../styles/register.css";
 
-import CJBookNookLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/CJBookNookLogoSmall.png";
+import CJBookNookLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/CJBookNookBG.png";
 
 export const Register = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [full_name, setFull_name] = useState("");
-    const [isChecked, setIsChecked] = useState(false);
+    const [formData, setFormData] = useState({
+        full_name: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        termsAndConditions: false,
+    });
+
+    const [successfulRegistration, setSuccessfulRegistration] = useState(false);
+    const [errors, setErrors] = useState({});
 
     const navigate = useNavigate();
 
-    const registerUser = async () => {
-        const opts = {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                email: email,
-                password: password,
-                full_name: full_name
-            })
-        };
-        try {
-            const resp = await fetch(process.env.BACKEND_URL + 'api/create/user', opts)
-            if (resp.status !== 200) {
-                const data = await resp.json()
-                alert(data.error);//show another kind of message instead of the alert
-                return false;
-            } else {
-                alert("Your registration was successfull")
-                navigate("/login")
-                sessionStorage.removeItem("token");
-                return true
-            };
+    const validateForm = () => {
+        const { full_name, email, password, confirmPassword, termsAndConditions } = formData;
+        const errors = {};
 
-
-        }
-        catch (error) {
-            console.error("There has been an error registering")
+        if (!full_name) {
+            errors.full_name = 'Please enter your full name';
         }
 
-    }
-    const handleCheckboxChange = (event) => {
-        setIsChecked(event.target.checked);
+        if (!email) {
+            errors.email = 'Please enter your email address';
+        } else if (!/\S+@\S+\.\S+/.test(email)) {
+            errors.email = 'Please enter a valid email address';
+        }
+
+        if (!password) {
+            errors.password = 'Please enter a password';
+        } else if (password.length < 6) {
+            errors.password = 'Password must be at least 6 characters long';
+        }
+
+        if (!confirmPassword) {
+            errors.confirmPassword = 'Please confirm your password';
+        } else if (password !== confirmPassword) {
+            errors.confirmPassword = 'Passwords do not match';
+        }
+
+        if (!termsAndConditions) {
+            errors.termsAndConditions = 'Please accept the terms and conditions';
+        }
+
+        return errors;
+    };
+
+    const handleChange = (e, fieldName) => {
+        e.persist();
+
+        let value;
+
+        if (e.target.type === 'checkbox') {
+            value = e.target.checked;
+        } else {
+            value = e.target.value;
+        }
+
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            [fieldName]: value,
+        }));
+    };
+
+    const handleCheckboxChange = (e) => {
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            termsAndConditions: e.target.checked,
+        }));
     };
 
     const handleRegisterSubmit = async (e) => {
-        e.preventDefault()
-        if (!isChecked) {
-            alert('Please check the box to proceed.');
-            return;
+        e.preventDefault();
+
+        const errors = validateForm();
+        const { full_name, email, password, confirmPassword } = formData;
+        if (Object.keys(errors).length > 0) {
+            setErrors(errors);
         } else {
-            registerUser();
+            const opts = {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+            };
+            try {
+                const resp = await fetch(process.env.BACKEND_URL + 'api/create/user', opts);
+                if (resp.status !== 200) {
+                    const data = await resp.json();
+                    toast.error(data.error); // Display error message using toast
+                    return false;
+                } else {
+                    setSuccessfulRegistration(true);
+                    toast.success("Your registration was successful"); // Display success message using toast
+                    // navigate("/login");
+                    sessionStorage.removeItem("token");
+                    return true;
+                }
+            } catch (error) {
+                console.error("There has been an error registering:", error);
+            }
         }
 
-    }
+
+    };
     return (
 
-        <div className="Auth-form container p-5">
-            {!isChecked &&
-                <div class="alert alert-danger" role="alert">
-                    Please check the box to proceed.
+        <div className="Auth-form container-lg container-md container-sm p-5">
+            {successfulRegistration ? (
+                <div className="card text-center">
+                    <div className="card-body">
+                        <h2>Registration Successful!</h2>
+                        <p>You can now proceed to login.</p>
+                        <Link to="/login" className="btn btn-primary">
+                            Go to Login
+                        </Link>
+                    </div>
                 </div>
-
-            }
-            {
-                <div class="alert alert-primary" role="alert">
-                    Your registration has been successfull!
-                </div>
-            }
-
-            <div className="card p-5">
-                <form className="Auth-form">
-                    <div className="Auth-form-content">
-                        <h3 className="Auth-form-title text-center">Sign Up</h3>
-                        <div className="text-center">
-                            Already registered?{" "}
-                            <Link to="/login">
-                                <span className="link-primary">
-                                    Login
-                                </span>
-                            </Link>
-                        </div>
-                        <div className="form-group mt-3">
-                            <label>Full Name</label>
-                            <input
-                                type="text"
-                                className="form-control mt-1"
-                                placeholder="e.g Jane Doe"
-                                aria-label="Full name"
-                                value={full_name}
-                                onChange={(e) => { setFull_name(e.target.value) }}
-                                required
-                            />
-                        </div>
-                        <div className="form-group mt-3">
-                            <label>Email address</label>
-                            <input
-                                type="email"
-                                className="form-control mt-1"
-                                placeholder="Email Address"
-                                aria-label="Email"
-                                value={email}
-                                onChange={(e) => { setEmail(e.target.value) }}
-                                required
-                            />
-                        </div>
-                        <div className="form-group mt-3">
-                            <label>Password</label>
-                            <input
-                                type="password"
-                                className="form-control mt-1"
-                                placeholder="Password"
-                                aria-label="Password"
-                                value={password}
-                                onChange={(e) => { setPassword(e.target.value) }}
-                                required
-                            />
-                        </div>
-                        <div className="form-check col-md-6 mt-3">
-                            <input
-                                className="form-check-input"
-                                type="checkbox"
-                                id="gridCheck"
-                                checked={isChecked}
-                                onChange={handleCheckboxChange}
-                                required
-                            />
-                            <label className="form-check-label py-0" htmlFor="gridCheck">
-                                I declare that I have read and accept the
-                                <sup>
-                                    <button
-                                        className="btn btn-link p-0"
+            ) : (
+                <div className="card">
+                    <div className="card-body">
+                        <form onSubmit={handleRegisterSubmit}>
+                            <div className="text-center register-custom-bg-img rounded">
+                                <LazyLoadImage
+                                    src={CJBookNookLogo}
+                                    alt="CJ Book Nook Logo"
+                                    className="my-2 border rounded-circle"
+                                    style={{ width: '150px' }} />
+                            </div>
+                            <h3 className="Auth-form-title text-center mt-3">Sign Up</h3>
+                            <div className="text-center">
+                                Already registered?{" "}
+                                <Link to="/login">
+                                    <span className="link-like">
+                                        Login
+                                    </span>
+                                </Link>
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="full_name" className="form-label">
+                                    Full Name
+                                </label>
+                                <input
+                                    type="text"
+                                    className={`form-control ${errors.full_name && 'is-invalid'}`}
+                                    id="full_name"
+                                    name="full_name"
+                                    value={formData.full_name}
+                                    onChange={(e) => handleChange(e, 'full_name')}
+                                    required
+                                />
+                                {errors.full_name && <div className="invalid-feedback">{errors.full_name}</div>}
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="email" className="form-label">
+                                    Email address
+                                </label>
+                                <input
+                                    type="email"
+                                    className={`form-control ${errors.email && 'is-invalid'}`}
+                                    id="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={(e) => handleChange(e, 'email')}
+                                    required
+                                />
+                                {errors.email && <div className="invalid-feedback">{errors.email}</div>}
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="password" className="form-label">
+                                    Password
+                                </label>
+                                <input
+                                    type="password"
+                                    className={`form-control ${errors.password && 'is-invalid'}`}
+                                    id="password"
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={(e) => handleChange(e, 'password')}
+                                    required
+                                />
+                                {errors.password && <div className="invalid-feedback">{errors.password}</div>}
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="confirmPassword" className="form-label">
+                                    Confirm Password
+                                </label>
+                                <input
+                                    type="password"
+                                    className={`form-control ${errors.confirmPassword && 'is-invalid'}`}
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    value={formData.confirmPassword}
+                                    onChange={(e) => handleChange(e, 'confirmPassword')}
+                                    required
+                                />
+                                {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
+                            </div>
+                            <div className="mb-3 form-check">
+                                <input
+                                    type="checkbox"
+                                    className={`form-check-input ${errors.termsAndConditions && 'is-invalid'}`}
+                                    id="termsAndConditions"
+                                    name="termsAndConditions"
+                                    checked={formData.termsAndConditions}
+                                    onChange={handleCheckboxChange}
+                                    required
+                                />
+                                <label className="form-check-label" htmlFor="termsAndConditions">
+                                    I have read and accept the{' '}
+                                    <a
+                                        className="link-like"
                                         data-bs-toggle="modal"
                                         data-bs-target="#exampleModal"
+                                        href="#"
                                     >
-                                        terms and conditions of sale and the privacy policy
-                                    </button>
-                                </sup>
-                                from CJ's Book Nook.
-                            </label>
-                        </div>
-                        <div className="d-grid gap-2 mt-3">
-                            <button type="submit" className="btn btn-secondary register-custom-button" onClick={handleRegisterSubmit}>
-                                Submit
-                            </button>
-                        </div>
+                                        terms and conditions and the privacy policy.
+                                    </a>{' '}
 
+                                </label>
+                                {errors.termsAndConditions && <div className="invalid-feedback">{errors.termsAndConditions}</div>}
+                            </div>
+
+                            <div className="d-grid gap-2 mt-3">
+                                <button type="submit" className="btn btn-secondary register-custom-button" onClick={handleRegisterSubmit}>
+                                    Register
+                                </button>
+                            </div>
+
+                        </form>
                     </div>
-                </form>
-            </div>
+                </div>
+
+            )}
+
+
             {/* modal for terms and conditions */}
             <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-dialog-scrollable">
@@ -269,7 +359,7 @@ export const Register = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
 
     );
 };
