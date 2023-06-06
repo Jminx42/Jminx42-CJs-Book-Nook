@@ -64,11 +64,16 @@ class Book(db.Model):
     title = db.Column(db.String(250), nullable=False)
     author = db.Column(db.String(120), nullable=False)
     isbn = db.Column(BIGINT(unsigned=True), unique=True, nullable=True)
-    book_cover = db.Column(db.String(250), nullable=False)
+    book_cover = db.Column(db.String(250), nullable=True) #this comes from the NY API, and sometimes is null, but has better resolution
+    book_cover_b = db.Column(db.String(250), nullable=True) #this comes from the google book API, is always populated but has less resolution
     book_category = db.Column(db.Enum(BookCategory), server_default=BookCategory.paperback.value)
     genre = db.Column(db.Enum(Genre), server_default=Genre.thrillers.value)
     description = db.Column(db.Text, nullable=True)
-    year = db.Column(db.Integer, unique=False, nullable=False)
+    year = db.Column(db.String(60), unique=False, nullable=True)
+    average_rating = db.Column(db.Float, unique=False, nullable=True)
+    ratings_count = db.Column(db.Integer, unique=False, nullable=True)
+    pages = db.Column(db.Integer, unique=False, nullable=True)
+    preview = db.Column(db.String(250), nullable=True)
     price = db.Column(db.Float, unique=False, nullable=True)
     external_reviews = db.relationship("ExternalReview", backref="book")
     wishlist = db.relationship("Wishlist", backref="book")
@@ -85,11 +90,16 @@ class Book(db.Model):
             "author": self.author,
             "isbn": self.isbn,
             "book_cover": self.book_cover,
+            "book_cover_b": self.book_cover_b,
             "description": self.description,
             "book_category": self.book_category.value,
             "genre": self.genre.value,
             "year": self.year,
             "price": self.price,
+            "average_rating": self.average_rating,
+            "ratings_count": self.ratings_count,
+            "pages": self.pages,
+            "preview": self.preview,
         }
 
 class Review(db.Model):
@@ -97,7 +107,7 @@ class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     review = db.Column(db.Text, nullable=True)
     rating = db.Column(db.Integer, nullable=False)
-    book_isbn = db.Column(db.Integer, nullable=False)
+    book_isbn = db.Column(BIGINT(unsigned=True), unique=False, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):

@@ -6,12 +6,14 @@ from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from flask_cors import CORS
-from api.utils import APIException, generate_sitemap
-from api.models import db
+from api.utils import APIException, generate_sitemap, retrieve_books
+from api.models import db, Book
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
 from flask_jwt_extended import JWTManager
+
+
 
 #from models import Person
 
@@ -54,6 +56,13 @@ def handle_invalid_usage(error):
 # generate sitemap with all your endpoints
 @app.route('/')
 def sitemap():
+    if len(Book.query.all())== 0:
+        populate_books = retrieve_books()
+        for x in populate_books:
+            print(isinstance (x, Book))
+            db.session.add(x)
+
+        db.session.commit()
     if ENV == "development":
         return generate_sitemap(app)
     return send_from_directory(static_file_dir, 'index.html')

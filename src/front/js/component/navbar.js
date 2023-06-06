@@ -53,11 +53,11 @@ export const Navbar = () => {
 							<Link to="/profile">
 								<button className="btn btn-secondary me-2 navbar-custom-button">Profile</button>
 							</Link>
-							<Link to="/">
-								<button className="btn btn-secondary  navbar-custom-button" onClick={() => actions.logout()}>
-									Logout
-								</button>
-							</Link>
+
+							<button className="btn btn-secondary  navbar-custom-button" onClick={() => actions.logout()}>
+								Logout
+							</button>
+
 
 
 						</div>

@@ -53,6 +53,7 @@ def login():
 @jwt_required()
 def validate_user():
     user_id = get_jwt_identity()
+    print(user_id)
     user = User.query.get(user_id)
     if not user:
         return jsonify ({"error": "invalid credentials"}), 300
@@ -142,6 +143,15 @@ def get_all_reviews():
 
     return jsonify(serialized_reviews), 200  
 
+@api.route("/user_reviews", methods=['GET'])
+@jwt_required()
+def get_user_reviews():
+    user_id = get_jwt_identity()
+    reviews = Review.query.get(user_id)
+    serialized_reviews = [review.serialize() for review in reviews]
+
+    return jsonify(serialized_reviews), 200  
+
 @api.route("/review/<int:review_id>", methods=['GET'])
 def get_one_review_by_id(review_id):
     review = Review.query.get(review_id)
@@ -170,9 +180,9 @@ def update_review(review_id):
 def create_review():
     user_id = get_jwt_identity()
     body = request.json
-    # review = request.json.get("review", None)
-    # rating = request.json.get("rating", None)
-    # book_isbn = request.json.get("book_isbn", None)
+    review = request.json.get("review", None)
+    rating = request.json.get("rating", None)
+    book_isbn = request.json.get("book_isbn", None)
        
     new_review = Review(
         review=body["review"],
