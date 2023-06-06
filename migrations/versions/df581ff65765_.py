@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 61aa918ffdd7
+Revision ID: df581ff65765
 Revises: 
-Create Date: 2023-06-04 17:24:41.070386
+Create Date: 2023-06-05 21:55:35.721537
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import mysql
 
 # revision identifiers, used by Alembic.
-revision = '61aa918ffdd7'
+revision = 'df581ff65765'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -23,11 +23,16 @@ def upgrade():
     sa.Column('title', sa.String(length=250), nullable=False),
     sa.Column('author', sa.String(length=120), nullable=False),
     sa.Column('isbn', mysql.BIGINT(unsigned=True), nullable=True),
-    sa.Column('book_cover', sa.String(length=250), nullable=False),
+    sa.Column('book_cover', sa.String(length=250), nullable=True),
+    sa.Column('book_cover_b', sa.String(length=250), nullable=True),
     sa.Column('book_category', sa.Enum('paperback', 'hardcover', 'ebook', 'audiobook', name='bookcategory'), server_default='paperback', nullable=True),
     sa.Column('genre', sa.Enum('romance', 'fiction', 'non_fiction', 'science_fiction', 'mystery_crime', 'thrillers', 'fantasy', name='genre'), server_default='thrillers', nullable=True),
     sa.Column('description', sa.Text(), nullable=True),
     sa.Column('year', sa.Integer(), nullable=False),
+    sa.Column('average_rating', sa.Integer(), nullable=True),
+    sa.Column('ratings_count', sa.Integer(), nullable=True),
+    sa.Column('pages', sa.Integer(), nullable=True),
+    sa.Column('preview', sa.String(length=250), nullable=True),
     sa.Column('price', sa.Float(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('isbn')
@@ -69,8 +74,7 @@ def upgrade():
     sa.Column('book_isbn', mysql.BIGINT(unsigned=True), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('book_isbn')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('transaction',
     sa.Column('id', sa.Integer(), nullable=False),

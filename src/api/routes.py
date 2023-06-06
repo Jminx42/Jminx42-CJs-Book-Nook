@@ -143,6 +143,15 @@ def get_all_reviews():
 
     return jsonify(serialized_reviews), 200  
 
+@api.route("/user_reviews", methods=['GET'])
+@jwt_required()
+def get_user_reviews():
+    user_id = get_jwt_identity()
+    reviews = Review.query.get(user_id)
+    serialized_reviews = [review.serialize() for review in reviews]
+
+    return jsonify(serialized_reviews), 200  
+
 @api.route("/review/<int:review_id>", methods=['GET'])
 def get_one_review_by_id(review_id):
     review = Review.query.get(review_id)

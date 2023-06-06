@@ -3,6 +3,7 @@ import { Navbar } from "../component/navbar";
 import { Link } from "react-router-dom";
 import "../../styles/profile.css"
 import { Card } from "../component/card";
+import { Review } from "../component/review";
 
 import { Context } from "../store/appContext";
 import { InputProfilePic } from "../component/inputProfilePic";
@@ -12,6 +13,7 @@ export const Profile = () => {
 	const [user, setUser] = useState(store.user);
 	const [editClicked, setEditClicked] = useState(false);
 	const wishlist = JSON.parse(sessionStorage.getItem("wishlist"));
+	const [reviews, setReviews] = useState([]);
 
 
 	useEffect(() => {
@@ -39,6 +41,32 @@ export const Profile = () => {
 		}
 	};
 
+	useEffect(() => {
+		getUserReviews();
+	}, []);
+
+	const getUserReviews = async () => {
+		try {
+			const response = await fetch(process.env.BACKEND_URL + "api/user_reviews", {
+				method: "GET",
+				headers: {
+					Authorization: "Bearer " + sessionStorage.getItem("token"),
+					"Content-Type": "application/json"
+				}
+			});
+
+			if (response.ok) {
+				const data = await response.json();
+				setReviews(data.reviews);
+			} else {
+				const data = await response.json();
+				alert(data.error);
+			}
+		} catch (error) {
+			console.error("Error fetching reviews:", error);
+		}
+	};
+
 	return (
 		<div>
 			<Navbar />
@@ -50,6 +78,9 @@ export const Profile = () => {
 					</li>
 					<li className="nav-item" role="presentation">
 						<button className="nav-link" id="wishlist-tab" data-bs-toggle="tab" data-bs-target="#wishlist-tab-pane" type="button" role="tab" aria-controls="wishlist-tab-pane" aria-selected="false">Wishlist</button>
+					</li>
+					<li className="nav-item" role="presentation">
+						<button className="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews-tab-pane" type="button" role="tab" aria-controls="reviews-tab-pane" aria-selected="false">My Reviews</button>
 					</li>
 					<li className="nav-item" role="presentation">
 						<button className="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment-tab-pane" type="button" role="tab" aria-controls="payment-tab-pane" aria-selected="false">Payment</button>
@@ -143,6 +174,16 @@ export const Profile = () => {
 							{wishlist && wishlist.length !== 0 ? wishlist.filter((book) => book.title.toLowerCase().includes(store.search)).map((book) => {
 								return <Card key={book.isbn} item={book} />
 							}) : null}
+						</div>
+					</div>
+
+				</div>
+				<div className="tab-pane fade" id="reviews-tab-pane" role="tabpanel" aria-labelledby="reviews-tab" tabIndex="0">
+					<div className="container mt-4">
+						<div className="row d-flex">
+							{reviews.map(review => (
+								<Review key={review.id} item={review} />
+							))}
 						</div>
 					</div>
 

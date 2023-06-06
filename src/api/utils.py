@@ -46,12 +46,40 @@ def retrieve_books ():
     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     result = requests.get('https://api.nytimes.com/svc/books/v3/lists/full-overview.json?api-key=emRJGQrXQ32EXbl6ThvjL8JdJcoicGWf')
     data = result.json()
-    booklist = data["results"]["lists"][0]["books"]
-    print(booklist[0])
-    result_google = requests.get('https://www.googleapis.com/books/v1/volumes?q=isbn:' + booklist[0]["primary_isbn13"] + '&key=AIzaSyAhG7q0MvYbiWzXeuSBlhqNATkUVSKhFq0')
-    data_google = result_google.json()
-    book = Book(title = booklist[0]["title"], author = booklist[0]["author"], isbn = booklist[0]["primary_isbn13"], book_cover = booklist[0]["book_image"], description = booklist[0]["description"], year = data_google["items"][0]["volumeInfo"]["publishedDate"])
-    print(book)
+    finalbooks = []
+    for booklist in data["results"]["lists"]:
+        
+        finalbooks += booklist["books"]
+    unique_books = []
+    for x in finalbooks:
+        if not x["primary_isbn13"] in [y["primary_isbn13"] for y in unique_books]:
+            unique_books.append(x)
+            
+
+    
+    for book in unique_books:
+        result_google = requests.get('https://www.googleapis.com/books/v1/volumes?q=isbn:' + book["primary_isbn13"] + '&key=AIzaSyAhG7q0MvYbiWzXeuSBlhqNATkUVSKhFq0')
+        data_google = result_google.json()
+        if "items" in data_google:
+            volume_info= data_google["items"][0]["volumeInfo"]
+            book["thumbnail"]= volume_info["imageLinks"]["thumbnail"]
+            book["publishedDate"]= volume_info["publishedDate"]
+            book["averageRating"]= volume_info.get("averageRating", None)
+            book["ratingsCount"]= volume_info.get("ratingsCount", None)
+            book["pageCount"]= volume_info.get("pageCount", None)
+            book["previewLink"]= volume_info["previewLink"]
+
+    book_to_add = [Book(title = book["title"], author = book["author"], isbn = book["primary_isbn13"], book_cover = book.get("book_image", None), book_cover_b = book.get("thumbnail", None), description = book["description"], year = book.get("publishedDate", None), average_rating = book.get("averageRating", None), ratings_count = book.get("ratingsCount", None), pages = book.get("pageCount", None), preview = book.get("previewLink", None)) for book in unique_books]
+   
+ 
+    return book_to_add
+
+   
+    # book = Book(title = booklist[0]["title"], author = booklist[0]["author"], isbn = booklist[0]["primary_isbn13"], book_cover = booklist[0]["book_image"], book_cover_b = data_google["items"][0]["volumeInfo"]["imageLinks"]["thumbnail"], description = booklist[0]["description"], year = data_google["items"][0]["volumeInfo"]["publishedDate"], average_rating = data_google["items"][0]["volumeInfo"]["averageRating"], ratings_count = data_google["items"][0]["volumeInfo"]["ratingsCount"], pages = data_google["items"][0]["volumeInfo"]["pageCount"], preview = data_google["items"][0]["volumeInfo"]["previewLink"])
+  
+    
+    #book_cover, this comes from the NY API, and sometimes is null, but has better resolution
+    #book_cover_b, this comes from the google book API, is always populated but has less resolution
 
 
    
