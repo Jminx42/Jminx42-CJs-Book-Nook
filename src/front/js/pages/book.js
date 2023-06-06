@@ -116,18 +116,11 @@ export const Book = () => {
 									<p className="mt-3 fs-5">Click here to preview the book</p>
 								</Link>
 							</div>
+						</div>
+					</div >
+				</div >
+			</div>
 
-		
-
-
-
-					</div>
-
-
-							</div >
-						</div >
-					</>
-				)}
 			<div className="container">
 				{/* {store.nytReview ?
 					<div className="row mb-3 mt-3">
