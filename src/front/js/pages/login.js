@@ -55,14 +55,15 @@ export const Login = () => {
             )}
             <div className="card p-5">
                 <form className="Auth-form" onSubmit={handleLoginSubmit}>
-                    <div className="text-center register-custom-bg-img rounded">
-
-                        <LazyLoadImage
-                            src={CJBookNookLogo}
-                            alt="CJ Book Nook Logo"
-                            className="my-2 border rounded-circle"
-                            style={{ width: '150px' }} />
-                    </div>
+                    <Link to="/">
+                        <div className="text-center register-custom-bg-img rounded">
+                            <LazyLoadImage
+                                src={CJBookNookLogo}
+                                alt="CJ Book Nook Logo"
+                                className="my-2 border rounded-circle"
+                                style={{ width: '150px' }} />
+                        </div>
+                    </Link>
                     <div className="Auth-form-content">
 
                         <h3 className="Auth-form-title text-center mt-3">Login</h3>

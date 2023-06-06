@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "../../styles/register.css";
@@ -113,13 +113,15 @@ export const Register = () => {
                 <div className="card p-4">
                     <div className="card-body">
                         <form onSubmit={handleRegisterSubmit}>
-                            <div className="text-center register-custom-bg-img rounded">
-                                <LazyLoadImage
-                                    src={CJBookNookLogo}
-                                    alt="CJ Book Nook Logo"
-                                    className="my-2 border rounded-circle"
-                                    style={{ width: '150px' }} />
-                            </div>
+                            <Link to="/">
+                                <div className="text-center register-custom-bg-img rounded">
+                                    <LazyLoadImage
+                                        src={CJBookNookLogo}
+                                        alt="CJ Book Nook Logo"
+                                        className="my-2 border rounded-circle"
+                                        style={{ width: '150px' }} />
+                                </div>
+                            </Link>
                             <h3 className="Auth-form-title text-center mt-3">Sign Up</h3>
                             <div className="text-center">
                                 Already registered?{" "}
