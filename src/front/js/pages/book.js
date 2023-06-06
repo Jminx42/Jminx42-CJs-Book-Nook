@@ -11,6 +11,7 @@ export const Book = () => {
 	const [review, setReview] = useState({ book_isbn: parseInt(params.theisbn) })
 	const [preview, setPreview] = useState(false)
 	const { store, actions } = useContext(Context);
+
 	const [price, setPrice] = useState(store.bookPrice)
 	const [selectedOption, setSelectedOption] = useState('');
 
@@ -23,6 +24,7 @@ export const Book = () => {
 	}, [store.oneGoogleBook.publishedDate])
 
 	const submitReview = async (id) => {
+
 
 		const response = await fetch(process.env.BACKEND_URL + 'api/review', {
 			method: "POST",
@@ -56,6 +58,7 @@ export const Book = () => {
 	return (
 		<div>
 			<Navbar />
+
 			<div className="card container mt-3">
 				<div className="p-4 text-center bg-body-tertiary rounded-3">
 					<img src={store.oneGoogleBook.imageLinks && store.oneGoogleBook.imageLinks.thumbnail} className=" w-25 float-start" alt="..." />
@@ -114,21 +117,26 @@ export const Book = () => {
 								</Link>
 							</div>
 
-						</div>
+		
+
+
 
 					</div>
 
-				</div >
-			</div >
+
+							</div >
+						</div >
+					</>
+				)}
 			<div className="container">
-				{store.nytReview ?
+				{/* {store.nytReview ?
 					<div className="row mb-3 mt-3">
 						<h4>Reviews</h4>
 						<p>{store.nytReview.byline}</p>
 						<p>Reviewed in: {store.nytReview.publication_dt}</p>
 						<p>Excerpt: {store.nytReview.summary}</p>
 						<p>Review Link: <a href={store.nytReview.url} target="_blank" rel="noopener noreferrer">Click here</a></p>
-					</div> : null}
+					</div> : null} */}
 				<div className="row mb-3 mt-3">
 					<h4>Submit your review</h4>
 					{sessionStorage.getItem("token") ?
