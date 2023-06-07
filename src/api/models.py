@@ -55,7 +55,8 @@ class User(db.Model):
             "email": self.email,
             "full_name": self.full_name,
             "profile_picture": self.profile_picture,
-            "password": ""
+            "password": "",
+            "serialized_reviews": [review.serialize() for review in self.reviews]
         }
 
 class Book(db.Model):

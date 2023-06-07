@@ -84,19 +84,37 @@ const getState = ({ getStore, getActions, setStore }) => {
 					alert(data.error)
 				} else {
 					setStore({ books: data.books })
+					console.log("sdjbhbdsfhsdbhbsh")
+					console.log(getStore().books)
 				}
 			},
-
+			// Not working!
 			getOneBook: async (isbn) => {
 				const response = await fetch(process.env.BACKEND_URL + 'api/book/' + isbn);
 				const data = await response.json();
+				console.log(data)
 				setStore({ book: data.book })
+				console.log(getStore().book)
 
 			},
 
+			// getOneBook: async (isbn) => {
+			// 	await getActions().getBooks()
+			// 	console.log(getStore().books)
+			// 	const store = getStore();
+			// 	if (store.books) {
+			// 		const filteredBooks = await store.books.filter((book) => book === isbn);
+			// 		setStore({ book: filteredBooks });
+			// 		console.log(store.book);
+			// 	} else {
+			// 		console.log("Store books array is not available.");
+			// 	}
 
-			getNYTReview: async (isbn13) => {
-				const resp = await fetch('https://api.nytimes.com/svc/books/v3/reviews.json?isbn=' + isbn13 + '&api-key=emRJGQrXQ32EXbl6ThvjL8JdJcoicGWf')
+			// },
+
+
+			getNYTReview: async (isbn) => {
+				const resp = await fetch('https://api.nytimes.com/svc/books/v3/reviews.json?isbn=' + isbn + '&api-key=emRJGQrXQ32EXbl6ThvjL8JdJcoicGWf')
 
 				const data = await resp.json()
 
