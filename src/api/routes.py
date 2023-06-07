@@ -44,7 +44,7 @@ def login():
     user = User.query.filter_by(email=email, password=password).first() #gives the whole user, including the id
 
     if not user:
-        return jsonify ({"error": "invalid credentials"}), 300
+        return jsonify ({"error": "Invalid credentials"}), 300
     
     access_token = create_access_token(identity=user.id)
     return jsonify({"access_token": access_token}), 200
