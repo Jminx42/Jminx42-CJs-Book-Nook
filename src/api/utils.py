@@ -68,8 +68,9 @@ def retrieve_books ():
             book["ratingsCount"]= volume_info.get("ratingsCount", None)
             book["pageCount"]= volume_info.get("pageCount", None)
             book["previewLink"]= volume_info["previewLink"]
+            book["categories"]= volume_info.get("categories", [])
 
-    book_to_add = [Book(title = book["title"], author = book["author"], isbn = book["primary_isbn13"], book_cover = book.get("book_image", None), book_cover_b = book.get("thumbnail", None), description = book["description"], year = book.get("publishedDate", None), average_rating = book.get("averageRating", None), ratings_count = book.get("ratingsCount", None), pages = book.get("pageCount", None), preview = book.get("previewLink", None)) for book in unique_books]
+    book_to_add = [Book(title = book["title"], author = book["author"], isbn = book["primary_isbn13"], publisher = book["publisher"],  book_cover = book.get("book_image", None), book_cover_b = book.get("thumbnail", None), description = book["description"], year = book.get("publishedDate", None), average_rating = book.get("averageRating", None), ratings_count = book.get("ratingsCount", None), pages = book.get("pageCount", None), preview = book.get("previewLink", None), genre = book.get("categories", None) ) for book in unique_books]
    
  
     return book_to_add
