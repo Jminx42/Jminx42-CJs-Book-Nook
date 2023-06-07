@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import "../../styles/register.css";
+import "../../styles/index.css";
 
 import CJBookNookLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/CJBookNookBG.png";
 
@@ -104,7 +104,7 @@ export const Register = () => {
                     <div className="card-body">
                         <h2>Registration Successful!</h2>
                         <p>You can now proceed to login.</p>
-                        <Link to="/login" className="btn register-custom-button">
+                        <Link to="/login" className="btn custom-button">
                             Go to Login
                         </Link>
                     </div>
@@ -114,7 +114,7 @@ export const Register = () => {
                     <div className="card-body">
                         <form onSubmit={handleRegisterSubmit}>
                             <Link to="/">
-                                <div className="text-center register-custom-bg-img rounded">
+                                <div className="text-center custom-bg-img rounded">
                                     <LazyLoadImage
                                         src={CJBookNookLogo}
                                         alt="CJ Book Nook Logo"
@@ -225,7 +225,7 @@ export const Register = () => {
                             </div>
 
                             <div className="d-grid gap-2 mt-3">
-                                <button type="submit" className="btn register-custom-button" onClick={handleRegisterSubmit}>
+                                <button type="submit" className="btn custom-button" onClick={handleRegisterSubmit}>
                                     Register
                                 </button>
                             </div>

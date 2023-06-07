@@ -16,12 +16,20 @@ export const Book = () => {
 	const [selectedOption, setSelectedOption] = useState('');
 
 	useEffect(() => {
-		actions.getOneGoogleBook(params.theisbn)
+		actions.getBooks();
+		actions.getOneBook(params.theisbn)
 		actions.getNYTReview(params.theisbn)
-		if (store.oneGoogleBook.publishedDate) {
-			actions.setBookPrice((store.oneGoogleBook.publishedDate));
-		}
-	}, [store.oneGoogleBook.publishedDate])
+
+	}, [])
+
+	// useEffect(() => {
+	// 	actions.getOneBook(params.theisbn)
+	// 	actions.getNYTReview(params.theisbn)
+	// 	console.log(store.book)
+	// 	if (store.book.year) {
+	// 		actions.setBookPrice((store.book.year));
+	// 	}
+	// }, [store.book.year])
 
 	const submitReview = async (id) => {
 
@@ -45,15 +53,15 @@ export const Book = () => {
 		}
 	};
 
-	const handleOptionChange = (event) => {
-		setSelectedOption(event.target.value);
-		// Update the cart state with the selected option
-		// You can implement your logic to add the option to the cart here
-	};
+	// const handleOptionChange = (event) => {
+	// 	setSelectedOption(event.target.value);
+	// 	// Update the cart state with the selected option
+	// 	// You can implement your logic to add the option to the cart here
+	// };
 
-	const handleAddToCart = () => {
+	// const handleAddToCart = () => {
 
-	}
+	// }
 
 	return (
 		<div>
@@ -61,27 +69,27 @@ export const Book = () => {
 
 			<div className="card container mt-3">
 				<div className="p-4 text-center bg-body-tertiary rounded-3">
-					<img src={store.oneGoogleBook.imageLinks && store.oneGoogleBook.imageLinks.thumbnail} className=" w-25 float-start" alt="..." />
+					<img src={store.book.book_cover == null || store.book.book_cover == "" ? store.book.book_cover_b : store.book.book_cover} className=" w-25 float-start" alt="..." />
 					<div>
-						<h1 className=" display-3">{store.oneGoogleBook.title}</h1>
-						<p className="display-6">By {store.oneGoogleBook.authors && store.oneGoogleBook.authors.join(", ")}</p>
+						<h1 className=" display-3">{store.book.title}</h1>
+						<p className="display-6">By {store.book.author}</p>
 						<div className="row text-start">
 
 							<div className="row">
 								<div className="col-2">Publisher:</div>
-								<div className="col-10">{store.oneGoogleBook.publisher}</div>
+								<div className="col-10">{store.book.publisher}</div>
 							</div>
 							<div className="row">
 								<div className="col-2">Published Date:</div>
-								<div className="col-10">{store.oneGoogleBook.publishedDate}</div>
+								<div className="col-10">{store.book.year}</div>
 							</div>
-							<div className="row">
+							{/* <div className="row">
 								<div className="col-2">Genre:</div>
-								<div className="col-10">{store.oneGoogleBook.categories && store.oneGoogleBook.categories.join("& ")}</div>
-							</div>
+								<div className="col-10">{store.book.genre && store.book.genre.join("& ")}</div>
+							</div> */}
 							<div className="row">
 								<div className="col-2">Pages:</div>
-								<div className="col-10">{store.oneGoogleBook.pageCount == 0 ? "Not available" : store.oneGoogleBook.pageCount}</div>
+								<div className="col-10">{store.book.pages == 0 ? "Not available" : store.book.pages}</div>
 							</div>
 							<div className="row">
 								<div className="row">
@@ -90,11 +98,11 @@ export const Book = () => {
 								</div>
 								<div className="row">
 									<div className="col-2">Rating: </div>
-									<div className="col-10">{store.oneGoogleBook.averageRating ? store.oneGoogleBook.averageRating + " (out of " + store.oneGoogleBook.ratingsCount + " votes)" : "Not available"} </div>
+									<div className="col-10">{store.book.average_rating ? store.book.average_rating + " (out of " + store.book.ratings_count + " votes)" : "Not available"} </div>
 								</div>
 								<div className="col-2">Price:</div>
 								<div className="col-10">
-									<select className="form-select" aria-label="Default select example" defaultValue="" onChange={handleOptionChange}>
+									{/* <select className="form-select" aria-label="Default select example" defaultValue="" onChange={handleOptionChange}>
 										<option value="" disabled>Select your format</option>
 										{store.bookPrice !== null && (
 											<>
@@ -103,13 +111,13 @@ export const Book = () => {
 												<option value="3">eBook: {(store.bookPrice - 6).toFixed(2)}€</option>
 												<option value="4">Audiobook: {(store.bookPrice + 10).toFixed(2)}€</option>
 											</>)}
-									</select>
+									</select>  */}
 									<button onClick={() => handleAddToCart(selectedOption)}>Add to Cart</button>
 								</div>
 							</div>
 							<div className="row">
 								<div className="col-2">Description:</div>
-								<div className="col-10">{store.oneGoogleBook.description}</div>
+								<div className="col-10">{store.book.description}</div>
 							</div>
 							<div className="row">
 								<Link to={`/googlePreview/${params.theisbn}`}>
@@ -181,5 +189,4 @@ export const Book = () => {
 
 	);
 };
-
 

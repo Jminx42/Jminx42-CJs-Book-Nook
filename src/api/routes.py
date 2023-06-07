@@ -128,11 +128,11 @@ def get_all_books():
 
     return jsonify({"books": serialized_books}), 200  
 
-@api.route("/book/<int:book_id>", methods=['GET'])
-def get_one_book_by_id(book_id):
-    book = Book.query.get(book_id)
+@api.route("/book/<int:isbn>", methods=['GET'])
+def get_one_book_by_id(isbn):
+    book = Book.query.filter_by(isbn = isbn).first()
     if not book:
-        return jsonify({"error": "No book found with this id"}), 400
+        return jsonify({"error": "No book found with this ISBN"}), 400
 
     return jsonify({"book": book.serialize()}), 200 
 

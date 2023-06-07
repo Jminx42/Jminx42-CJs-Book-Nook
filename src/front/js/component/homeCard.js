@@ -1,11 +1,11 @@
 import React, { useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
-import "../../styles/externalCard.css";
+import "../../styles/index.css";
 import "../../styles/home.css";
-import CJBookNookLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/CJBookNookLogo.png";
 
-export const ExternalCard = ({ item }) => {
+
+export const HomeCard = ({ item }) => {
     const { store, actions } = useContext(Context);
     const price = item.weeks_on_list ? store.price : "Free";
 
@@ -15,32 +15,27 @@ export const ExternalCard = ({ item }) => {
 
     return (
         <div className="card d-flex flex-column m-2 p-0" style={{ width: "18rem" }}>
-            <Link to={`/book/${item.primary_isbn13}`} className="card-body-custom flex-grow-1">
-                {item.book_image == null || item.book_image == ""
+            <Link to={`/book/${item.isbn}`} className="card-body-custom flex-grow-1">
+                {item.book_cover == null || item.book_cover == ""
                     ?
                     <div className="image-container" style={{ height: "320px", overflow: "hidden" }}>
-                        <img src={CJBookNookLogo} className="card-img-top w-100 h-100" alt="Book Cover" />
+                        <img src={item.book_cover_b} className="card-img-top w-100 h-100" alt="Book Cover" />
                     </div>
                     :
                     <div className="image-container" style={{ height: "320px", overflow: "hidden" }}>
-                        <img src={item.book_image} className="card-img-top w-100 h-100" alt="Book Cover" />
+                        <img src={item.book_cover} className="card-img-top w-100 h-100" alt="Book Cover" />
                     </div>
                 }
 
-                <div className="card-body text-start">
+                <div className="card-body">
 
-                    <div className="row">
+                    <div className="row  d-flex flex-grow-1">
                         <h5 className="card-title">{item.title}</h5>
                     </div>
-                    <div className="row">
+                    <div className="row align-items-end">
                         <p className="card-text">{item.author}</p>
                     </div>
-                    <div className="row">
-                        <p className="card-text">
-                            <span className="fw-bold">Price: </span>
-                            {price}€
-                        </p>
-                    </div>
+
 
                 </div>
             </Link>
@@ -48,12 +43,12 @@ export const ExternalCard = ({ item }) => {
 
                 <button
                     type="button"
-                    className="btn me-2 text-white card-custom-button"
+                    className="btn me-2 text-white custom-button"
                     onClick={() =>
-                        actions.setWishlist(item.primary_isbn13, item.book_image, item.title, item.author)
+                        actions.setWishlist(item.isbn, item.book_cover, item.title, item.author)
                     }
                 >
-                    {store.wishlist.some((wishlistItem) => wishlistItem.primary_isbn13 === item.primary_isbn13) ? (
+                    {store.wishlist.some((wishlistItem) => wishlistItem.isbn === item.isbn) ? (
                         <i className="fas fa-heart"></i>
                     ) : (
                         <i className="far fa-heart"></i>
@@ -61,12 +56,12 @@ export const ExternalCard = ({ item }) => {
                 </button>
                 <button
                     type="button"
-                    className="btn text-white card-custom-button"
+                    className="btn text-white custom-button"
                     onClick={() =>
-                        actions.setCheckout(item.primary_isbn13, item.book_image, item.title, item.author, item.price)
+                        actions.setCheckout(item.isbn, item.book_cover, item.title, item.author)
                     }
                 >
-                    {store.checkout.some((checkoutItem) => checkoutItem.primary_isbn13 === item.primary_isbn13) ? (
+                    {store.checkout.some((checkoutItem) => checkoutItem.isbn === item.isbn) ? (
                         <i className="bi bi-cart-fill"></i>
                     ) : (
                         <i className="bi bi-cart"></i>
@@ -77,4 +72,3 @@ export const ExternalCard = ({ item }) => {
         </div>
     );
 };
-
