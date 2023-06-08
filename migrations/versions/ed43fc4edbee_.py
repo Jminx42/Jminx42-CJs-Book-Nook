@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: df581ff65765
+Revision ID: ed43fc4edbee
 Revises: 
-Create Date: 2023-06-05 21:55:35.721537
+Create Date: 2023-06-08 19:34:08.573622
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import mysql
 
 # revision identifiers, used by Alembic.
-revision = 'df581ff65765'
+revision = 'ed43fc4edbee'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -26,10 +26,10 @@ def upgrade():
     sa.Column('book_cover', sa.String(length=250), nullable=True),
     sa.Column('book_cover_b', sa.String(length=250), nullable=True),
     sa.Column('book_category', sa.Enum('paperback', 'hardcover', 'ebook', 'audiobook', name='bookcategory'), server_default='paperback', nullable=True),
-    sa.Column('genre', sa.Enum('romance', 'fiction', 'non_fiction', 'science_fiction', 'mystery_crime', 'thrillers', 'fantasy', name='genre'), server_default='thrillers', nullable=True),
+    sa.Column('genre', sa.ARRAY(sa.String(length=255)), nullable=True),
     sa.Column('description', sa.Text(), nullable=True),
-    sa.Column('year', sa.Integer(), nullable=False),
-    sa.Column('average_rating', sa.Integer(), nullable=True),
+    sa.Column('year', sa.String(length=60), nullable=True),
+    sa.Column('average_rating', sa.Float(), nullable=True),
     sa.Column('ratings_count', sa.Integer(), nullable=True),
     sa.Column('pages', sa.Integer(), nullable=True),
     sa.Column('preview', sa.String(length=250), nullable=True),

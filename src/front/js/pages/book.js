@@ -83,10 +83,11 @@ export const Book = () => {
 								<div className="col-2">Published Date:</div>
 								<div className="col-10">{store.book.year}</div>
 							</div>
-							{/* <div className="row">
+							<div className="row">
 								<div className="col-2">Genre:</div>
-								<div className="col-10">{store.book.genre && store.book.genre.join("& ")}</div>
-							</div> */}
+								<div className="col-10">{store.book.genre}</div>
+								{/* <div ">{store.book.genre && store.book.genre.join("& ")}</div> */}
+							</div>
 							<div className="row">
 								<div className="col-2">Pages:</div>
 								<div className="col-10">{store.book.pages == 0 ? "Not available" : store.book.pages}</div>
