@@ -46,7 +46,7 @@ def login():
     if not user:
         return jsonify ({"error": "Invalid credentials"}), 300
     
-    access_token = create_access_token(identity=user.id)
+    access_token = create_access_token(identity=user.id, expires_delta = datetime.timedelta(minutes=30))
     return jsonify({"access_token": access_token}), 200
 
 @api.route("/user/validate", methods=["GET"])

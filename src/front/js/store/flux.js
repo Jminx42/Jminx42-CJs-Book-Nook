@@ -170,26 +170,37 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-
-
-			setWishlist: (primary_isbn13, cover, title, author) => {
-				const wish = getStore().wishlist;
-
-				const newItem = { primary_isbn13, cover, title, author };
+			setWishlist: (user_id, book_id) => {
+				const wish = getStore().user.wishlist;
+				const newItem = { user_id, book_id };
 				console.log(newItem);
 				const updatedWishlist = [...wish];
-				const existingItemIndex = updatedWishlist.findIndex(item => item.primary_isbn13 === primary_isbn13);
-
+				const existingItemIndex = updatedWishlist.findIndex(item => item.id === book_id);
 				if (existingItemIndex === -1) {
 					updatedWishlist.push(newItem);
 				} else {
 					updatedWishlist[existingItemIndex] = newItem;
 				}
-
 				setStore({ wishlist: updatedWishlist });
 				sessionStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
-
 			},
+
+			// setWishlist: (user_id, book_id) => {
+			// 	const wish = getStore().user.wishlist;
+
+
+			// 	const existingItemIndex = wish.findIndex(item => item.id === book_id);
+
+			// 	if (existingItemIndex === -1) {
+			// 		wish.push(newItem);
+			// 	} else {
+			// 		updatedWishlist[existingItemIndex] = newItem;
+			// 	}
+
+			// 	setStore({ wishlist: updatedWishlist });
+			// 	sessionStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
+
+			// },
 
 			setCheckout: (primary_isbn13, cover, title, author, price) => {
 				const cart = getStore().checkout;
