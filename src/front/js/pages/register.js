@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "../../styles/index.css";
 
@@ -81,11 +81,13 @@ export const Register = () => {
                 const resp = await fetch(process.env.BACKEND_URL + 'api/create/user', opts);
                 if (resp.status !== 200) {
                     const data = await resp.json();
-                    toast.error(data.error); // Display error message using toast
+                    // toast.error(data.error); // Display error message using toast
+                    alert(data.error); // Display error message using toast
                     return false;
                 } else {
                     setSuccessfulRegistration(true);
-                    toast.success("Your registration was successful"); // Display success message using toast
+                    // toast.success("Your registration was successful"); // Display success message using toast
+                    alert("Your registration was successful"); // Display success message using toast
                     sessionStorage.removeItem("token");
                     return true;
                 }
