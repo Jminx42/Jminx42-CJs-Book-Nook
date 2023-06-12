@@ -218,15 +218,27 @@ def get_wishlist():
 
 @api.route("/wishlist", methods=["POST"])
 def create_wishlist():
-    body = request.json
-    new_wishlist = Wishlist(
-        book_id=body["book_id"],
-        user_id=body["user_id"]
-    )
-    db.session.add(new_wishlist)
-    db.session.commit()
+    try:
+        body = request.json
+        if not all(key in body for key in ["book_id", "user_id"]):
+            return jsonify({"error": "Missing required fields"}), 400
 
-    return jsonify({"wishlist": "created"}), 200
+        new_wishlist = Wishlist(
+            book_id=body["book_id"],
+            user_id=body["user_id"]
+        )
+        db.session.add(new_wishlist)
+        db.session.commit()
+
+        wishlist_data = {
+            "book_id": new_wishlist.book_id,
+            "user_id": new_wishlist.user_id
+        }
+        return jsonify({"wishlist": wishlist_data}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
 
 @api.route("/wishlist", methods=["DELETE"])
 # @jwt_required()

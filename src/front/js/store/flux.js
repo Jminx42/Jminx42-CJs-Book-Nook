@@ -181,8 +181,48 @@ const getState = ({ getStore, getActions, setStore }) => {
 				} else {
 					updatedWishlist[existingItemIndex] = newItem;
 				}
+
+
 				setStore({ wishlist: updatedWishlist });
 				sessionStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
+			},
+
+			postWishlist: async (user_id, book_id) => {
+				const wish = getStore().user.wishlist;
+				const newItem = { user_id, book_id };
+
+				const updatedWishlist = [...wish];
+				const existingItemIndex = updatedWishlist.findIndex(item => item.id === book_id);
+				if (existingItemIndex === -1) {
+					updatedWishlist.push(newItem);
+				} else {
+					updatedWishlist[existingItemIndex] = newItem;
+				}
+
+				const opts = {
+					method: 'POST',
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({ user_id, book_id })
+				};
+
+				try {
+					const resp = await fetch(process.env.BACKEND_URL + 'api/wishlist', opts);
+					if (resp.status !== 200) {
+						const data = await resp.json();
+						const errorMessage = data.error || "Something went wrong";
+						toast.error(errorMessage); // Display error message using toast
+						return false;
+					} else {
+						setStore({ wishlist: updatedWishlist });
+						toast.success("Your book was successfully added to the wishlist"); // Display success message using toast
+						sessionStorage.removeItem("token");
+						return true;
+					}
+				} catch (error) {
+					console.error(`Error during fetch: ${process.env.BACKEND_URL}api/wishlist`, error);
+				}
 			},
 
 			// setWishlist: (user_id, book_id) => {
