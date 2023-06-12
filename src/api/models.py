@@ -55,7 +55,8 @@ class User(db.Model):
             "email": self.email,
             "full_name": self.full_name,
             "profile_picture": self.profile_picture,
-            "password": ""
+            "password": "",
+            "serialized_reviews": [review.serialize() for review in self.reviews]
         }
 
 class Book(db.Model):
@@ -66,8 +67,11 @@ class Book(db.Model):
     isbn = db.Column(BIGINT(unsigned=True), unique=True, nullable=True)
     book_cover = db.Column(db.String(250), nullable=True) #this comes from the NY API, and sometimes is null, but has better resolution
     book_cover_b = db.Column(db.String(250), nullable=True) #this comes from the google book API, is always populated but has less resolution
-    # book_category = db.Column(db.Enum(BookCategory), server_default=BookCategory.paperback.value)
-    # genre = db.Column(db.Enum(Genre), server_default=Genre.thrillers.value)
+
+    book_category = db.Column(db.Enum(BookCategory), server_default=BookCategory.paperback.value)
+    publisher = db.Column(db.String(100), unique=False, nullable=True)
+    genre = db.Column(db.String(100), unique=False, nullable=True)
+
     description = db.Column(db.Text, nullable=True)
     year = db.Column(db.String(60), unique=False, nullable=True)
     average_rating = db.Column(db.Float, unique=False, nullable=True)
@@ -93,7 +97,8 @@ class Book(db.Model):
             "book_cover_b": self.book_cover_b,
             "description": self.description,
             "book_category": self.book_category.value,
-            "genre": self.genre.value,
+            # "genre": self.genre, # We need to see how to access the values of genre
+            "publisher": self.publisher,
             "year": self.year,
             "price": self.price,
             "average_rating": self.average_rating,

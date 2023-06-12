@@ -9,6 +9,7 @@ from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 import cloudinary
 import cloudinary.uploader
+import datetime
 
 api = Blueprint('api', __name__)    
 
@@ -46,7 +47,7 @@ def login():
     if not user:
         return jsonify ({"error": "Invalid credentials"}), 300
     
-    access_token = create_access_token(identity=user.id)
+    access_token = create_access_token(identity=user.id, expires_delta = datetime.timedelta(minutes=30))
     return jsonify({"access_token": access_token}), 200
 
 @api.route("/user/validate", methods=["GET"])
@@ -128,11 +129,11 @@ def get_all_books():
 
     return jsonify({"books": serialized_books}), 200  
 
-@api.route("/book/<int:book_id>", methods=['GET'])
-def get_one_book_by_id(book_id):
-    book = Book.query.get(book_id)
+@api.route("/book/<int:isbn>", methods=['GET'])
+def get_one_book_by_id(isbn):
+    book = Book.query.filter_by(isbn = isbn).first()
     if not book:
-        return jsonify({"error": "No book found with this id"}), 400
+        return jsonify({"error": "No book found with this isbn"}), 400
 
     return jsonify({"book": book.serialize()}), 200 
 
@@ -147,10 +148,10 @@ def get_all_reviews():
 @jwt_required()
 def get_user_reviews():
     user_id = get_jwt_identity()
-    reviews = Review.query.get(user_id)
+    reviews = Review.query.filter_by(user_id = user_id).all()
     serialized_reviews = [review.serialize() for review in reviews]
 
-    return jsonify(serialized_reviews), 200  
+    return jsonify({"reviews": serialized_reviews}), 200  
 
 @api.route("/review/<int:review_id>", methods=['GET'])
 def get_one_review_by_id(review_id):
