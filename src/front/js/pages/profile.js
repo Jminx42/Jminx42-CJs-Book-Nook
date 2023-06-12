@@ -58,6 +58,8 @@ export const Profile = () => {
 			if (response.ok) {
 				const data = await response.json();
 				setReviews(data.reviews);
+				console.log("aaaaaaaaaaa")
+				console.log(data.reviews)
 			} else {
 				const data = await response.json();
 				alert(data.error);

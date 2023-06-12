@@ -1,3 +1,4 @@
+
 import React, { useContext, useEffect, useState, useRef } from "react";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
@@ -5,9 +6,11 @@ import "../../styles/index.css";
 import "../../styles/home.css";
 
 
+
 export const HomeCard = ({ item }) => {
     const { store, actions } = useContext(Context);
     const price = item.weeks_on_list ? store.price : "Free";
+
     const [loggedIn, setLoggedIn] = useState(true);
     const modal = useRef();
 
@@ -15,6 +18,7 @@ export const HomeCard = ({ item }) => {
         actions.setPrice(item.weeks_on_list);
 
     }, [item.weeks_on_list]);
+
 
 
 
@@ -32,12 +36,14 @@ export const HomeCard = ({ item }) => {
                     </div>
                 }
 
+
                 <div className="card-body">
 
                     <div className="row  d-flex flex-grow-1">
                         <h5 className="card-title">{item.title}</h5>
                     </div>
                     <div className="row align-items-end">
+
                         <p className="card-text">{item.author}</p>
                     </div>
 
@@ -48,6 +54,7 @@ export const HomeCard = ({ item }) => {
 
                 <button
                     type="button"
+
                     className="btn me-2 text-white custom-button"
 
                     onClick={() => {
@@ -59,11 +66,13 @@ export const HomeCard = ({ item }) => {
                         button.setAttribute("data-bs-toggle", "modal")
                         button.setAttribute("data-bs-target", "#exampleModal")
                     }
+
                     }
                 >
                     {store.wishlist.some((wishlistItem) => wishlistItem.isbn === item.isbn) ? (
                         <i className="fas fa-heart"></i>
                     ) : (
+
                         <i className="far fa-heart bg-primary"></i>
                     )}
                 </button>
@@ -88,6 +97,7 @@ export const HomeCard = ({ item }) => {
                 <button
                     type="button"
                     className="btn text-white custom-button"
+
                     onClick={() =>
                         actions.setCheckout(item.isbn, item.book_cover, item.title, item.author)
                     }
@@ -103,3 +113,4 @@ export const HomeCard = ({ item }) => {
         </div>
     );
 };
+

@@ -72,7 +72,9 @@ def retrieve_books ():
             book["averageRating"]= volume_info.get("averageRating", None)
             book["ratingsCount"]= volume_info.get("ratingsCount", None)
             book["pageCount"]= volume_info.get("pageCount", None)
+
             book["previewLink"]= volume_info.get("previewLink", None)
+            book["publisher"]= volume_info.get("publisher", None)
             book["categories"] = volume_info.get("categories", [])
 
     book_to_add = [Book(title = book["title"], 
@@ -86,7 +88,9 @@ def retrieve_books ():
                         average_rating = book.get("averageRating", None), 
                         ratings_count = book.get("ratingsCount", None), 
                         pages = book.get("pageCount", None), 
+                        publisher = book["publisher"],
                         preview = book.get("previewLink", None)) for book in unique_books]
+
    
  
     return book_to_add

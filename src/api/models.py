@@ -29,6 +29,7 @@ class User(db.Model):
             "full_name": self.full_name,
             "profile_picture": self.profile_picture,
             "password": "",
+
             "wishlist": [x.serialize() for x in self.wishlist]
         }
 
@@ -46,6 +47,9 @@ class UserCategory(db.Model):
             "id": self.id,
             "user_category": self.user_category,
             "user_id": self.user_id
+
+            "serialized_reviews": [review.serialize() for review in self.reviews]
+
         }
 
 class Book(db.Model):
@@ -56,7 +60,13 @@ class Book(db.Model):
     isbn = db.Column(BIGINT(unsigned=True), unique=True, nullable=True)
     book_cover = db.Column(db.String(250), nullable=True) #this comes from the NY API, and sometimes is null, but has better resolution
     book_cover_b = db.Column(db.String(250), nullable=True) #this comes from the google book API, is always populated but has less resolution
+
     genre = db.Column(db.ARRAY(db.String(255)), unique=False, nullable=True)
+
+    publisher = db.Column(db.String(100), unique=False, nullable=True)
+
+
+
     description = db.Column(db.Text, nullable=True)
     year = db.Column(db.String(60), unique=False, nullable=True)
     average_rating = db.Column(db.Float, unique=False, nullable=True)
@@ -81,7 +91,12 @@ class Book(db.Model):
             "book_cover": self.book_cover,
             "book_cover_b": self.book_cover_b,
             "description": self.description,
+
             "genre": self.genre,
+
+           
+            "publisher": self.publisher,
+
             "year": self.year,
             
             "average_rating": self.average_rating,
