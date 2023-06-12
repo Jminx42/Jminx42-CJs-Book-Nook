@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Navbar } from "../component/navbar";
 import { Link } from "react-router-dom";
-import "../../styles/profile.css"
+import "../../styles/index.css"
 import { Card } from "../component/card";
 import { Review } from "../component/review";
 
@@ -151,13 +151,13 @@ export const Profile = () => {
 							<div className="row">
 								{!editClicked ? (
 
-									<button className="btn btn-secondary profile-custom-button" onClick={() => setEditClicked(true)}>
+									<button className="btn btn-secondary custom-button" onClick={() => setEditClicked(true)}>
 										Edit
 									</button>
 
 								) : (
 									<div className="d-flex">
-										<button className="btn btn-secondary me-2 profile-custom-button" onClick={handleSave}>
+										<button className="btn btn-secondary me-2 custom-button" onClick={handleSave}>
 											Save
 										</button>
 										<button className="btn btn-secondary " onClick={() => setEditClicked(false)}>

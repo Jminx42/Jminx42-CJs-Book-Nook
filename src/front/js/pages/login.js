@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Context } from "../store/appContext";
 import { Link, useNavigate } from 'react-router-dom';
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import "../../styles/login.css"
+import "../../styles/index.css"
 import CJBookNookLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/CJBookNookBG.png";
 
 
@@ -56,7 +56,7 @@ export const Login = () => {
             <div className="card p-5">
                 <form className="Auth-form" onSubmit={handleLoginSubmit}>
                     <Link to="/">
-                        <div className="text-center register-custom-bg-img rounded">
+                        <div className="text-center custom-bg-img rounded">
                             <LazyLoadImage
                                 src={CJBookNookLogo}
                                 alt="CJ Book Nook Logo"
@@ -104,7 +104,7 @@ export const Login = () => {
                             )}
                         </div>
                         <div className="d-grid gap-2 mt-3">
-                            <button type="submit" className="btn btn-secondary login-custom-button">
+                            <button type="submit" className="btn btn-secondary custom-button">
                                 Login
                             </button>
                         </div>

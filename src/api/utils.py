@@ -1,6 +1,7 @@
 from flask import jsonify, url_for
 import requests
 from api.models import Book
+import numbers
 
 class APIException(Exception):
     status_code = 400
@@ -46,31 +47,50 @@ def retrieve_books ():
     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     result = requests.get('https://api.nytimes.com/svc/books/v3/lists/full-overview.json?api-key=emRJGQrXQ32EXbl6ThvjL8JdJcoicGWf')
     data = result.json()
+   
     finalbooks = []
     for booklist in data["results"]["lists"]:
-        
         finalbooks += booklist["books"]
+    
     unique_books = []
     for x in finalbooks:
-        if not x["primary_isbn13"] in [y["primary_isbn13"] for y in unique_books]:
-            unique_books.append(x)
+        primary_isbn13 = x.get("primary_isbn13")
+
+        if primary_isbn13 and primary_isbn13.isdigit():
+            if primary_isbn13 not in [y.get("primary_isbn13") for y in unique_books]:
+                unique_books.append(x)
             
 
     
-    for book in unique_books:
+    for book in unique_books: 
         result_google = requests.get('https://www.googleapis.com/books/v1/volumes?q=isbn:' + book["primary_isbn13"] + '&key=AIzaSyAhG7q0MvYbiWzXeuSBlhqNATkUVSKhFq0')
         data_google = result_google.json()
         if "items" in data_google:
             volume_info= data_google["items"][0]["volumeInfo"]
             book["thumbnail"]= volume_info["imageLinks"]["thumbnail"]
-            book["publishedDate"]= volume_info["publishedDate"]
+            book["publishedDate"]= volume_info.get("publishedDate", None)
             book["averageRating"]= volume_info.get("averageRating", None)
             book["ratingsCount"]= volume_info.get("ratingsCount", None)
             book["pageCount"]= volume_info.get("pageCount", None)
-            book["previewLink"]= volume_info["previewLink"]
-            book["categories"]= volume_info.get("categories", [])
 
-    book_to_add = [Book(title = book["title"], author = book["author"], isbn = book["primary_isbn13"], publisher = book["publisher"],  book_cover = book.get("book_image", None), book_cover_b = book.get("thumbnail", None), description = book["description"], year = book.get("publishedDate", None), average_rating = book.get("averageRating", None), ratings_count = book.get("ratingsCount", None), pages = book.get("pageCount", None), preview = book.get("previewLink", None), genre = book.get("categories", None) ) for book in unique_books]
+            book["previewLink"]= volume_info.get("previewLink", None)
+            book["publisher"]= volume_info.get("publisher", None)
+            book["categories"] = volume_info.get("categories", [])
+
+    book_to_add = [Book(title = book["title"], 
+                        author = book["author"], 
+                        isbn = book["primary_isbn13"], 
+                        book_cover = book.get("book_image", None), 
+                        book_cover_b = book.get("thumbnail", None), 
+                        description = book["description"], 
+                        year = book.get("publishedDate", None), 
+                        genre = book.get("categories", None),
+                        average_rating = book.get("averageRating", None), 
+                        ratings_count = book.get("ratingsCount", None), 
+                        pages = book.get("pageCount", None), 
+                        publisher = book["publisher"],
+                        preview = book.get("previewLink", None)) for book in unique_books]
+
    
  
     return book_to_add

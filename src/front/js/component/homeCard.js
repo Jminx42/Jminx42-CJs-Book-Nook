@@ -1,17 +1,26 @@
-import React, { useContext, useEffect } from "react";
+
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
-import "../../styles/homeCard.css";
+import "../../styles/index.css";
 import "../../styles/home.css";
-import CJBookNookLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/CJBookNookLogo.png";
+
+
 
 export const HomeCard = ({ item }) => {
     const { store, actions } = useContext(Context);
     const price = item.weeks_on_list ? store.price : "Free";
 
+    const [loggedIn, setLoggedIn] = useState(true);
+    const modal = useRef();
+
     useEffect(() => {
         actions.setPrice(item.weeks_on_list);
+
     }, [item.weeks_on_list]);
+
+
+
 
     return (
         <div className="card d-flex flex-column m-2 p-0" style={{ width: "18rem" }}>
@@ -27,12 +36,14 @@ export const HomeCard = ({ item }) => {
                     </div>
                 }
 
-                <div className="card-body text-start">
 
-                    <div className="row">
+                <div className="card-body">
+
+                    <div className="row  d-flex flex-grow-1">
                         <h5 className="card-title">{item.title}</h5>
                     </div>
-                    <div className="row">
+                    <div className="row align-items-end">
+
                         <p className="card-text">{item.author}</p>
                     </div>
 
@@ -43,20 +54,50 @@ export const HomeCard = ({ item }) => {
 
                 <button
                     type="button"
-                    className="btn me-2 text-white card-custom-button"
-                    onClick={() =>
-                        actions.setWishlist(item.isbn, item.book_cover, item.title, item.author)
+
+                    className="btn me-2 text-white custom-button"
+
+                    onClick={() => {
+                        sessionStorage.getItem("token") && loggedIn
+                            ?
+                            actions.setWishlist(item.isbn, item.book_cover, item.title, item.author)
+                            :
+                            setLoggedIn(false)
+                        button.setAttribute("data-bs-toggle", "modal")
+                        button.setAttribute("data-bs-target", "#exampleModal")
+                    }
+
                     }
                 >
                     {store.wishlist.some((wishlistItem) => wishlistItem.isbn === item.isbn) ? (
                         <i className="fas fa-heart"></i>
                     ) : (
-                        <i className="far fa-heart"></i>
+
+                        <i className="far fa-heart bg-primary"></i>
                     )}
                 </button>
+                {/* <!-- Modal --> */}
+                <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h1 className="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div className="modal-body">
+                                ...
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" className="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <button
                     type="button"
-                    className="btn text-white card-custom-button"
+                    className="btn text-white custom-button"
+
                     onClick={() =>
                         actions.setCheckout(item.isbn, item.book_cover, item.title, item.author)
                     }

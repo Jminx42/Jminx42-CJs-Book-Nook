@@ -56,7 +56,7 @@ def handle_invalid_usage(error):
 # generate sitemap with all your endpoints
 @app.route('/')
 def sitemap():
-    if len(Book.query.all())== 0:
+    if len(Book.query.all()) == 0:
         populate_books = retrieve_books()
         for x in populate_books:
             print(isinstance (x, Book))

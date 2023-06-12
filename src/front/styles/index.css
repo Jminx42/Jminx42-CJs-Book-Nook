@@ -1,3 +1,31 @@
 /* 
     General Styles used on every website (Don't Repeat Yourself)
 */
+.custom-button {
+    background-color: #68B0AB;
+    border-color: #68B0AB;
+}
+
+.custom-button:hover {
+    background-color: #128179;
+    border-color: #128179;
+}
+
+.card-body-custom {
+    text-decoration: none;
+    color: black;
+}
+
+.link-like {
+    color: #68B0AB;
+    text-decoration: underline;
+   
+  }
+
+  .custom-bg-img {
+    background-color: #68B0AB;
+  }
+
+  .navbar-custom {
+    background-color: #C8D5B9;
+}
