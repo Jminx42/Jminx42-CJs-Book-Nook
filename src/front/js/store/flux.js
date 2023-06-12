@@ -15,6 +15,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			bookPrice: null,
 
 			loading: true,
+			errorMsg: '',
 
 
 		},
@@ -45,7 +46,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				console.log("Logging out");
 				setStore({ user: null });
 			},
-
 			login: async (email, password) => {
 				const opts = {
 					method: 'POST',
@@ -57,23 +57,26 @@ const getState = ({ getStore, getActions, setStore }) => {
 						password: password,
 					})
 				};
+
 				try {
-					const resp = await fetch(process.env.BACKEND_URL + 'api/user/login', opts)
+					const resp = await fetch(process.env.BACKEND_URL + 'api/user/login', opts);
+
 					if (resp.status !== 200) {
-						const data = await resp.json()
-						alert(data.error);
+						const data = await resp.json();
+						setStore({ errorMsg: data.error });
 						return false;
 					}
+
 					const data = await resp.json();
 					sessionStorage.setItem("token", data.access_token);
 					console.log("here is your token " + data.access_token)
-					getActions().validate_user()
+					getActions().validate_user();
 					return true;
+				} catch (error) {
+					setStore({ errorMsg: "An error occurred during login." });
+					console.error("There has been an error logging in:", error);
+					return false;
 				}
-				catch (error) {
-					console.error("There has been an error logging in")
-				}
-
 			},
 
 

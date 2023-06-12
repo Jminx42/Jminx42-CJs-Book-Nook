@@ -15,15 +15,15 @@ class BookCategory(enum.Enum):
     ebook = "ebook"
     audiobook = "audiobook"
 
-class Genre(enum.Enum):
+# class Genre(enum.Enum):
    
-    romance = "romance"
-    fiction = "fiction"
-    non_fiction = "non_fiction"
-    science_fiction = "science_fiction"
-    mystery_crime = "mystery_crime"
-    thrillers = "thrillers"
-    fantasy = "fantasy"
+#     romance = "romance"
+#     fiction = "fiction"
+#     non_fiction = "non_fiction"
+#     science_fiction = "science_fiction"
+#     mystery_crime = "mystery_crime"
+#     thrillers = "thrillers"
+#     fantasy = "fantasy"
 
 class PaymentMethods(enum.Enum):
  
@@ -67,9 +67,11 @@ class Book(db.Model):
     isbn = db.Column(BIGINT(unsigned=True), unique=True, nullable=True)
     book_cover = db.Column(db.String(250), nullable=True) #this comes from the NY API, and sometimes is null, but has better resolution
     book_cover_b = db.Column(db.String(250), nullable=True) #this comes from the google book API, is always populated but has less resolution
+
     book_category = db.Column(db.Enum(BookCategory), server_default=BookCategory.paperback.value)
     publisher = db.Column(db.String(100), unique=False, nullable=True)
     genre = db.Column(db.String(100), unique=False, nullable=True)
+
     description = db.Column(db.Text, nullable=True)
     year = db.Column(db.String(60), unique=False, nullable=True)
     average_rating = db.Column(db.Float, unique=False, nullable=True)

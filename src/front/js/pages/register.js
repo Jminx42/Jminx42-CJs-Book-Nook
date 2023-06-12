@@ -18,7 +18,6 @@ export const Register = () => {
     const [successfulRegistration, setSuccessfulRegistration] = useState(false);
     const [errors, setErrors] = useState({});
 
-    const navigate = useNavigate();
 
     const validateForm = () => {
         const { full_name, email, password, confirmPassword, termsAndConditions } = formData;
@@ -36,8 +35,8 @@ export const Register = () => {
 
         if (!password) {
             errors.password = 'Please enter a password';
-        } else if (password.length < 6) {
-            errors.password = 'Password must be at least 6 characters long';
+        } else if (password.length < 5) {
+            errors.password = 'Password must be at least 5 characters long';
         }
 
         if (!confirmPassword) {
@@ -53,27 +52,13 @@ export const Register = () => {
         return errors;
     };
 
-    const handleChange = (e, fieldName) => {
-        e.persist();
-
-        let value;
-
-        if (e.target.type === 'checkbox') {
-            value = e.target.checked;
-        } else {
-            value = e.target.value;
-        }
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        const updatedValue = type === 'checkbox' ? checked : value;
 
         setFormData((prevFormData) => ({
             ...prevFormData,
-            [fieldName]: value,
-        }));
-    };
-
-    const handleCheckboxChange = (e) => {
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            termsAndConditions: e.target.checked,
+            [name]: updatedValue,
         }));
     };
 
@@ -81,7 +66,7 @@ export const Register = () => {
         e.preventDefault();
 
         const errors = validateForm();
-        const { full_name, email, password, confirmPassword } = formData;
+        // const { full_name, email, password, confirmPassword } = formData;
         if (Object.keys(errors).length > 0) {
             setErrors(errors);
         } else {
@@ -101,7 +86,6 @@ export const Register = () => {
                 } else {
                     setSuccessfulRegistration(true);
                     toast.success("Your registration was successful"); // Display success message using toast
-                    // navigate("/login");
                     sessionStorage.removeItem("token");
                     return true;
                 }
@@ -120,22 +104,24 @@ export const Register = () => {
                     <div className="card-body">
                         <h2>Registration Successful!</h2>
                         <p>You can now proceed to login.</p>
-                        <Link to="/login" className="btn btn-primary">
+                        <Link to="/login" className="btn register-custom-button">
                             Go to Login
                         </Link>
                     </div>
                 </div>
             ) : (
-                <div className="card">
+                <div className="card p-4">
                     <div className="card-body">
                         <form onSubmit={handleRegisterSubmit}>
-                            <div className="text-center register-custom-bg-img rounded">
-                                <LazyLoadImage
-                                    src={CJBookNookLogo}
-                                    alt="CJ Book Nook Logo"
-                                    className="my-2 border rounded-circle"
-                                    style={{ width: '150px' }} />
-                            </div>
+                            <Link to="/">
+                                <div className="text-center register-custom-bg-img rounded">
+                                    <LazyLoadImage
+                                        src={CJBookNookLogo}
+                                        alt="CJ Book Nook Logo"
+                                        className="my-2 border rounded-circle"
+                                        style={{ width: '150px' }} />
+                                </div>
+                            </Link>
                             <h3 className="Auth-form-title text-center mt-3">Sign Up</h3>
                             <div className="text-center">
                                 Already registered?{" "}
@@ -154,6 +140,8 @@ export const Register = () => {
                                     className={`form-control ${errors.full_name && 'is-invalid'}`}
                                     id="full_name"
                                     name="full_name"
+                                    placeholder="Enter full-name"
+                                    aria-label="full_name"
                                     value={formData.full_name}
                                     onChange={(e) => handleChange(e, 'full_name')}
                                     required
@@ -169,6 +157,8 @@ export const Register = () => {
                                     className={`form-control ${errors.email && 'is-invalid'}`}
                                     id="email"
                                     name="email"
+                                    placeholder="user@example.com"
+                                    aria-label="email"
                                     value={formData.email}
                                     onChange={(e) => handleChange(e, 'email')}
                                     required
@@ -184,6 +174,8 @@ export const Register = () => {
                                     className={`form-control ${errors.password && 'is-invalid'}`}
                                     id="password"
                                     name="password"
+                                    placeholder="Enter password"
+                                    aria-label="password"
                                     value={formData.password}
                                     onChange={(e) => handleChange(e, 'password')}
                                     required
@@ -199,6 +191,8 @@ export const Register = () => {
                                     className={`form-control ${errors.confirmPassword && 'is-invalid'}`}
                                     id="confirmPassword"
                                     name="confirmPassword"
+                                    placeholder="Confirm password"
+                                    aria-label="confirm_password"
                                     value={formData.confirmPassword}
                                     onChange={(e) => handleChange(e, 'confirmPassword')}
                                     required
@@ -212,7 +206,7 @@ export const Register = () => {
                                     id="termsAndConditions"
                                     name="termsAndConditions"
                                     checked={formData.termsAndConditions}
-                                    onChange={handleCheckboxChange}
+                                    onChange={handleChange}
                                     required
                                 />
                                 <label className="form-check-label" htmlFor="termsAndConditions">
@@ -231,7 +225,7 @@ export const Register = () => {
                             </div>
 
                             <div className="d-grid gap-2 mt-3">
-                                <button type="submit" className="btn btn-secondary register-custom-button" onClick={handleRegisterSubmit}>
+                                <button type="submit" className="btn register-custom-button" onClick={handleRegisterSubmit}>
                                     Register
                                 </button>
                             </div>
