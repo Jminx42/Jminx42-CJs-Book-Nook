@@ -92,14 +92,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log(getStore().books)
 				}
 			},
-			// Not working!
-			getOneBook: async (isbn) => {
-				const response = await fetch(process.env.BACKEND_URL + 'api/book/' + isbn);
-				const data = await response.json();
-				console.log(data)
-				setStore({ book: data.book })
-				console.log(getStore().book)
-
 
 			getOneBook: async (isbn) => {
 				const response = await fetch(process.env.BACKEND_URL + 'api/book/' + isbn);
@@ -107,6 +99,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				console.log(data)
 				setStore({ book: data.book })
 				console.log(getStore().book)
+
 			},
 
 			getGoogleBooks: async (search_text) => {

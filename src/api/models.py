@@ -46,7 +46,7 @@ class UserCategory(db.Model):
         return {
             "id": self.id,
             "user_category": self.user_category,
-            "user_id": self.user_id
+            "user_id": self.user_id,
 
             "serialized_reviews": [review.serialize() for review in self.reviews]
 

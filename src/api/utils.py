@@ -67,7 +67,8 @@ def retrieve_books ():
         data_google = result_google.json()
         if "items" in data_google:
             volume_info= data_google["items"][0]["volumeInfo"]
-            book["thumbnail"]= volume_info["imageLinks"]["thumbnail"]
+            # image_links = data_google["items"][0]["volumeInfo"]["imageLinks"]
+            # book["thumbnail"]= image_links.get("thumbnail", None)
             book["publishedDate"]= volume_info.get("publishedDate", None)
             book["averageRating"]= volume_info.get("averageRating", None)
             book["ratingsCount"]= volume_info.get("ratingsCount", None)
@@ -81,7 +82,7 @@ def retrieve_books ():
                         author = book["author"], 
                         isbn = book["primary_isbn13"], 
                         book_cover = book.get("book_image", None), 
-                        book_cover_b = book.get("thumbnail", None), 
+                        # book_cover_b = book.get("thumbnail", None), 
                         description = book["description"], 
                         year = book.get("publishedDate", None), 
                         genre = book.get("categories", None),
