@@ -16,7 +16,6 @@ export const HomeCard = ({ item }) => {
 
     useEffect(() => {
         actions.setPrice(item.weeks_on_list);
-        console.log(store.user.wishlist)
 
     }, [item.weeks_on_list]);
 
