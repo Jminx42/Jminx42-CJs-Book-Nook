@@ -1,7 +1,7 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			user: {},
+			user: { wishlist: [] },
 
 			books: [],
 			book: {},
@@ -9,7 +9,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			search: "",
 			// oneGoogleBook: {},
 			nytReview: {},
-			wishlist: [],
 			checkout: [],
 			price: null,
 
@@ -35,7 +34,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				if (resp.status == 200) {
 					setStore({ user: data.user })
 				} else {
-					setStore({ user: null })
+					setStore({ user: { wishlist: [] } })
 					sessionStorage.removeItem("token")
 				}
 			},
@@ -45,7 +44,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				sessionStorage.removeItem("wishlist");
 				sessionStorage.removeItem("checkout");
 				console.log("Logging out");
-				setStore({ user: null });
+				setStore({ user: { wishlist: [] } });
 			},
 			login: async (email, password) => {
 				const opts = {
@@ -197,24 +196,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 
-			postWishlist: async (user_id, book_id) => {
-				const wish = getStore().user.wishlist;
-				const newItem = { user_id, book_id };
-
-				const updatedWishlist = [...wish];
-				const existingItemIndex = updatedWishlist.findIndex(item => item.id === book_id);
-				if (existingItemIndex === -1) {
-					updatedWishlist.push(newItem);
-				} else {
-					updatedWishlist[existingItemIndex] = newItem;
-				}
-
+			postWishlist: async (book_id) => {
 				const opts = {
 					method: 'POST',
 					headers: {
+						Authorization: "Bearer " + sessionStorage.getItem("token"),
 						"Content-Type": "application/json"
 					},
-					body: JSON.stringify({ user_id, book_id })
+					body: JSON.stringify({ "book_id": book_id })
 				};
 
 				try {
@@ -222,12 +211,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 					if (resp.status !== 200) {
 						const data = await resp.json();
 						const errorMessage = data.error || "Something went wrong";
-						toast.error(errorMessage); // Display error message using toast
+						alert(errorMessage); // Display error message using toast
 						return false;
 					} else {
-						setStore({ wishlist: updatedWishlist });
-						toast.success("Your book was successfully added to the wishlist"); // Display success message using toast
-						sessionStorage.removeItem("token");
+						await getActions().validate_user();
+						alert("Your wishlist was updated successfully"); // Display success message using toast
 						return true;
 					}
 				} catch (error) {

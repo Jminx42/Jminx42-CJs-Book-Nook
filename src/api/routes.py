@@ -220,27 +220,37 @@ def get_wishlist():
     return jsonify(wishlist.serialize()), 200 
 
 @api.route("/wishlist", methods=["POST"])
+@jwt_required()
 def create_wishlist():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
     try:
         body = request.json
-        if not all(key in body for key in ["book_id", "user_id"]):
+        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+       
+        if "book_id" not in body or not user:
             return jsonify({"error": "Missing required fields"}), 400
+        
+        wishlist = Wishlist.query.filter_by(book_id=body["book_id"], user_id=user_id).first()
+        if not wishlist:
+            new_wishlist = Wishlist(
+                book_id=body["book_id"],
+                user_id=user_id
+            )
+            db.session.add(new_wishlist)
+            db.session.commit()
 
-        new_wishlist = Wishlist(
-            book_id=body["book_id"],
-            user_id=body["user_id"]
-        )
-        db.session.add(new_wishlist)
-        db.session.commit()
-
-        wishlist_data = {
-            "book_id": new_wishlist.book_id,
-            "user_id": new_wishlist.user_id
-        }
-        return jsonify({"wishlist": wishlist_data}), 200
+            wishlist_data = {
+                "book_id": new_wishlist.book_id,
+                "user_id": new_wishlist.user_id
+            }
+            return jsonify({"wishlist": wishlist_data}), 200
+        else:
+            db.session.delete(wishlist)
+            db.session.commit()
+            return jsonify({"wishlist": "book deleted from wishlist"}), 200
 
     except Exception as e:
-        db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
 @api.route("/wishlist", methods=["DELETE"])

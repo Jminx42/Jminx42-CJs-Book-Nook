@@ -16,10 +16,10 @@ export const Profile = () => {
 	const [reviews, setReviews] = useState([]);
 
 
-	useEffect(() => {
-		setUser(store.user)
+	// useEffect(() => {
+	// 	setUser(store.user)
 
-	}, [store.user]);
+	// }, [store.user]);
 
 	const handleSave = async () => {
 		setEditClicked(false);
@@ -173,8 +173,11 @@ export const Profile = () => {
 				<div className="tab-pane fade" id="wishlist-tab-pane" role="tabpanel" aria-labelledby="wishlist-tab" tabIndex="0">
 					<div className="container mt-4">
 						<div className="row d-flex">
-							{wishlist && wishlist.length !== 0 ? wishlist.filter((book) => book.title.toLowerCase().includes(store.search)).map((book) => {
+							{/* {store.user.wishlist && store.user.wishlist.length !== 0 ? store.user.wishlist.filter((book) => book.title.toLowerCase().includes(store.search)).map((book) => {
 								return <Card key={book.isbn} item={book} />
+							}) : null} */}
+							{store.user.wishlist && store.user.wishlist.length !== 0 ? store.user.wishlist.map((book) => {
+								return <Card key={book.id} item={book.book_id} />
 							}) : null}
 						</div>
 					</div>

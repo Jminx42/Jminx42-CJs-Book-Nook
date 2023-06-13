@@ -57,23 +57,24 @@ export const HomeCard = ({ item }) => {
 
                     className="btn me-2 text-white custom-button"
 
-                    onClick={() => {
+                    onClick={(e) => {
                         sessionStorage.getItem("token") && loggedIn
                             ?
-                            actions.setWishlist(item.isbn, item.book_cover, item.title, item.author)
+                            actions.postWishlist(item.id)
                             :
                             setLoggedIn(false)
-                        button.setAttribute("data-bs-toggle", "modal")
-                        button.setAttribute("data-bs-target", "#exampleModal")
+                        // this is request that the user login
+                        // e.target.setAttribute("data-bs-toggle", "modal") 
+                        // e.target.setAttribute("data-bs-target", "#exampleModal")
                     }
 
                     }
                 >
-                    {store.wishlist.some((wishlistItem) => wishlistItem.isbn === item.isbn) ? (
+                    {store.user.wishlist.some((wishlistItem) => wishlistItem.book_id.id === item.id) ? (
                         <i className="fas fa-heart"></i>
                     ) : (
 
-                        <i className="far fa-heart bg-primary"></i>
+                        <i className="far fa-heart"></i>
                     )}
                 </button>
                 {/* <!-- Modal --> */}
