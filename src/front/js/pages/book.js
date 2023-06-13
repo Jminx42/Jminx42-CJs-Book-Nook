@@ -31,27 +31,28 @@ export const Book = () => {
 	// 	}
 	// }, [store.book.year])
 
-	const submitReview = async (id) => {
+	// const submitReview = async (book_id) => {
 
 
-		const response = await fetch(process.env.BACKEND_URL + 'api/review', {
-			method: "POST",
-			headers: {
-				Authorization: "Bearer " + sessionStorage.getItem("token"),
-				"Content-Type": "application/json"
-			},
+	// 	const response = await fetch(process.env.BACKEND_URL + 'api/review', {
+	// 		method: "POST",
+	// 		headers: {
+	// 			Authorization: "Bearer " + sessionStorage.getItem("token"),
+	// 			"Content-Type": "application/json"
+	// 		},
 
-			body: JSON.stringify(review)
-		});
+	// 		body: JSON.stringify(review)
+	// 	});
 
-		if (response.ok) {
-			await actions.validate_user()
-			alert("Review added successfully");
-		} else {
-			const data = await response.json()
-			alert(data.error)
-		}
-	};
+
+	// 	if (response.ok) {
+	// 		await actions.validate_user()
+	// 		alert("Review added successfully");
+	// 	} else {
+	// 		const data = await response.json()
+	// 		alert(data.error)
+	// 	}
+	// };
 
 	// const handleOptionChange = (event) => {
 	// 	setSelectedOption(event.target.value);
@@ -62,6 +63,18 @@ export const Book = () => {
 	// const handleAddToCart = () => {
 
 	// }
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+
+		// Process the form submission, e.g., send the review to the server
+
+		// Clear the form fields
+		setReview({
+			rating: '',
+			review: ''
+		});
+	};
 
 	return (
 		<div>
@@ -133,19 +146,37 @@ export const Book = () => {
 			</div>
 
 			<div className="container">
-				{/* {store.nytReview ?
+				{store.nytReview ?
 					<div className="row mb-3 mt-3">
 						<h4>Reviews</h4>
 						<p>{store.nytReview.byline}</p>
 						<p>Reviewed in: {store.nytReview.publication_dt}</p>
 						<p>Excerpt: {store.nytReview.summary}</p>
 						<p>Review Link: <a href={store.nytReview.url} target="_blank" rel="noopener noreferrer">Click here</a></p>
+					</div> : null}
+				{/* I want to show the user reviews for each book but this function isn't working */}
+				{store.user.review && store.user.review !== 0 ?
+					store.user.review.filter((review) => review.book_id.isbn === params.theisbn).map((review) => (
+						<div key={review.id}>
+							<h4>Reviews</h4>
+							<p>Rating: {review.rating}</p>
+							<p>Review: {review.review}</p>
+							<p>Reviewed by: {store.user.full_name}</p>
+						</div>
+					))
+					: null}
+				{/* {store.user.review.book_id ?
+					<div className="row mb-3 mt-3">
+						<h4>Reviews</h4>
+						<p>Rating: {store.user.review.book_id.rating}</p>
+						<p>Review: {store.user.review.book_id.review}</p>
+						<p>Reviewed by: {store.user.full_name}</p>
 					</div> : null} */}
 				<div className="row mb-3 mt-3">
 					<h4>Submit your review</h4>
 					{sessionStorage.getItem("token") ?
 						<div>
-							<form onSubmit={(e) => e.preventDefault()}>
+							<form onSubmit={handleSubmit}>
 								<label>Rating</label>
 								<input
 									className="form-control"
@@ -163,13 +194,14 @@ export const Book = () => {
 									value={review.review || ""}
 									onChange={(e) => setReview({ ...review, review: e.target.value })}
 								/>
-								<button className="btn profile-custom-button text-white mt-3" onClick={() => {
-									setReview({ ...review, book_isbn: params.theisbn })
-									submitReview(params.theisbn)
+								<button className="btn custom-button text-white mt-3 mb-4" onClick={() => {
+									setReview({ ...review, book_id: store.book.id })
+									actions.submitReview(store.book.id)
 								}
 								} type="submit">
 									Submit
 								</button>
+
 							</form>
 						</div> : <div>
 							<p>Want to submit your review?&nbsp;

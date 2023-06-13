@@ -1,7 +1,7 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			user: { wishlist: [] },
+			user: { wishlist: [], review: [] },
 
 			books: [],
 			book: {},
@@ -87,15 +87,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 					alert(data.error)
 				} else {
 					setStore({ books: data.books })
-					console.log("sdjbhbdsfhsdbhbsh")
-					console.log(getStore().books)
+					// console.log(getStore().books)
 				}
 			},
 
 			getOneBook: async (isbn) => {
 				const response = await fetch(process.env.BACKEND_URL + 'api/book/' + isbn);
 				const data = await response.json();
-				console.log(data)
 				setStore({ book: data.book })
 				console.log(getStore().book)
 
@@ -176,25 +174,38 @@ const getState = ({ getStore, getActions, setStore }) => {
 					setStore({ nytReview: data.results[0] });
 				}
 			},
+			// I can't make this function to work, but it's getting the reviews correctly from the backend
+			submitReview: async (book_id) => {
+				const reviewText = document.getElementById("review").value;
+				const rating = parseInt(document.getElementById("rating").value);
 
+				const review = {
+					// book_id: book_id,
+					review: reviewText,
+					rating: rating
+				};
 
-			setWishlist: (user_id, book_id) => {
-				const wish = getStore().user.wishlist;
-				const newItem = { user_id, book_id };
-				console.log(newItem);
-				const updatedWishlist = [...wish];
-				const existingItemIndex = updatedWishlist.findIndex(item => item.id === book_id);
-				if (existingItemIndex === -1) {
-					updatedWishlist.push(newItem);
+				const response = await fetch(process.env.BACKEND_URL + 'api/review', {
+					method: "POST",
+					headers: {
+						Authorization: "Bearer " + sessionStorage.getItem("token"),
+						"Content-Type": "application/json"
+					},
+
+					body: JSON.stringify({ "book_id": book_id, "review": review })
+				});
+
+				if (response.ok) {
+					const data = await response.json();
+					const reviewData = data.review;
+					await getActions().validate_user();
+					alert("Review added successfully");
+					console.log(reviewData); // Access the returned review data as needed
 				} else {
-					updatedWishlist[existingItemIndex] = newItem;
+					const data = await response.json();
+					alert(data.error);
 				}
-
-
-				setStore({ wishlist: updatedWishlist });
-				sessionStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
 			},
-
 
 			postWishlist: async (book_id) => {
 				const opts = {

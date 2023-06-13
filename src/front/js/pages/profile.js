@@ -58,7 +58,6 @@ export const Profile = () => {
 			if (response.ok) {
 				const data = await response.json();
 				setReviews(data.reviews);
-				console.log("aaaaaaaaaaa")
 				console.log(data.reviews)
 			} else {
 				const data = await response.json();
@@ -185,7 +184,7 @@ export const Profile = () => {
 				</div>
 				<div className="tab-pane fade" id="reviews-tab-pane" role="tabpanel" aria-labelledby="reviews-tab" tabIndex="0">
 					<div className="container mt-4">
-						<div className="row d-flex">
+						<div className="row d-flex g-3">
 							{reviews.map(review => (
 								<Review key={review.id} item={review} />
 							))}
