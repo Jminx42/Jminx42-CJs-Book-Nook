@@ -10,42 +10,59 @@ from flask_jwt_extended import jwt_required
 import cloudinary
 import cloudinary.uploader
 import datetime
+import bcrypt
 
 api = Blueprint('api', __name__)    
 
 @api.route("/create/user", methods=["POST"])
 def create_user():
     body = request.json
-    email = request.json.get("email", None)
-    password = request.json.get("password", None)
-    full_name = request.json.get("full_name", None)
+    email = body.get("email", None)
+    password = body.get("password", None) 
+    full_name = body.get("full_name", None)
+
+    if not all(key in body for key in ["email", "password", "full_name"]):
+        return jsonify({"error": "The server cannot process the request due to invalid syntax or parameters."}), 400
+    
     if "@" not in email: 
-        return jsonify ({"error": "Please enter valid email, example: user@gmail.com"}), 300
+        return jsonify({"error": "Please enter a valid email, e.g., user@gmail.com"}), 400
+
     if len(password) < 5:
-        return jsonify ({"error": "Your password must have more than 5 characters"}), 300
+        return jsonify({"error": "Your password must have more than 5 characters"}), 400
+
     if not email or not password or not full_name:
-        return jsonify ({"error": "Missing credentials"}), 300
-    already_exist = User.query.filter_by(email = email).first()
+        return jsonify({"error": "Missing credentials"}), 400
+
+    already_exist = User.query.filter_by(email=email).first()
     if already_exist:
-        return jsonify({"error": "Email already exists in the database"}), 300
+        return jsonify({"error": "Email already exists in the database"}), 409
+
+    password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     new_user = User(
-        email=body["email"],
-        password=body["password"],
-        full_name=body["full_name"],
+        email=email,
+        password_hash=password_hash,
+        full_name=full_name,
     )
     db.session.add(new_user)
     db.session.commit()
-    return jsonify({"user": "created"}), 200
+    
+    return jsonify({
+        "user": {
+            "id": new_user.id,
+            "email": new_user.email,
+            "full_name": new_user.full_name
+        }
+    }), 200
+    
 
 @api.route("/user/login", methods=["POST"])
 def login():
     email = request.json.get("email", None)
     password = request.json.get("password", None)
     
-    user = User.query.filter_by(email=email, password=password).first() #gives the whole user, including the id
-
-    if not user:
-        return jsonify ({"error": "Invalid credentials"}), 300
+    user = User.query.filter_by(email=email).first() #gives the whole user, including the id
+    if not user and not bcrypt.checkpw(password.encode('utf-8'), user.password_hash):
+        return jsonify ({"error": "Invalid credentials"}), 300        
     
     access_token = create_access_token(identity=user.id, expires_delta = datetime.timedelta(minutes=30))
     return jsonify({"access_token": access_token}), 200
@@ -81,22 +98,28 @@ def get_one_user_by_id():
 @api.route("/user/update", methods=["PUT"])
 @jwt_required()
 def update_user():
-    user_id = get_jwt_identity() # Is this the same of using "user_id" as a parameter for the function?
-    body = request.json
+    user_id = get_jwt_identity()
     user = User.query.get(user_id)
+
     if not user:
         return jsonify({"error": "No user found with this id"}), 400
-    print(1111111111111111111111111111111)
-    print(body)
+
+    body = request.json
+
     if "password" in body:
-        password = body["password"]
-        if password.strip() == "" and len(password) > 5:
-            return jsonify({"error": "Your password should be at least 5 characters and not contain only whitespaces"}), 400
-      
-    user.full_name = body["full_name"]
+        password = body["password"].strip()
+
+        if len(password) < 5 or password.isspace():
+            return jsonify({"error": "Your password should be at least 5 characters long and not contain only whitespaces"}), 400
+
+        user.password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+
+    if "full_name" in body:
+        user.full_name = body["full_name"]
 
     db.session.commit()
-    return jsonify("User updated"), 200
+
+    return jsonify({"message": "User updated"}), 200
 
 @api.route('/user/image', methods=['POST'])
 @jwt_required()
@@ -298,7 +321,38 @@ def get_one_transaction_by_id(user_id):
     return jsonify(transaction.serialize()), 200 
 
 @api.route("/transaction", methods=["POST"])
+@jwt_required()
 def create_transaction():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    try:
+        body = request.json
+        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+       
+        if "book_id" not in body or not user:
+            return jsonify({"error": "Missing required fields"}), 400
+        
+        transaction = Transaction.query.filter_by(book_id=body["book_id"], user_id=user_id).first()
+        if not wishlist:
+            new_wishlist = Wishlist(
+                book_id=body["book_id"],
+                user_id=user_id
+            )
+            db.session.add(new_wishlist)
+            db.session.commit()
+
+            wishlist_data = {
+                "book_id": new_wishlist.book_id,
+                "user_id": new_wishlist.user_id
+            }
+            return jsonify({"wishlist": wishlist_data}), 200
+        else:
+            db.session.delete(wishlist)
+            db.session.commit()
+            return jsonify({"wishlist": "book deleted from wishlist"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
     body = request.json
     new_transaction = Transaction(
         book_id=body["book_id"],

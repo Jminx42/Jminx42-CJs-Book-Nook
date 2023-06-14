@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-// import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "../../styles/index.css";
 
@@ -8,45 +7,45 @@ import CJBookNookLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/CJBookNookB
 
 export const Register = () => {
     const [formData, setFormData] = useState({
-        full_name: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
+        full_name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
         termsAndConditions: false,
     });
 
     const [successfulRegistration, setSuccessfulRegistration] = useState(false);
     const [errors, setErrors] = useState({});
 
-
-    const validateForm = () => {
-        const { full_name, email, password, confirmPassword, termsAndConditions } = formData;
+    const validateForm = (formData) => {
+        const { full_name, email, password, confirmPassword, termsAndConditions } =
+            formData;
         const errors = {};
 
         if (!full_name) {
-            errors.full_name = 'Please enter your full name';
+            errors.full_name = "Please enter your full name";
         }
 
         if (!email) {
-            errors.email = 'Please enter your email address';
+            errors.email = "Please enter your email address";
         } else if (!/\S+@\S+\.\S+/.test(email)) {
-            errors.email = 'Please enter a valid email address';
+            errors.email = "Please enter a valid email address";
         }
 
         if (!password) {
-            errors.password = 'Please enter a password';
+            errors.password = "Please enter a password";
         } else if (password.length < 5) {
-            errors.password = 'Password must be at least 5 characters long';
+            errors.password = "Password must be at least 5 characters long";
         }
 
         if (!confirmPassword) {
-            errors.confirmPassword = 'Please confirm your password';
+            errors.confirmPassword = "Please confirm your password";
         } else if (password !== confirmPassword) {
-            errors.confirmPassword = 'Passwords do not match';
+            errors.confirmPassword = "Passwords do not match";
         }
 
         if (!termsAndConditions) {
-            errors.termsAndConditions = 'Please accept the terms and conditions';
+            errors.termsAndConditions = "Please accept the terms and conditions";
         }
 
         return errors;
@@ -54,7 +53,7 @@ export const Register = () => {
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
-        const updatedValue = type === 'checkbox' ? checked : value;
+        const updatedValue = type === "checkbox" ? checked : value;
 
         setFormData((prevFormData) => ({
             ...prevFormData,
@@ -65,39 +64,41 @@ export const Register = () => {
     const handleRegisterSubmit = async (e) => {
         e.preventDefault();
 
-        const errors = validateForm();
-        // const { full_name, email, password, confirmPassword } = formData;
-        if (Object.keys(errors).length > 0) {
-            setErrors(errors);
-        } else {
-            const opts = {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(formData)
-            };
-            try {
-                const resp = await fetch(process.env.BACKEND_URL + 'api/create/user', opts);
-                if (resp.status !== 200) {
-                    const data = await resp.json();
-                    // toast.error(data.error); // Display error message using toast
-                    alert(data.error); // Display error message using toast
-                    return false;
-                } else {
-                    setSuccessfulRegistration(true);
-                    // toast.success("Your registration was successful"); // Display success message using toast
-                    alert("Your registration was successful"); // Display success message using toast
-                    sessionStorage.removeItem("token");
-                    return true;
-                }
-            } catch (error) {
-                console.error("There has been an error registering:", error);
-            }
+        const validationErrors = validateForm(formData);
+        console.log(validationErrors)
+
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            return;
         }
 
-
+        try {
+            const opts = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            };
+            console.log(opts)
+            const resp = await fetch(process.env.BACKEND_URL + "api/create/user", opts);
+            if (resp.status !== 200) {
+                const data = await resp.json();
+                // toast.error(data.error); // Display error message using toast
+                alert(data.error); // Display error message using toast
+                return false;
+            } else {
+                setSuccessfulRegistration(true);
+                // toast.success("Your registration was successful"); // Display success message using toast
+                alert("Your registration was successful"); // Display success message using toast
+                sessionStorage.removeItem("token");
+                return true;
+            }
+        } catch (error) {
+            console.error("There has been an error registering:", error);
+        }
     };
+
     return (
 
         <div className="Auth-form container-lg container-md container-sm p-5">

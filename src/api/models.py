@@ -8,7 +8,7 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(80), nullable=False)
+    password_hash = db.Column(db.String(200), nullable=False)
     full_name = db.Column(db.String(120), nullable=True)
     user_category = db.Column(db.Integer, db.ForeignKey('user_category.id'), nullable=True)
     payment_method = db.relationship("PaymentMethod", backref="user")
@@ -29,7 +29,11 @@ class User(db.Model):
             "full_name": self.full_name,
             "profile_picture": self.profile_picture,
             "password": "",
+
+            # payment method.... way to serialize without revealing user private info?
+
             "review": [y.serialize() for y in self.review],
+
             "wishlist": [x.serialize() for x in self.wishlist]
         }
 
@@ -47,7 +51,6 @@ class UserCategory(db.Model):
             "id": self.id,
             "user_category": self.user_category,
             "user_id": self.user_id,
-
             "serialized_reviews": [review.serialize() for review in self.reviews]
 
         }
@@ -57,7 +60,7 @@ class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(250), nullable=False)
     author = db.Column(db.String(120), nullable=False)
-    isbn = db.Column(BIGINT(unsigned=True), unique=True, nullable=True)
+    isbn = db.Column(BIGINT(unsigned=True), unique=False, nullable=True)
     book_cover = db.Column(db.String(250), nullable=True) #this comes from the NY API, and sometimes is null, but has better resolution
     book_cover_b = db.Column(db.String(250), nullable=True) #this comes from the google book API, is always populated but has less resolution
     genre = db.Column(db.ARRAY(db.String(255)), unique=False, nullable=True)
