@@ -13,7 +13,7 @@ class User(db.Model):
     user_category = db.Column(db.Integer, db.ForeignKey('user_category.id'), nullable=True)
     payment_method = db.relationship("PaymentMethod", backref="user")
     wishlist = db.relationship("Wishlist", backref="user")
-    reviews = db.relationship("Review", backref="user")
+    review = db.relationship("Review", backref="user")
     transactions = db.relationship("Transaction", backref="user")
     support = db.relationship("Support", backref="user")
     profile_picture = db.Column(db.String(250), unique=True, nullable=True)
@@ -29,7 +29,11 @@ class User(db.Model):
             "full_name": self.full_name,
             "profile_picture": self.profile_picture,
             "password": "",
+
             # payment method.... way to serialize without revealing user private info?
+
+            "review": [y.serialize() for y in self.review],
+
             "wishlist": [x.serialize() for x in self.wishlist]
         }
 
@@ -71,7 +75,8 @@ class Book(db.Model):
     external_reviews = db.relationship("ExternalReview", backref="book")
     transactions = db.relationship("Transaction", backref="book")
     support = db.relationship("Support", backref="book")
-    wishlist_id = db.relationship("Wishlist", backref="book")
+    wishlist = db.relationship("Wishlist", backref="book")
+    reviews = db.relationship("Review", backref="book")
 
     def __repr__(self):
         return f'<Book {self.title}>'
@@ -85,13 +90,14 @@ class Book(db.Model):
             "book_cover": self.book_cover,
             "book_cover_b": self.book_cover_b,
             "description": self.description,
-            "genre": self.genre,
+            "genre": self.genre,         
             "publisher": self.publisher,
             "year": self.year,
             "average_rating": self.average_rating,
             "ratings_count": self.ratings_count,
             "pages": self.pages,
             "preview": self.preview,
+            "reviews": [review.serialize_for_book() for review in self.reviews]
         }
 
 
@@ -110,8 +116,7 @@ class BookFormat(db.Model):
         return {
             "id": self.id,
             "book_format": self.book_format,
-            "book_price": self.book_price
-            
+            "book_price": self.book_price            
         }
 
 class Review(db.Model):
@@ -119,7 +124,7 @@ class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     review = db.Column(db.Text, nullable=True)
     rating = db.Column(db.Integer, nullable=False)
-    book_isbn = db.Column(BIGINT(unsigned=True), unique=False, nullable=False)
+    book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
@@ -130,8 +135,16 @@ class Review(db.Model):
             "id": self.id,
             "review": self.review,
             "rating": self.rating,
-            "book_isbn": self.book_isbn,
+            "book_id": Book.query.get(self.book_id).serialize(),
             "user_id": self.user_id,
+        }
+    def serialize_for_book(self):
+        return {
+            "id": self.id,
+            "review": self.review,
+            "rating": self.rating,
+            "book_id": self.book_id,
+            "full_name": User.query.get(self.user_id).full_name,
         }
 
 class ExternalReview(db.Model):
@@ -185,6 +198,25 @@ class Transaction(db.Model):
             "payment_methods": self.payment_methods,
         }
 
+# class History(db.Model):
+
+#     id = db.Column(db.Integer, primary_key=True)
+#     book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
+#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+#     payment_methods = db.relationship("PaymentMethod", backref="transaction")
+#     support = db.relationship("Support", backref="transaction")
+
+#     def __repr__(self):
+#         return f'<Transaction {self.id}>'
+
+#     def serialize(self):
+#         return {
+#             "id": self.id,
+#             "book_id": self.book_id,
+#             "user_id": self.user_id,
+#             "payment_methods": self.payment_methods,
+#         }
+    
 class PaymentMethod(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)

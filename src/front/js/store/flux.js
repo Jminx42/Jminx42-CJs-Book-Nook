@@ -1,9 +1,10 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			user: { wishlist: [] },
+
+			user: { wishlist: [], review: [] },
 			books: [],
-			book: {},
+			book: { reviews: [] },
 			// externalBooks: [],
 			search: "",
 			// oneGoogleBook: {},
@@ -87,15 +88,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 					alert(data.error)
 				} else {
 					setStore({ books: data.books })
-					console.log("sdjbhbdsfhsdbhbsh")
-					console.log(getStore().books)
+					// console.log(getStore().books)
 				}
 			},
 
 			getOneBook: async (isbn) => {
 				const response = await fetch(process.env.BACKEND_URL + 'api/book/' + isbn);
 				const data = await response.json();
-				console.log(data)
 				setStore({ book: data.book })
 				console.log(getStore().book)
 
@@ -126,6 +125,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			postWishlist: async (book_id) => {
+
 				const opts = {
 					method: 'POST',
 					headers: {
@@ -153,6 +153,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			postCheckout: async (book_id) => {
+
 				const opts = {
 					method: 'POST',
 					headers: {
