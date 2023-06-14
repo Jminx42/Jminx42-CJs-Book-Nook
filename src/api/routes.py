@@ -227,7 +227,8 @@ def create_review():
                 "rating": new_review.rating,
             }
             return jsonify({"review": review_data}), 200
-
+        return jsonify({"error": "Please try again"}), 400
+    
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

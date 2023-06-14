@@ -4,7 +4,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			user: { wishlist: [], review: [] },
 
 			books: [],
-			book: {},
+			book: { reviews: [] },
 			// externalBooks: [],
 			search: "",
 			// oneGoogleBook: {},
@@ -172,38 +172,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					alert(data.error)
 				} else {
 					setStore({ nytReview: data.results[0] });
-				}
-			},
-			// I can't make this function to work, but it's getting the reviews correctly from the backend
-			submitReview: async (book_id) => {
-				const reviewText = document.getElementById("review").value;
-				const rating = parseInt(document.getElementById("rating").value);
-
-				const review = {
-					// book_id: book_id,
-					review: reviewText,
-					rating: rating
-				};
-
-				const response = await fetch(process.env.BACKEND_URL + 'api/review', {
-					method: "POST",
-					headers: {
-						Authorization: "Bearer " + sessionStorage.getItem("token"),
-						"Content-Type": "application/json"
-					},
-
-					body: JSON.stringify({ "book_id": book_id, "review": review })
-				});
-
-				if (response.ok) {
-					const data = await response.json();
-					const reviewData = data.review;
-					await getActions().validate_user();
-					alert("Review added successfully");
-					console.log(reviewData); // Access the returned review data as needed
-				} else {
-					const data = await response.json();
-					alert(data.error);
 				}
 			},
 

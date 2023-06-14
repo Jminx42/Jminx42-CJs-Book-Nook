@@ -72,8 +72,8 @@ class Book(db.Model):
     external_reviews = db.relationship("ExternalReview", backref="book")
     transactions = db.relationship("Transaction", backref="book")
     support = db.relationship("Support", backref="book")
-    wishlist_id = db.relationship("Wishlist", backref="book")
-    review_id = db.relationship("Review", backref="book")
+    wishlist = db.relationship("Wishlist", backref="book")
+    reviews = db.relationship("Review", backref="book")
 
     def __repr__(self):
         return f'<Book {self.title}>'
@@ -94,6 +94,7 @@ class Book(db.Model):
             "ratings_count": self.ratings_count,
             "pages": self.pages,
             "preview": self.preview,
+            "reviews": [review.serialize_for_book() for review in self.reviews]
         }
 
 
@@ -133,6 +134,14 @@ class Review(db.Model):
             "rating": self.rating,
             "book_id": Book.query.get(self.book_id).serialize(),
             "user_id": self.user_id,
+        }
+    def serialize_for_book(self):
+        return {
+            "id": self.id,
+            "review": self.review,
+            "rating": self.rating,
+            "book_id": self.book_id,
+            "full_name": User.query.get(self.user_id).full_name,
         }
 
 class ExternalReview(db.Model):
