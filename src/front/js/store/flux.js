@@ -2,7 +2,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			user: { wishlist: [] },
-
 			books: [],
 			book: {},
 			// externalBooks: [],
@@ -11,15 +10,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 			nytReview: {},
 			checkout: [],
 			price: null,
-
 			bookPrice: null,
-
 			loading: true,
 			errorMsg: '',
 
 
 		},
 		actions: {
+
 			handleSearch: (word) => {
 				setStore({ search: word })
 			},
@@ -30,6 +28,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						Authorization: "Bearer " + sessionStorage.getItem("token")
 					}
 				})
+
 				const data = await resp.json()
 				if (resp.status == 200) {
 					setStore({ user: data.user })
@@ -46,6 +45,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				console.log("Logging out");
 				setStore({ user: { wishlist: [] } });
 			},
+
 			login: async (email, password) => {
 				const opts = {
 					method: 'POST',
@@ -112,58 +112,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			},
 
-			// getOneBook: async (isbn) => {
-			// 	await getActions().getBooks()
-			// 	console.log(getStore().books)
-			// 	const store = getStore();
-			// 	if (store.books) {
-			// 		const filteredBooks = await store.books.filter((book) => book === isbn);
-			// 		setStore({ book: filteredBooks });
-			// 		console.log(store.book);
-			// 	} else {
-			// 		console.log("Store books array is not available.");
-			// 	}
-
-			// },
-			// getOneGoogleBook: async (isbn) => {
-			// 	try {
-			// 		setStore({ oneGoogleBook: {}, loading: true });
-			// 		const resp = await fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:' + isbn + '&key=AIzaSyAhG7q0MvYbiWzXeuSBlhqNATkUVSKhFq0');
-			// 		if (!resp.ok) {
-			// 			throw new Error('Error fetching book data');
-			// 		}
-			// 		const data = await resp.json();
-			// 		const bookData = data.items[0].volumeInfo;
-			// 		setStore({ oneGoogleBook: bookData, loading: false });
-			// 	} catch (error) {
-			// 		console.error(error);
-			// 		setStore({ oneGoogleBook: {}, loading: false });
-
-			// 	}
-			// },
-
-			// getNYTBooks: async () => {
-			// 	const resp = await fetch('https://api.nytimes.com/svc/books/v3/lists/full-overview.json?api-key=emRJGQrXQ32EXbl6ThvjL8JdJcoicGWf')
-
-			// 	const data = await resp.json()
-
-			// 	if (resp.status !== 200) {
-			// 		alert(data.error)
-			// 	} else {
-			// 		let externalBooks = []
-			// 		for (let x in data.results.lists) {
-			// 			//console.log(data.results.lists[x])
-			// 			externalBooks = externalBooks.concat(data.results.lists[x].books)
-			// 		}
-			// 		const uniqueBooks = externalBooks.filter(
-			// 			(book, index, self) => index === self.findIndex((b) => b.primary_isbn13 === book.primary_isbn13)
-			// 		);
-			// 		// filtering the duplicates with "uniqueBooks"
-			// 		//console.log(uniqueBooks);
-			// 		setStore({ externalBooks: uniqueBooks });
-
-			// 	}
-			// },
 			getNYTReview: async (isbn13) => {
 				const resp = await fetch('https://api.nytimes.com/svc/books/v3/reviews.json?isbn=' + isbn13 + '&api-key=emRJGQrXQ32EXbl6ThvjL8JdJcoicGWf')
 
@@ -176,25 +124,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					setStore({ nytReview: data.results[0] });
 				}
 			},
-
-
-			setWishlist: (user_id, book_id) => {
-				const wish = getStore().user.wishlist;
-				const newItem = { user_id, book_id };
-				console.log(newItem);
-				const updatedWishlist = [...wish];
-				const existingItemIndex = updatedWishlist.findIndex(item => item.id === book_id);
-				if (existingItemIndex === -1) {
-					updatedWishlist.push(newItem);
-				} else {
-					updatedWishlist[existingItemIndex] = newItem;
-				}
-
-
-				setStore({ wishlist: updatedWishlist });
-				sessionStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
-			},
-
 
 			postWishlist: async (book_id) => {
 				const opts = {
@@ -223,22 +152,32 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			// setWishlist: (user_id, book_id) => {
-			// 	const wish = getStore().user.wishlist;
+			postCheckout: async (book_id) => {
+				const opts = {
+					method: 'POST',
+					headers: {
+						Authorization: "Bearer " + sessionStorage.getItem("token"),
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({ "book_id": book_id })
+				};
 
-
-			// 	const existingItemIndex = wish.findIndex(item => item.id === book_id);
-
-			// 	if (existingItemIndex === -1) {
-			// 		wish.push(newItem);
-			// 	} else {
-			// 		updatedWishlist[existingItemIndex] = newItem;
-			// 	}
-
-			// 	setStore({ wishlist: updatedWishlist });
-			// 	sessionStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
-
-			// },
+				try {
+					const resp = await fetch(process.env.BACKEND_URL + 'api/wishlist', opts);
+					if (resp.status !== 200) {
+						const data = await resp.json();
+						const errorMessage = data.error || "Something went wrong";
+						alert(errorMessage); // Display error message using toast
+						return false;
+					} else {
+						await getActions().validate_user();
+						alert("Your wishlist was updated successfully"); // Display success message using toast
+						return true;
+					}
+				} catch (error) {
+					console.error(`Error during fetch: ${process.env.BACKEND_URL}api/wishlist`, error);
+				}
+			},
 
 			setCheckout: (primary_isbn13, cover, title, author, price) => {
 				const cart = getStore().checkout;
@@ -271,6 +210,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 				setStore({ price });
 			},
+
 			setBookPrice: (publishedDate) => {
 
 				if (!publishedDate) {
@@ -294,65 +234,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				setStore({ bookPrice });
 			},
-
-			// getGoogleBooks: async (search_text) => {
-			// 	const resp = await fetch('https://www.googleapis.com/books/v1/volumes?q=' + search_text + '&key=AIzaSyAhG7q0MvYbiWzXeuSBlhqNATkUVSKhFq0')
-			// 	const data = await resp.json()
-			// 	if (resp.status !== 200) {
-			// 		alert(data.error)
-			// 	} else {
-			// 		setStore({ externalBooks: data })
-			// 	}
-			// },
-
-			// getOneGoogleBook: async (isbn) => {
-			// 	const resp = await fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:' + isbn + '&key=AIzaSyAhG7q0MvYbiWzXeuSBlhqNATkUVSKhFq0')
-			// 	const data = await resp.json()
-			// 	if (resp.status !== 200) {
-			// 		alert(data.error)
-			// 	} else {
-			// 		setStore({ oneGoogleBook: data.items[0].volumeInfo })
-			// 	}
-			// },
-			// getOneGoogleBook: async (isbn) => {
-			// 	try {
-			// 		setStore({ oneGoogleBook: {}, loading: true });
-			// 		const resp = await fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:' + isbn + '&key=AIzaSyAhG7q0MvYbiWzXeuSBlhqNATkUVSKhFq0');
-			// 		if (!resp.ok) {
-			// 			throw new Error('Error fetching book data');
-			// 		}
-			// 		const data = await resp.json();
-			// 		const bookData = data.items[0].volumeInfo;
-			// 		setStore({ oneGoogleBook: bookData, loading: false });
-			// 	} catch (error) {
-			// 		console.error(error);
-			// 		setStore({ oneGoogleBook: {}, loading: false });
-
-			// 	}
-			// },
-
-			// getNYTBooks: async () => {
-			// 	const resp = await fetch('https://api.nytimes.com/svc/books/v3/lists/full-overview.json?api-key=emRJGQrXQ32EXbl6ThvjL8JdJcoicGWf')
-
-			// 	const data = await resp.json()
-
-			// 	if (resp.status !== 200) {
-			// 		alert(data.error)
-			// 	} else {
-			// 		let externalBooks = []
-			// 		for (let x in data.results.lists) {
-			// 			//console.log(data.results.lists[x])
-			// 			externalBooks = externalBooks.concat(data.results.lists[x].books)
-			// 		}
-			// 		const uniqueBooks = externalBooks.filter(
-			// 			(book, index, self) => index === self.findIndex((b) => b.primary_isbn13 === book.primary_isbn13)
-			// 		);
-			// 		// filtering the duplicates with "uniqueBooks"
-			// 		//console.log(uniqueBooks);
-			// 		setStore({ externalBooks: uniqueBooks });
-
-			// 	}
-			// },
 
 		}
 	};

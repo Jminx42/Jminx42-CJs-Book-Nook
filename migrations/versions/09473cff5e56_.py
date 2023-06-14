@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 52b30b6eefb6
+Revision ID: 09473cff5e56
 Revises: 
-Create Date: 2023-06-12 17:22:43.044010
+Create Date: 2023-06-14 15:20:56.763547
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import mysql
 
 # revision identifiers, used by Alembic.
-revision = '52b30b6eefb6'
+revision = '09473cff5e56'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -33,8 +33,7 @@ def upgrade():
     sa.Column('ratings_count', sa.Integer(), nullable=True),
     sa.Column('pages', sa.Integer(), nullable=True),
     sa.Column('preview', sa.String(length=250), nullable=True),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('isbn')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('book_format',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -57,7 +56,7 @@ def upgrade():
     op.create_table('user',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('email', sa.String(length=120), nullable=False),
-    sa.Column('password', sa.String(length=80), nullable=False),
+    sa.Column('password_hash', sa.String(length=200), nullable=False),
     sa.Column('full_name', sa.String(length=120), nullable=True),
     sa.Column('user_category', sa.Integer(), nullable=True),
     sa.Column('profile_picture', sa.String(length=250), nullable=True),
