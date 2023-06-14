@@ -178,25 +178,59 @@ def update_review(review_id):
     db.session.commit()
     return jsonify("review updated"), 200
 
+# @api.route("/review", methods=["POST"])
+# @jwt_required()
+# def create_review():
+#     user_id = get_jwt_identity()
+#     body = request.json
+#     review = request.json.get("review", None)
+#     rating = request.json.get("rating", None)
+#     book_isbn = request.json.get("book_isbn", None)
+       
+#     new_review = Review(
+#         review=body["review"],
+#         rating=body["rating"],
+#         book_isbn=body["book_isbn"],
+#         user_id=user_id
+#     )
+#     db.session.add(new_review)
+#     db.session.commit()
+
+#     return jsonify({"review": "created"}), 200
+
 @api.route("/review", methods=["POST"])
 @jwt_required()
 def create_review():
     user_id = get_jwt_identity()
-    body = request.json
-    review = request.json.get("review", None)
-    rating = request.json.get("rating", None)
-    book_isbn = request.json.get("book_isbn", None)
+    user = User.query.get(user_id)
+    try:
+        body = request.json
        
-    new_review = Review(
-        review=body["review"],
-        rating=body["rating"],
-        book_isbn=body["book_isbn"],
-        user_id=user_id
-    )
-    db.session.add(new_review)
-    db.session.commit()
+        if "review" not in body or not user:
+            return jsonify({"error": "Missing required fields"}), 400
+        
+        review = Review.query.filter_by(book_id=body["book_id"], user_id=user_id).first()
+        if not review:
+            new_review = Review(
+                book_id=body["book_id"],
+                user_id=user_id,
+                review=body["review"],
+                rating=body["rating"],
+            )
+            db.session.add(new_review)
+            db.session.commit()
 
-    return jsonify({"review": "created"}), 200
+            review_data = {
+                "book_id": new_review.book_id,
+                "user_id": new_review.user_id,
+                "review": new_review.review,
+                "rating": new_review.rating,
+            }
+            return jsonify({"review": review_data}), 200
+        return jsonify({"error": "Please try again"}), 400
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @api.route("/review/<int:review_id>", methods=["DELETE"])
 def delete_review(review_id):
@@ -209,15 +243,15 @@ def delete_review(review_id):
     return jsonify("review deleted"), 200
 
 
-@api.route("/wishlist", methods=['GET'])
-@jwt_required()
-def get_wishlist():
-    user_id = get_jwt_identity()
-    wishlist = Wishlist.query.get(user_id)
-    if not wishlist:
-        return jsonify({"error": "No wishlist found"}), 400
+# @api.route("/wishlist", methods=['GET'])
+# @jwt_required()
+# def get_wishlist():
+#     user_id = get_jwt_identity()
+#     wishlist = Wishlist.query.get(user_id)
+#     if not wishlist:
+#         return jsonify({"error": "No wishlist found"}), 400
 
-    return jsonify(wishlist.serialize()), 200 
+#     return jsonify(wishlist.serialize()), 200 
 
 @api.route("/wishlist", methods=["POST"])
 @jwt_required()
@@ -226,7 +260,6 @@ def create_wishlist():
     user = User.query.get(user_id)
     try:
         body = request.json
-        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
        
         if "book_id" not in body or not user:
             return jsonify({"error": "Missing required fields"}), 400
@@ -252,17 +285,6 @@ def create_wishlist():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-@api.route("/wishlist", methods=["DELETE"])
-# @jwt_required()
-def delete_wishlist():
-    wishlist = Wishlist.query.get()
-    if not wishlist:
-        return jsonify({"error": "No wishlist found for this user id"}), 400
-
-    db.session.delete(wishlist)
-    db.session.commit()
-    return jsonify("wishlist deleted"), 200
 
 
 @api.route("/transaction", methods=['GET'])

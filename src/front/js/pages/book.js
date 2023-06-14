@@ -8,12 +8,13 @@ import { GoogleViewer2 } from "../component/googleViewer2";
 
 export const Book = () => {
 	const params = useParams();
-	const [review, setReview] = useState({ book_isbn: parseInt(params.theisbn) })
+	const [review, setReview] = useState({ review: "", rating: 0 })
 	const [preview, setPreview] = useState(false)
 	const { store, actions } = useContext(Context);
 
 	const [price, setPrice] = useState(store.bookPrice)
 	const [selectedOption, setSelectedOption] = useState('');
+
 
 	useEffect(() => {
 		actions.getBooks();
@@ -21,6 +22,7 @@ export const Book = () => {
 		actions.getNYTReview(params.theisbn)
 
 	}, [])
+
 
 	// useEffect(() => {
 	// 	actions.getOneBook(params.theisbn)
@@ -31,9 +33,7 @@ export const Book = () => {
 	// 	}
 	// }, [store.book.year])
 
-	const submitReview = async (id) => {
-
-
+	const submitReview = async (book_id) => {
 		const response = await fetch(process.env.BACKEND_URL + 'api/review', {
 			method: "POST",
 			headers: {
@@ -41,17 +41,25 @@ export const Book = () => {
 				"Content-Type": "application/json"
 			},
 
-			body: JSON.stringify(review)
+			body: JSON.stringify({ "book_id": book_id, "review": review.review, "rating": review.rating })
 		});
 
 		if (response.ok) {
-			await actions.validate_user()
+			const data = await response.json();
+			const reviewData = data.review;
+			await actions.validate_user();
 			alert("Review added successfully");
+			console.log(reviewData); // Access the returned review data as needed
+			actions.getOneBook(params.theisbn)
+			setReview({
+				rating: '',
+				review: ''
+			});
 		} else {
-			const data = await response.json()
-			alert(data.error)
+			const data = await response.json();
+			alert(data.error);
 		}
-	};
+	}
 
 	// const handleOptionChange = (event) => {
 	// 	setSelectedOption(event.target.value);
@@ -62,6 +70,12 @@ export const Book = () => {
 	// const handleAddToCart = () => {
 
 	// }
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		submitReview(store.book.id, review.review, review.rating)
+	};
+
 
 	return (
 		<div>
@@ -123,6 +137,7 @@ export const Book = () => {
 								<div className="col-10">{store.book.description}</div>
 							</div>
 							<div className="row">
+								{/* We need to add a ternary here to just show this link for the preview if the store.book.preview includes... (check Insomnia for api response) */}
 								<Link to={`/googlePreview/${params.theisbn}`}>
 									<p className="mt-3 fs-5">Click here to preview the book</p>
 								</Link>
@@ -133,19 +148,35 @@ export const Book = () => {
 			</div>
 
 			<div className="container">
-				{/* {store.nytReview ?
+				{store.nytReview ?
 					<div className="row mb-3 mt-3">
 						<h4>Reviews</h4>
 						<p>{store.nytReview.byline}</p>
 						<p>Reviewed in: {store.nytReview.publication_dt}</p>
 						<p>Excerpt: {store.nytReview.summary}</p>
 						<p>Review Link: <a href={store.nytReview.url} target="_blank" rel="noopener noreferrer">Click here</a></p>
+					</div> : null}
+				{/* I want to show the user reviews for each book but this function isn't working */}
+				{store.book.reviews.map((review) => {
+					return (<div key={review.id}>
+						<h4>Reviews</h4>
+						<p>Rating: {review.rating}</p>
+						<p>Review: {review.review}</p>
+						<p>Reviewed by: {review.full_name}</p>
+					</div>)
+				})}
+				{/* {store.user.review.book_id ?
+					<div className="row mb-3 mt-3">
+						<h4>Reviews</h4>
+						<p>Rating: {store.user.review.book_id.rating}</p>
+						<p>Review: {store.user.review.book_id.review}</p>
+						<p>Reviewed by: {store.user.full_name}</p>
 					</div> : null} */}
 				<div className="row mb-3 mt-3">
 					<h4>Submit your review</h4>
 					{sessionStorage.getItem("token") ?
 						<div>
-							<form onSubmit={(e) => e.preventDefault()}>
+							<form onSubmit={handleSubmit}>
 								<label>Rating</label>
 								<input
 									className="form-control"
@@ -163,13 +194,14 @@ export const Book = () => {
 									value={review.review || ""}
 									onChange={(e) => setReview({ ...review, review: e.target.value })}
 								/>
-								<button className="btn profile-custom-button text-white mt-3" onClick={() => {
-									setReview({ ...review, book_isbn: params.theisbn })
-									submitReview(params.theisbn)
+								<button className="btn custom-button text-white mt-3 mb-4" onClick={() => {
+									setReview({ ...review, book_id: store.book.id })
+
 								}
 								} type="submit">
 									Submit
 								</button>
+
 							</form>
 						</div> : <div>
 							<p>Want to submit your review?&nbsp;

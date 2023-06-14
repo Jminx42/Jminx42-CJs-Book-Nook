@@ -1,10 +1,10 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			user: { wishlist: [] },
+			user: { wishlist: [], review: [] },
 
 			books: [],
-			book: {},
+			book: { reviews: [] },
 			// externalBooks: [],
 			search: "",
 			// oneGoogleBook: {},
@@ -87,15 +87,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 					alert(data.error)
 				} else {
 					setStore({ books: data.books })
-					console.log("sdjbhbdsfhsdbhbsh")
-					console.log(getStore().books)
+					// console.log(getStore().books)
 				}
 			},
 
 			getOneBook: async (isbn) => {
 				const response = await fetch(process.env.BACKEND_URL + 'api/book/' + isbn);
 				const data = await response.json();
-				console.log(data)
 				setStore({ book: data.book })
 				console.log(getStore().book)
 
@@ -176,25 +174,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					setStore({ nytReview: data.results[0] });
 				}
 			},
-
-
-			setWishlist: (user_id, book_id) => {
-				const wish = getStore().user.wishlist;
-				const newItem = { user_id, book_id };
-				console.log(newItem);
-				const updatedWishlist = [...wish];
-				const existingItemIndex = updatedWishlist.findIndex(item => item.id === book_id);
-				if (existingItemIndex === -1) {
-					updatedWishlist.push(newItem);
-				} else {
-					updatedWishlist[existingItemIndex] = newItem;
-				}
-
-
-				setStore({ wishlist: updatedWishlist });
-				sessionStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
-			},
-
 
 			postWishlist: async (book_id) => {
 				const opts = {
