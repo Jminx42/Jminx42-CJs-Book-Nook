@@ -201,26 +201,6 @@ def update_review(review_id):
     db.session.commit()
     return jsonify("review updated"), 200
 
-# @api.route("/review", methods=["POST"])
-# @jwt_required()
-# def create_review():
-#     user_id = get_jwt_identity()
-#     body = request.json
-#     review = request.json.get("review", None)
-#     rating = request.json.get("rating", None)
-#     book_isbn = request.json.get("book_isbn", None)
-       
-#     new_review = Review(
-#         review=body["review"],
-#         rating=body["rating"],
-#         book_isbn=body["book_isbn"],
-#         user_id=user_id
-#     )
-#     db.session.add(new_review)
-#     db.session.commit()
-
-#     return jsonify({"review": "created"}), 200
-
 @api.route("/review", methods=["POST"])
 @jwt_required()
 def create_review():
@@ -264,17 +244,6 @@ def delete_review(review_id):
     db.session.delete(review)
     db.session.commit()
     return jsonify("review deleted"), 200
-
-
-# @api.route("/wishlist", methods=['GET'])
-# @jwt_required()
-# def get_wishlist():
-#     user_id = get_jwt_identity()
-#     wishlist = Wishlist.query.get(user_id)
-#     if not wishlist:
-#         return jsonify({"error": "No wishlist found"}), 400
-
-#     return jsonify(wishlist.serialize()), 200 
 
 @api.route("/wishlist", methods=["POST"])
 @jwt_required()
@@ -332,37 +301,34 @@ def create_transaction():
         if "book_id" not in body or not user:
             return jsonify({"error": "Missing required fields"}), 400
         
-        transaction = Transaction.query.filter_by(book_id=body["book_id"], user_id=user_id).first()
-        if not wishlist:
-            new_wishlist = Wishlist(
-                book_id=body["book_id"],
-                user_id=user_id
-            )
-            db.session.add(new_wishlist)
-            db.session.commit()
+        new_transaction = Transaction(
+            book_id=body["book_id"],
+            user_id=user_id,
+            book_format_id=body["book_format_id"],
+            unit = body["unit"]
+        )
+        db.session.add(new_transaction)
+        db.session.commit()
 
-            wishlist_data = {
-                "book_id": new_wishlist.book_id,
-                "user_id": new_wishlist.user_id
-            }
-            return jsonify({"wishlist": wishlist_data}), 200
-        else:
-            db.session.delete(wishlist)
-            db.session.commit()
-            return jsonify({"wishlist": "book deleted from wishlist"}), 200
-
+       
+        return jsonify({"transaction": new_transaction.serialize()}), 200
+        
+            
+           
+        
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    body = request.json
-    new_transaction = Transaction(
-        book_id=body["book_id"],
-        user_id=body["user_id"],
-        payment_methods=body["payment_methods"]
-    )
-    db.session.add(new_transaction)
-    db.session.commit()
+    
+    # body = request.json
+    # new_transaction = Transaction(
+    #     book_id=body["book_id"],
+    #     user_id=body["user_id"],
+    #     payment_methods=body["payment_methods"]
+    # )
+    # db.session.add(new_transaction)
+    # db.session.commit()
 
-    return jsonify({"transaction": "created"}), 200
+    # return jsonify({"transaction": "created"}), 200
 
 @api.route("/payment-method", methods=['GET'])
 def get_all_payment_methods():

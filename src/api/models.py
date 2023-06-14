@@ -106,7 +106,7 @@ class BookFormat(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     book_format = db.Column(db.String(100), nullable=True, unique=False)
     book_price = db.Column(db.Float, unique=False, nullable=False)
-  
+    transactions = db.relationship("Transaction", backref="bookFormat")
    
     def __repr__(self):
         return f'<BookFormat {self.id}>'
@@ -183,7 +183,9 @@ class Transaction(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
+    book_format_id = db.Column(db.Integer, db.ForeignKey('book_format.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    unit = db.Column(db.Integer, unique= False, nullable=False)
     payment_methods = db.relationship("PaymentMethod", backref="transaction")
     support = db.relationship("Support", backref="transaction")
 
@@ -193,38 +195,42 @@ class Transaction(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "book_id": self.book_id,
+            "book_id": Book.query.get(self.book_id).serialize(),
+            "book_format_id": BookFormat.query.get(self.book_format_id).serialize(),
             "user_id": self.user_id,
             "payment_methods": self.payment_methods,
+            "unit": self.unit,
         }
 
-# class History(db.Model):
+class History(db.Model):
 
-#     id = db.Column(db.Integer, primary_key=True)
-#     book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
-#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-#     payment_methods = db.relationship("PaymentMethod", backref="transaction")
-#     support = db.relationship("Support", backref="transaction")
+    id = db.Column(db.Integer, primary_key=True)
+    transaction_id = db.Column(db.Integer, db.ForeignKey('transaction.id'), nullable=False)
+    # book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
+    # user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    # payment_methods = db.relationship("PaymentMethod", backref="transaction")
+    # support = db.relationship("Support", backref="transaction")
 
-#     def __repr__(self):
-#         return f'<Transaction {self.id}>'
+    def __repr__(self):
+        return f'<History {self.id}>'
 
-#     def serialize(self):
-#         return {
-#             "id": self.id,
-#             "book_id": self.book_id,
-#             "user_id": self.user_id,
-#             "payment_methods": self.payment_methods,
-#         }
+    def serialize(self):
+        return {
+            "id": self.id,
+            "transaction_id": Transaction.query.get(self.transaction_id).serialize(),
+            # "book_id": self.book_id,
+            # "user_id": self.user_id,
+            # "payment_methods": self.payment_methods,
+        }
     
 class PaymentMethod(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     payment_methods = db.Column(db.String(100), nullable=True, unique=False)
-    card_number = db.Column(BIGINT(unsigned=True), unique=True, nullable=False)
-    card_name = db.Column(db.String(100), unique=False, nullable=False)
-    cvc = db.Column(db.Integer, unique=False, nullable=False)
+    card_number = db.Column(db.Text, unique=True, nullable=False)
+    card_name = db.Column(db.Text, unique=False, nullable=False)
+    cvc = db.Column(db.Text, unique=False, nullable=False)
     expiry_date = db.Column(db.Date, unique=False, nullable=False)
     transaction_id = db.Column(db.Integer, db.ForeignKey('transaction.id'), nullable=True)
 

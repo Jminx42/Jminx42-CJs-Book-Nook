@@ -8,6 +8,9 @@ export const Navbar = () => {
 	const { store, actions } = useContext(Context);
 	const [search, setSearch] = useState("");
 
+	const handleSearch = (word) => {
+		setStore({ search: word })
+	}
 
 
 
@@ -25,12 +28,12 @@ export const Navbar = () => {
 								id="search"
 								className="form-control"
 								aria-describedby="search-field"
-								value={search}
-								onChange={(e) => setSearch(e.target.value)}
+								value={store.search}
+								onChange={(e) => actions.handleSearch(e.target.value)}
 								placeholder="Search" />
 
 						</div>
-						<button type="button" className="btn btn-secondary custom-button" onClick={() => actions.handleSearch(search)}>
+						<button type="button" className="btn btn-secondary custom-button" >
 							<i className="fas fa-search"></i>
 						</button>
 					</div>
