@@ -1,7 +1,7 @@
   
 import os
 from flask_admin import Admin
-from .models import db, User, Book, Review, ExternalReview, Wishlist, Transaction, PaymentMethod, Support, BookFormat, UserCategory
+from .models import db, User, Book, Review, ExternalReview, Wishlist, Transaction, PaymentMethod, Support, BookFormat, UserCategory, History
 from flask_admin.contrib.sqla import ModelView
 
 def setup_admin(app):
@@ -23,6 +23,7 @@ def setup_admin(app):
     admin.add_view(ModelView(Support, db.session))
     admin.add_view(ModelView(BookFormat, db.session))
     admin.add_view(ModelView(UserCategory, db.session))
+    admin.add_view(ModelView(History, db.session))
   
 
     # You can duplicate that line to add mew models

@@ -2,7 +2,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 
-			user: { wishlist: [], review: [] },
+			user: { wishlist: [], review: [], transaction: [] },
 			books: [],
 			book: { reviews: [] },
 			// externalBooks: [],
@@ -152,7 +152,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			postCheckout: async (book_id) => {
+			postCheckout: async (book_id, unit, book_format_id) => {
 
 				const opts = {
 					method: 'POST',
@@ -160,11 +160,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 						Authorization: "Bearer " + sessionStorage.getItem("token"),
 						"Content-Type": "application/json"
 					},
-					body: JSON.stringify({ "book_id": book_id })
+					body: JSON.stringify({ "book_id": book_id, "unit": unit, "book_format_id": book_format_id })
 				};
 
 				try {
-					const resp = await fetch(process.env.BACKEND_URL + 'api/wishlist', opts);
+					const resp = await fetch(process.env.BACKEND_URL + 'api/transaction', opts);
 					if (resp.status !== 200) {
 						const data = await resp.json();
 						const errorMessage = data.error || "Something went wrong";
@@ -172,30 +172,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 						return false;
 					} else {
 						await getActions().validate_user();
-						alert("Your wishlist was updated successfully"); // Display success message using toast
+						alert("Your cart was updated successfully"); // Display success message using toast
 						return true;
 					}
 				} catch (error) {
-					console.error(`Error during fetch: ${process.env.BACKEND_URL}api/wishlist`, error);
+					console.error(`Error during fetch: ${process.env.BACKEND_URL}api/transaction`, error);
 				}
-			},
-
-			setCheckout: (primary_isbn13, cover, title, author, price) => {
-				const cart = getStore().checkout;
-				const newCart = { primary_isbn13, cover, title, author, price };
-
-				const updatedCart = [...cart];
-				const existingCartIndex = updatedCart.findIndex(item => item.primary_isbn13 === primary_isbn13);
-
-				if (existingCartIndex === -1) {
-					updatedCart.push(newCart);
-				} else {
-					updatedCart[existingCartIndex] = newCart;
-				}
-
-				setStore({ checkout: updatedCart });
-				sessionStorage.setItem("checkout", JSON.stringify(updatedCart));
-
 			},
 
 			setPrice: (weeks_on_list) => {
