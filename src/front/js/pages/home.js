@@ -3,6 +3,7 @@ import { Context } from "../store/appContext";
 import rigoImageUrl from "../../img/rigo-baby.jpg";
 import "../../styles/home.css";
 import { Navbar } from "../component/navbar";
+import { Footer } from "../component/footer";
 
 import { HomeCard } from "../component/homeCard";
 
@@ -39,6 +40,7 @@ export const Home = () => {
 					}
 				</div>
 			</div>
+			<Footer />
 		</div>
 	);
 };
