@@ -64,7 +64,7 @@ def login():
     if not user and not bcrypt.checkpw(password.encode('utf-8'), user.password_hash):
         return jsonify ({"error": "Invalid credentials"}), 300        
     
-    access_token = create_access_token(identity=user.id, expires_delta = datetime.timedelta(minutes=30))
+    access_token = create_access_token(identity=user.id, expires_delta = datetime.timedelta(minutes=90))
     return jsonify({"access_token": access_token}), 200
 
 @api.route("/user/validate", methods=["GET"])
@@ -312,10 +312,7 @@ def create_transaction():
 
        
         return jsonify({"transaction": new_transaction.serialize()}), 200
-        
-            
            
-        
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
@@ -390,15 +387,21 @@ def get_one_support_by_id(ticket_id):
     return jsonify(support.serialize()), 200 
 
 @api.route("/support", methods=["POST"])
+@jwt_required()
 def create_support():
+    user_id = get_jwt_identity()
     body = request.json
-    new_support = Support(
-        user_id=body["user_id"],
-        enquiry=body["enquiries"],
-        book_id=body["book_id"],
-        transaction_id=body["transaction_id"]
-    )
-    db.session.add(new_support)
-    db.session.commit()
+    if not body:
+        return jsonify({"error": "missing requirements"}), 400
+    else:
+        new_support = Support(
+            user_id=user_id,
+            subject=body["subject"],
+            message=body["message"],
+            
+        )
+        db.session.add(new_support)
+        db.session.commit()
 
-    return jsonify({"support": "created"}), 200
+        return jsonify({"support": "created"}), 200
+    

@@ -29,12 +29,10 @@ class User(db.Model):
             "full_name": self.full_name,
             "profile_picture": self.profile_picture,
             "password": "",
-
             # payment method.... way to serialize without revealing user private info?
-
             "review": [y.serialize() for y in self.review],
-
-            "wishlist": [x.serialize() for x in self.wishlist]
+            "wishlist": [x.serialize() for x in self.wishlist],
+            "support": [ticket.serialize_for_support() for ticket in self.support],
         }
 
 class UserCategory(db.Model):
@@ -74,7 +72,6 @@ class Book(db.Model):
     # price = db.Column(db.Float, unique=False, nullable=True) /////////////////
     external_reviews = db.relationship("ExternalReview", backref="book")
     transactions = db.relationship("Transaction", backref="book")
-    support = db.relationship("Support", backref="book")
     wishlist = db.relationship("Wishlist", backref="book")
     reviews = db.relationship("Review", backref="book")
 
@@ -187,7 +184,6 @@ class Transaction(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     unit = db.Column(db.Integer, unique= False, nullable=False)
     payment_methods = db.relationship("PaymentMethod", backref="transaction")
-    support = db.relationship("Support", backref="transaction")
 
     def __repr__(self):
         return f'<Transaction {self.id}>'
@@ -251,9 +247,9 @@ class Support(db.Model):
 
     ticket_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    enquiries = db.Column(db.Text, nullable=False)
-    book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=True)
-    transaction_id = db.Column(db.Integer, db.ForeignKey('transaction.id'), nullable=True)
+    subject = db.Column(db.Text, nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    
 
     def __repr__(self):
         return f'<Support {self.ticket_id}>'
@@ -261,8 +257,16 @@ class Support(db.Model):
     def serialize(self):
         return {
             "ticket_id": self.ticket_id,
+            "user_id": User.query.get(self.user_id).serialize(),
+            "subject": self.subject,
+            "message": self.message,
+           
+        }
+    def serialize_for_support(self):
+        return {
+            "ticket_id": self.ticket_id,
             "user_id": self.user_id,
-            "enquiries": self.enquiries,
-            "book_id": self.book_id,
-            "transaction_id": self.transaction_id
+            "subject": self.subject,
+            "message": self.message,
+           
         }

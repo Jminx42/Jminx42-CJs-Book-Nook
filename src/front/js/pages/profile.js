@@ -7,6 +7,7 @@ import { Review } from "../component/review";
 
 import { Context } from "../store/appContext";
 import { InputProfilePic } from "../component/inputProfilePic";
+import { SupportCard } from "../component/supportCard";
 
 export const Profile = () => {
 	const { store, actions } = useContext(Context);
@@ -85,6 +86,9 @@ export const Profile = () => {
 					</li>
 					<li className="nav-item" role="presentation">
 						<button className="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment-tab-pane" type="button" role="tab" aria-controls="payment-tab-pane" aria-selected="false">Payment</button>
+					</li>
+					<li className="nav-item" role="presentation">
+						<button className="nav-link" id="support-tab" data-bs-toggle="tab" data-bs-target="#support-tab-pane" type="button" role="tab" aria-controls="support-tab-pane" aria-selected="false">Support</button>
 					</li>
 				</ul>
 			</div>
@@ -197,6 +201,14 @@ export const Profile = () => {
 						Payment Methods
 					</div>
 				</div>
+				<div className="tab-pane fade" id="support-tab-pane" role="tabpanel" aria-labelledby="support-tab" tabIndex="0">
+					<div className="container mt-4">
+						{store.user.support && store.user.support.length !== 0 ? store.user.support.map((ticket) => {
+							return <SupportCard key={ticket.ticket_id} item={ticket} />
+						}) : null}
+					</div>
+				</div>
+
 
 			</div>
 

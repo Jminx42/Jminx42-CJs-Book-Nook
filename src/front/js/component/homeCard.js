@@ -100,7 +100,7 @@ export const HomeCard = ({ item }) => {
                     className="btn text-white custom-button"
 
                     onClick={() =>
-                        actions.postCheckout(item.id)
+                        actions.postCheckout(item.id,)
                     }
                 >
                     {store.checkout.some((checkoutItem) => checkoutItem.isbn === item.isbn) ? (

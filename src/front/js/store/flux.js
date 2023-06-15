@@ -2,7 +2,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 
-			user: { wishlist: [], review: [], transaction: [] },
+			user: { wishlist: [], review: [], transaction: [], support: [] },
 			books: [],
 			book: { reviews: [] },
 			// externalBooks: [],
