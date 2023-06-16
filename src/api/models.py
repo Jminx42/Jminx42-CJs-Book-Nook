@@ -1,27 +1,27 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.mysql import BIGINT
 import enum
-
+from datetime import datetime
 db = SQLAlchemy()
 
 class User(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
     full_name = db.Column(db.String(120), nullable=True)
+    address = db.Column(db.Text, nullable=True)
     user_category = db.Column(db.Integer, db.ForeignKey('user_category.id'), nullable=True)
     payment_method = db.relationship("PaymentMethod", backref="user")
     wishlist = db.relationship("Wishlist", backref="user")
     review = db.relationship("Review", backref="user")
     transactions = db.relationship("Transaction", backref="user")
+    items = db.relationship("TransactionItem", backref="user")
     support = db.relationship("Support", backref="user")
     profile_picture = db.Column(db.String(250), unique=True, nullable=True)
 
-
     def __repr__(self):
         return f'<User {self.email}>'
-
+    
     def serialize(self):
         return {
             "id": self.id,
@@ -29,34 +29,31 @@ class User(db.Model):
             "full_name": self.full_name,
             "profile_picture": self.profile_picture,
             "password": "",
-
+            "address": self.address,
+            "payment_method": [x.serialize() for x in self.payment_method],
             # payment method.... way to serialize without revealing user private info?
-
             "review": [y.serialize() for y in self.review],
-
-            "wishlist": [x.serialize() for x in self.wishlist]
+            "wishlist": [x.serialize() for x in self.wishlist],
+            "items": [item.serialize() for item in self.items if item.in_progress ],
         }
-
+    
 class UserCategory(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
     user_category = db.Column(db.String(100), unique=False, nullable=True)
     user_id = db.relationship("User", backref="categories")
-   
+
     def __repr__(self):
         return f'<UserCategory {self.user_category}>'
-
+    
     def serialize(self):
         return {
             "id": self.id,
             "user_category": self.user_category,
             "user_id": self.user_id,
             "serialized_reviews": [review.serialize() for review in self.reviews]
-
         }
-
+    
 class Book(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(250), nullable=False)
     author = db.Column(db.String(120), nullable=False)
@@ -73,14 +70,14 @@ class Book(db.Model):
     preview = db.Column(db.String(250), nullable=True)
     # price = db.Column(db.Float, unique=False, nullable=True) /////////////////
     external_reviews = db.relationship("ExternalReview", backref="book")
-    transactions = db.relationship("Transaction", backref="book")
+    items = db.relationship("TransactionItem", backref="book")
     support = db.relationship("Support", backref="book")
     wishlist = db.relationship("Wishlist", backref="book")
     reviews = db.relationship("Review", backref="book")
 
     def __repr__(self):
         return f'<Book {self.title}>'
-
+    
     def serialize(self):
         return {
             "id": self.id,
@@ -90,7 +87,7 @@ class Book(db.Model):
             "book_cover": self.book_cover,
             "book_cover_b": self.book_cover_b,
             "description": self.description,
-            "genre": self.genre,         
+            "genre": self.genre,
             "publisher": self.publisher,
             "year": self.year,
             "average_rating": self.average_rating,
@@ -99,37 +96,34 @@ class Book(db.Model):
             "preview": self.preview,
             "reviews": [review.serialize_for_book() for review in self.reviews]
         }
-
-
+    
 class BookFormat(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
     book_format = db.Column(db.String(100), nullable=True, unique=False)
     book_price = db.Column(db.Float, unique=False, nullable=False)
-    transactions = db.relationship("Transaction", backref="bookFormat")
-   
+    items = db.relationship("TransactionItem", backref="bookformat")
+
     def __repr__(self):
-        return f'<BookFormat {self.id}>'
-
-
+        return f'<BookFormat {self.book_format}>'
+    
     def serialize(self):
         return {
             "id": self.id,
             "book_format": self.book_format,
-            "book_price": self.book_price            
+            "book_price": self.book_price
         }
-
+    
 class Review(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
     review = db.Column(db.Text, nullable=True)
     rating = db.Column(db.Integer, nullable=False)
     book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
         return f'<Review {self.id}>'
-
+    
     def serialize(self):
         return {
             "id": self.id,
@@ -137,7 +131,9 @@ class Review(db.Model):
             "rating": self.rating,
             "book_id": Book.query.get(self.book_id).serialize(),
             "user_id": self.user_id,
+            "created_at": self.created_at.strftime("%b %d, %Y")
         }
+    
     def serialize_for_book(self):
         return {
             "id": self.id,
@@ -146,88 +142,81 @@ class Review(db.Model):
             "book_id": self.book_id,
             "full_name": User.query.get(self.user_id).full_name,
         }
-
+    
 class ExternalReview(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
     external_review = db.Column(db.Text, nullable=True)
     book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
 
     def __repr__(self):
         return f'<ExternalReview {self.id}>'
-
+    
     def serialize(self):
         return {
             "id": self.id,
             "external_review": self.external_review,
             "book_id": self.book_id,
         }
-
+    
 class Wishlist(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
     book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
         return f'<Wishlist {self.id}>'
-
+    
     def serialize(self):
         return {
             "id": self.id,
             "book_id": Book.query.get(self.book_id).serialize(),
             "user_id": self.user_id,
         }
-
-class Transaction(db.Model):
-
+    
+class TransactionItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    in_progress = db.Column(db.Boolean, default=True)
     book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
-    book_format_id = db.Column(db.Integer, db.ForeignKey('book_format.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    transaction_id = db.Column(db.Integer, db.ForeignKey('transaction.id'), nullable=True)
+    book_format_id = db.Column(db.Integer, db.ForeignKey('book_format.id'), nullable=False)
     unit = db.Column(db.Integer, unique= False, nullable=False)
-    payment_methods = db.relationship("PaymentMethod", backref="transaction")
-    support = db.relationship("Support", backref="transaction")
 
     def __repr__(self):
-        return f'<Transaction {self.id}>'
-
+        return f'<TransactionItem {self.id}>'
+    
     def serialize(self):
         return {
             "id": self.id,
+            "in_progress": self.in_progress,
             "book_id": Book.query.get(self.book_id).serialize(),
-            "book_format_id": BookFormat.query.get(self.book_format_id).serialize(),
             "user_id": self.user_id,
-            "payment_methods": self.payment_methods,
+            "transaction_id": self.transaction_id,
+            "book_format_id": BookFormat.query.get(self.book_format_id).serialize(),       
             "unit": self.unit,
         }
 
-class History(db.Model):
-
+class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    transaction_id = db.Column(db.Integer, db.ForeignKey('transaction.id'), nullable=False)
-    # book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
-    # user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    # payment_methods = db.relationship("PaymentMethod", backref="transaction")
-    # support = db.relationship("Support", backref="transaction")
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    payment_methods = db.relationship("PaymentMethod", backref="transaction")
+    items = db.relationship("TransactionItem", backref="transaction")
 
     def __repr__(self):
-        return f'<History {self.id}>'
-
+        return f'<Transaction {self.id}>'
+    
     def serialize(self):
         return {
             "id": self.id,
-            "transaction_id": Transaction.query.get(self.transaction_id).serialize(),
-            # "book_id": self.book_id,
-            # "user_id": self.user_id,
-            # "payment_methods": self.payment_methods,
+            "user_id": User.query.get(self.user_id).serialize(),
+            "payment_methods": self.payment_methods,
+            "items": TransactionItem.query.get(self.transaction_item_id).serialize(),
         }
-    
+        
 class PaymentMethod(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    payment_methods = db.Column(db.String(100), nullable=True, unique=False)
+    card_type = db.Column(db.String(100), nullable=True, unique=False)
     card_number = db.Column(db.Text, unique=True, nullable=False)
     card_name = db.Column(db.Text, unique=False, nullable=False)
     cvc = db.Column(db.Text, unique=False, nullable=False)
@@ -235,34 +224,35 @@ class PaymentMethod(db.Model):
     transaction_id = db.Column(db.Integer, db.ForeignKey('transaction.id'), nullable=True)
 
     def __repr__(self):
-        return f'<PaymentMethods {self.id}>'
-
+        return f'<PaymentMethods {self.card_name}>'
+    
     def serialize(self):
         return {
             "id": self.id,
             "user_id": self.user_id,
-            "payment_methods": self.payment_methods.value,
+            "card_type": self.card_type,
             "card_name": self.card_name,
+            "card_number": self.card_number,
+            "cvc": self.cvc,
             "expiry_date": self.expiry_date
             # Serializing the payment methods is probably a security breach, so you can exclude it
         }
-
+    
 class Support(db.Model):
-
     ticket_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     enquiries = db.Column(db.Text, nullable=False)
     book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=True)
-    transaction_id = db.Column(db.Integer, db.ForeignKey('transaction.id'), nullable=True)
+    
 
     def __repr__(self):
         return f'<Support {self.ticket_id}>'
-
+    
     def serialize(self):
         return {
             "ticket_id": self.ticket_id,
             "user_id": self.user_id,
             "enquiries": self.enquiries,
             "book_id": self.book_id,
-            "transaction_id": self.transaction_id
+           
         }

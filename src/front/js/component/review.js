@@ -9,7 +9,7 @@ import "../../styles/home.css";
 
 export const Review = ({ item }) => {
     const { store, actions } = useContext(Context);
-
+    // Add edit function to review!!!
     return (
         <div className="container">
             <div className="row">
@@ -21,8 +21,10 @@ export const Review = ({ item }) => {
                 <div className="col-sm-6 col-md-9 col-lg-9" >
                     <h4 className="text-start">{item.book_id.title}</h4>
                     <h5 className="text-start">by {item.book_id.author}</h5>
+                    <p className="text-start mb-0">Posted on {item.created_at}</p>
                     <p className="text-start mb-0">Rating: {item.rating}</p>
                     <p className="text-start ">Review: {item.review}</p>
+
                 </div>
             </div>
         </div>
