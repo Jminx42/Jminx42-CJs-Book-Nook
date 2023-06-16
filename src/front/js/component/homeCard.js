@@ -4,6 +4,7 @@ import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
 import "../../styles/index.css";
 import "../../styles/home.css";
+import CartCard from "./cartCard";
 
 
 
@@ -13,6 +14,7 @@ export const HomeCard = ({ item }) => {
 
     const [loggedIn, setLoggedIn] = useState(true);
     const modal = useRef();
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
         actions.setPrice(item.weeks_on_list);
@@ -78,7 +80,7 @@ export const HomeCard = ({ item }) => {
                     )}
                 </button>
                 {/* <!-- Modal --> */}
-                <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                {/* <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header">
@@ -94,8 +96,8 @@ export const HomeCard = ({ item }) => {
                             </div>
                         </div>
                     </div>
-                </div>
-                <button
+                </div> */}
+                {/* <button
                     type="button"
                     className="btn text-white custom-button"
 
@@ -108,7 +110,20 @@ export const HomeCard = ({ item }) => {
                     ) : (
                         <i className="bi bi-cart"></i>
                     )}
+                </button> */}
+                {/* <!-- Button trigger modal --> */}
+
+                <button type="button"
+                    className="btn text-white custom-button"
+                    onClick={() => setShowModal(true)}
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal">
+                    <i className="bi bi-cart"></i>
                 </button>
+                {
+                    showModal &&
+                    <CartCard item={item} />
+                }
 
             </div>
         </div>

@@ -25,7 +25,7 @@ export const Home = () => {
 							?
 							store.books.filter(
 								(book) => book.title.toLowerCase().includes(store.search)).map((book) => {
-									return <HomeCard key={book.isbn} item={book} />
+									return <HomeCard key={book.id} item={book} />
 								})
 							:
 							<div>
