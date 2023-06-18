@@ -14,6 +14,11 @@ export const Book = () => {
 
 	const [price, setPrice] = useState(store.bookPrice)
 	const [selectedOption, setSelectedOption] = useState('');
+	const [editClicked, setEditClicked] = useState(false);
+	const [editReview, setEditReview] = useState({
+		rating: review.rating,
+		review: review.review
+	});
 
 
 	useEffect(() => {
@@ -22,6 +27,13 @@ export const Book = () => {
 		actions.getNYTReview(params.theisbn)
 
 	}, [])
+
+	useEffect(() => {
+		setEditReview({
+			rating: review.rating,
+			review: review.review
+		});
+	}, [review]);
 
 
 	// useEffect(() => {
@@ -157,11 +169,47 @@ export const Book = () => {
 						<p>Review Link: <a href={store.nytReview.url} target="_blank" rel="noopener noreferrer">Click here</a></p>
 					</div> : null}
 				{/* I want to show the user reviews for each book but this function isn't working */}
+				<h4>Reviews</h4>
 				{store.book.reviews.map((review) => {
 					return (<div key={review.id}>
-						<h4>Reviews</h4>
+						{!editClicked ?
+							<button className="btn btn-primary" onClick={() => setEditClicked(true)}>Edit</button>
+							:
+							<button className="btn btn-secondary" onClick={() => {
+								setEditClicked(false)
+								actions.editReview(review.book_id, editReview.review, editReview.rating)
+								handleEditReview()
+							}}>Save</button>}
+
+						<p className="text-start mb-0">Rating: </p>
+						{!editClicked ? (
+							<p>{review.rating}</p>
+						) : (
+							<input
+								className="form-control"
+								id="rating"
+								aria-describedby="rating"
+								value={editReview.rating}
+								onChange={(e) => setEditReview({ ...editReview, rating: e.target.value })}
+							/>
+						)}
+
+						<p className="text-start">Review: </p>
+						{!editClicked ? (
+							<p>{review.review}</p>
+						) : (
+							<input
+								className="form-control"
+								id="rating"
+								aria-describedby="rating"
+								value={editReview.review}
+								onChange={(e) => setEditReview({ ...editReview, review: e.target.value })}
+							/>
+						)}
+
+						{/* 
 						<p>Rating: {review.rating}</p>
-						<p>Review: {review.review}</p>
+						<p>Review: {review.review}</p> */}
 						<p>Reviewed by: {review.full_name}</p>
 					</div>)
 				})}

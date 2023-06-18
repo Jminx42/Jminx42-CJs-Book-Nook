@@ -64,7 +64,7 @@ def login():
     if not user and not bcrypt.checkpw(password.encode('utf-8'), user.password_hash):
         return jsonify ({"error": "Invalid credentials"}), 300        
     
-    access_token = create_access_token(identity=user.id, expires_delta = datetime.timedelta(minutes=30))
+    access_token = create_access_token(identity=user.id, expires_delta = datetime.timedelta(minutes=90))
     return jsonify({"access_token": access_token}), 200
 
 @api.route("/user/validate", methods=["GET"])
@@ -186,17 +186,19 @@ def get_one_review_by_id(review_id):
 
     return jsonify(review.serialize()), 200 
 
-@api.route("/review/<int:review_id>", methods=["PUT"])
-def update_review(review_id):
+@api.route("/review", methods=["PUT"]) #Why don't we need the /<int:book_id>
+@jwt_required()
+def update_review():
+    user_id = get_jwt_identity()
     body = request.json
-    review = Review.query.get(review_id) #check if user who edits review is same
+    review = Review.query.filter_by(book_id=body["book_id"]).first()
     if not review:
-        return jsonify({"error": "No review found with this id"}), 400
+        return jsonify({"error": "Please post your review first"}), 400
 
     review.review = body["review"]
     review.rating = body["rating"]
     review.book_id = body["book_id"]
-    review.user_id = body["user_id"]
+    review.user_id = user_id
 
     db.session.commit()
     return jsonify("review updated"), 200
@@ -230,7 +232,7 @@ def create_review():
                 "rating": new_review.rating,
             }
             return jsonify({"review": review_data}), 200
-        return jsonify({"error": "Please try again"}), 400
+        return jsonify({"error": "You can only submit one review for each book"}), 400
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500

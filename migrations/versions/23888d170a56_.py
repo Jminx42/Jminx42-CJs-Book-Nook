@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 536082484ec4
+Revision ID: 23888d170a56
 Revises: 
-Create Date: 2023-06-16 18:57:33.821981
+Create Date: 2023-06-18 17:11:37.510304
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import mysql
 
 # revision identifiers, used by Alembic.
-revision = '536082484ec4'
+revision = '23888d170a56'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -72,6 +72,7 @@ def upgrade():
     sa.Column('rating', sa.Integer(), nullable=False),
     sa.Column('book_id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['book_id'], ['book.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -102,7 +103,7 @@ def upgrade():
     op.create_table('payment_method',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('payment_methods', sa.String(length=100), nullable=True),
+    sa.Column('card_type', sa.String(length=100), nullable=True),
     sa.Column('card_number', sa.Text(), nullable=False),
     sa.Column('card_name', sa.Text(), nullable=False),
     sa.Column('cvc', sa.Text(), nullable=False),

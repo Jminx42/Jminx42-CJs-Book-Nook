@@ -124,6 +124,31 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
+			editReview: async (book_id, review, rating) => {
+				const response = await fetch(process.env.BACKEND_URL + 'api/review', {
+					method: "PUT",
+					headers: {
+						Authorization: "Bearer " + sessionStorage.getItem("token"),
+						"Content-Type": "application/json"
+					},
+
+					body: JSON.stringify({ "book_id": book_id.id, "review": review, "rating": rating })
+				});
+
+				if (response.ok) {
+					const data = await response.json();
+					const reviewData = data.review;
+					await actions.validate_user();
+					alert("Review updated successfully");
+					console.log(reviewData); // Access the returned review data as needed
+					await getActions().getOneBook(getStore().book.isbn)
+
+				} else {
+					const data = await response.json();
+					alert(data.error);
+				}
+			},
+
 			postWishlist: async (book_id) => {
 
 				const opts = {
