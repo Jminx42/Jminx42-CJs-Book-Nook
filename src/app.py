@@ -6,8 +6,8 @@ from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from flask_cors import CORS
-from api.utils import APIException, generate_sitemap, retrieve_books
-from api.models import db, Book
+from api.utils import APIException, generate_sitemap, retrieve_books, generate_formats
+from api.models import db, Book, BookFormat
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
@@ -60,6 +60,13 @@ def sitemap():
         populate_books = retrieve_books()
         for x in populate_books:
             print(isinstance (x, Book))
+            db.session.add(x)
+
+        db.session.commit()
+    if len(BookFormat.query.all()) == 0:
+        populate_formats = generate_formats()
+        for x in populate_formats:
+            print(isinstance (x, BookFormat))
             db.session.add(x)
 
         db.session.commit()

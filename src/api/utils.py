@@ -1,6 +1,6 @@
 from flask import jsonify, url_for
 import requests
-from api.models import Book
+from api.models import Book, BookFormat
 import numbers
 
 class APIException(Exception):
@@ -42,6 +42,18 @@ def generate_sitemap(app):
         <p>Start working on your project by following the <a href="https://start.4geeksacademy.com/starters/full-stack" target="_blank">Quick Start</a></p>
         <p>Remember to specify a real endpoint path like: </p>
         <ul style="text-align: left;">"""+links_html+"</ul></div>"
+def generate_formats():
+    print ("aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+    list_formats = [{"book_format": "ebook", "book_price": 10.99},
+             {"book_format": "paperback", "book_price": 15.99},
+             {"book_format": "hardcover", "book_price": 20.99}, 
+             {"book_format": "audiobook", "book_price": 24.99} ]
+    
+    format_to_add = [BookFormat(book_format = format["book_format"],
+                                book_price = format["book_price"]) for format in list_formats]
+    
+    return format_to_add
+    
 
 def retrieve_books ():
     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")

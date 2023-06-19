@@ -34,7 +34,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				if (resp.status == 200) {
 					setStore({ user: data.user })
 				} else {
-					setStore({ user: { wishlist: [] } })
+					setStore({ user: { wishlist: [], review: [], transaction: [] } })
 					sessionStorage.removeItem("token")
 				}
 			},
@@ -44,7 +44,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				sessionStorage.removeItem("wishlist");
 				sessionStorage.removeItem("checkout");
 				console.log("Logging out");
-				setStore({ user: { wishlist: [] } });
+				setStore({ user: { wishlist: [], review: [], transaction: [] } });
 			},
 
 			login: async (email, password) => {
@@ -92,6 +92,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
+			emptyBook: () => {
+				setStore({ book: { reviews: [] } })
+			},
+
 			getOneBook: async (isbn) => {
 				const response = await fetch(process.env.BACKEND_URL + 'api/book/' + isbn);
 				const data = await response.json();
@@ -121,6 +125,31 @@ const getState = ({ getStore, getActions, setStore }) => {
 					alert(data.error)
 				} else {
 					setStore({ nytReview: data.results[0] });
+				}
+			},
+
+			editReview: async (book_id, review, rating) => {
+				const response = await fetch(process.env.BACKEND_URL + 'api/review', {
+					method: "PUT",
+					headers: {
+						Authorization: "Bearer " + sessionStorage.getItem("token"),
+						"Content-Type": "application/json"
+					},
+
+					body: JSON.stringify({ "book_id": book_id.id, "review": review, "rating": rating })
+				});
+
+				if (response.ok) {
+					const data = await response.json();
+					const reviewData = data.review;
+					await actions.validate_user();
+					alert("Review updated successfully");
+					console.log(reviewData); // Access the returned review data as needed
+					await getActions().getOneBook(getStore().book.isbn)
+
+				} else {
+					const data = await response.json();
+					alert(data.error);
 				}
 			},
 
