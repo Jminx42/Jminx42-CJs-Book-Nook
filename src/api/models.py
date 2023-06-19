@@ -29,6 +29,7 @@ class User(db.Model):
             "full_name": self.full_name,
             "profile_picture": self.profile_picture,
             "password": "",
+
             "address": self.address,
             "payment_method": [x.serialize() for x in self.payment_method],
             # payment method.... way to serialize without revealing user private info?
@@ -241,9 +242,8 @@ class PaymentMethod(db.Model):
 class Support(db.Model):
     ticket_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    enquiries = db.Column(db.Text, nullable=False)
-    book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=True)
-    
+    subject = db.Column(db.Text, nullable=False)
+    message = db.Column(db.Text, nullable=False)    
 
     def __repr__(self):
         return f'<Support {self.ticket_id}>'
@@ -251,8 +251,16 @@ class Support(db.Model):
     def serialize(self):
         return {
             "ticket_id": self.ticket_id,
-            "user_id": self.user_id,
-            "enquiries": self.enquiries,
-            "book_id": self.book_id,
+            "user_id": User.query.get(self.user_id).serialize(),
+            "subject": self.subject,
+            "message": self.message,
            
         }
+    def serialize_for_support(self):
+        return {
+            "ticket_id": self.ticket_id,
+            "user_id": self.user_id,
+            "subject": self.subject,
+            "message": self.message,      
+        }
+

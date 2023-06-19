@@ -72,6 +72,7 @@ export const HomeCard = ({ item }) => {
                 </button>
 
 
+
                 <button type="button"
                     className="btn text-white custom-button"
                     onClick={() => setShowCartModal(true)}

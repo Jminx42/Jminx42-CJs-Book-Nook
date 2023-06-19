@@ -8,7 +8,7 @@ import { Profile } from "./pages/profile";
 import { BookPage } from "./pages/bookPage";
 import { Register } from "./pages/register";
 import { Login } from "./pages/login.js";
-import { Wishlist } from "./pages/wishlist.js";
+import { Support } from "./pages/support.js";
 import { GooglePreview } from "./pages/googlePreview.js";
 import { Checkout } from "./pages/checkout";
 
@@ -39,7 +39,7 @@ const Layout = () => {
 
                         <Route element={<Register />} path="/register" />
                         <Route element={<Login />} path="/login" />
-                        <Route element={<Wishlist />} path="/wishlist" />
+                        <Route element={<Support />} path="/support" />
                         <Route element={<GooglePreview />} path="/googlePreview/:theisbn" />
                         <Route element={<Checkout />} path="/checkout" />
 
