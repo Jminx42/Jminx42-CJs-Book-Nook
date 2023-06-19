@@ -91,12 +91,14 @@ const CartCard = ({ item, setShowModal }) => {
                                             </div>
                                             <div className="row">
                                                 <div className="col-3">Book Format:</div>
-                                                <select className="form-select" aria-label="Default select example" defaultValue="" onChange={(e) => setFormat(e.target.value)}>
-                                                    <option value="" disabled>Select your format</option>
-                                                    {store.bookFormats.map((format) => (
-                                                        <option key={format.id} value={format.id}>{format.book_format} - {format.book_price}€ </option>
-                                                    ))}
-                                                </select>
+                                                <div className="col-7">
+                                                    <select className="form-select" aria-label="Default select example" defaultValue="" onChange={(e) => setFormat(e.target.value)}>
+                                                        <option value="" disabled>Select your format</option>
+                                                        {store.bookFormats.map((format) => (
+                                                            <option key={format.id} value={format.id}>{format.book_format} - {format.book_price}€ </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                         <div className="row">
@@ -117,7 +119,11 @@ const CartCard = ({ item, setShowModal }) => {
                         >
                             Close
                         </button>
-                        <button type="button" disabled={!format} className="btn btn-primary" onClick={() => actions.postCheckout(format)}>
+                        <button type="button" disabled={!format} className="btn custom-button"
+                            onClick={() => {
+                                actions.postCheckout(format)
+                                setShowModal(false)
+                            }}>
                             Add to Cart
                         </button>
                     </div>

@@ -14,6 +14,7 @@ export const BookPage = () => {
 	const [editClicked, setEditClicked] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 	const [showBookDetails, setShowBookDetails] = useState(false);
+	const [format, setFormat] = useState()
 	const [editReview, setEditReview] = useState({
 		rating: review.rating,
 		review: review.review
@@ -38,6 +39,10 @@ export const BookPage = () => {
 			review: review.review
 		});
 	}, [review]);
+
+	useEffect(() => {
+		actions.getBookFormats();
+	}, []);
 
 
 	// useEffect(() => {
@@ -154,19 +159,20 @@ export const BookPage = () => {
 									<div className="col-2">Rating: </div>
 									<div className="col-10">{store.book.average_rating ? store.book.average_rating + " (out of " + store.book.ratings_count + " votes)" : "Not available"} </div>
 								</div>
-								<div className="col-2">Price:</div>
-								<div className="col-10">
-									{/* <select className="form-select" aria-label="Default select example" defaultValue="" onChange={handleOptionChange}>
+								<div className="col-2">Book Format:</div>
+								<div className="col-8">
+
+									<select className="form-select" aria-label="Default select example" defaultValue="" onChange={(e) => setFormat(e.target.value)}>
 										<option value="" disabled>Select your format</option>
-										{store.bookPrice !== null && (
-											<>
-												<option value="1">Paperback: {store.bookPrice.toFixed(2)}€</option>
-												<option value="2">Hardcover: {(store.bookPrice + 5).toFixed(2)}€</option>
-												<option value="3">eBook: {(store.bookPrice - 6).toFixed(2)}€</option>
-												<option value="4">Audiobook: {(store.bookPrice + 10).toFixed(2)}€</option>
-											</>)}
-									</select>  */}
-									<button onClick={() => handleAddToCart(selectedOption)}>Add to Cart</button>
+										{store.bookFormats.map((format) => (
+											<option key={format.id} value={format.id}>{format.book_format} - {format.book_price}€ </option>
+										))}
+									</select>
+								</div>
+								<div className="col-2">
+									<button type="button" disabled={!format} className="btn me-2 custom-button" onClick={() => actions.postCheckout(format)}>
+										<i className="fas fa-shopping-cart"></i>
+									</button>
 								</div>
 							</div>
 							<div className="row">
@@ -199,45 +205,51 @@ export const BookPage = () => {
 				<h4>Reviews</h4>
 				{store.book.reviews.map((review) => {
 					return (<div key={review.id}>
-						{!editClicked ?
-							<button className="btn btn-primary" onClick={() => setEditClicked(true)}>Edit</button>
-							:
-							<button className="btn btn-secondary" onClick={() => {
-								setEditClicked(false)
-								actions.editReview(review.book_id, editReview.review, editReview.rating)
-								handleEditReview()
-							}}>Save</button>}
+						<div className="d-flex justify-content-between align-items-center mb-2">
+							<p className="mb-0">Reviewed by: {review.full_name}</p>
+							{!editClicked ?
+								<button className="btn custom-button" onClick={() => setEditClicked(true)}>Edit</button>
+								:
+								<button className="btn custom-button" onClick={() => {
+									setEditClicked(false)
+									actions.editReview(review.book_id, editReview.review, editReview.rating)
+									handleEditReview()
+								}}>Save</button>}
+						</div>
+						<div className="d-flex align-items-center"> {/* Wrap label and input in a flex container */}
+							<label className="text-start mb-1">Rating:&nbsp; </label>
+							{!editClicked ? (
+								<p className="mb-1"> {review.rating}</p>
+							) : (
+								<input
+									className="form-control p-0 mb-1"
+									id="rating"
+									aria-describedby="rating"
+									defaultValue={editReview.rating}
+									onChange={(e) => setEditReview({ ...editReview, rating: e.target.value })}
+								/>
+							)}
+						</div>
 
-						<p className="text-start mb-0">Rating: </p>
-						{!editClicked ? (
-							<p>{review.rating}</p>
-						) : (
-							<input
-								className="form-control"
-								id="rating"
-								aria-describedby="rating"
-								value={editReview.rating}
-								onChange={(e) => setEditReview({ ...editReview, rating: e.target.value })}
-							/>
-						)}
-
-						<p className="text-start">Review: </p>
-						{!editClicked ? (
-							<p>{review.review}</p>
-						) : (
-							<input
-								className="form-control"
-								id="rating"
-								aria-describedby="rating"
-								value={editReview.review}
-								onChange={(e) => setEditReview({ ...editReview, review: e.target.value })}
-							/>
-						)}
+						<div className="d-flex align-items-center"> {/* Wrap label and input in a flex container */}
+							<label className="text-start mb-1">Review:&nbsp; </label>
+							{!editClicked ? (
+								<p className="mb-1">{review.review}</p>
+							) : (
+								<input
+									className="form-control"
+									id="review"
+									aria-describedby="review"
+									value={editReview.review}
+									onChange={(e) => setEditReview({ ...editReview, review: e.target.value })}
+								/>
+							)}
+						</div>
 
 						{/* 
 						<p>Rating: {review.rating}</p>
 						<p>Review: {review.review}</p> */}
-						<p>Reviewed by: {review.full_name}</p>
+
 					</div>)
 				})}
 				{/* {store.user.review.book_id ?

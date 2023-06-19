@@ -28,41 +28,46 @@ export const Review = ({ item }) => {
                 <div className="col-sm-6 col-md-9 col-lg-9">
                     <h4 className="text-start">{item.book_id.title}</h4>
                     <h5 className="text-start">by {item.book_id.author}</h5>
-                    <p className="text-start mb-0">Posted on {item.created_at}</p>
-                    {!editClicked ?
-                        <button className="btn btn-primary" onClick={() => setEditClicked(true)}>Edit</button>
-                        :
-                        <button className="btn btn-secondary" onClick={() => {
-                            setEditClicked(false)
-                            actions.editReview(item.book_id, editReview.review, editReview.rating)
+                    <div className="d-flex justify-content-between align-items-center mb-2">
+                        <p className="text-start mb-0">Posted on {item.created_at}</p>
+                        {!editClicked ?
+                            <button className="btn custom-button" onClick={() => setEditClicked(true)}>Edit</button>
+                            :
+                            <button className="btn custom-button" onClick={() => {
+                                setEditClicked(false)
+                                actions.editReview(item.book_id, editReview.review, editReview.rating)
 
-                        }}>Save</button>}
+                            }}>Save</button>}
+                    </div>
 
-                    <p className="text-start mb-0">Rating: </p>
-                    {!editClicked ? (
-                        <p>{item.rating}</p>
-                    ) : (
-                        <input
-                            className="form-control"
-                            id="rating"
-                            aria-describedby="rating"
-                            defaultValue={editReview.rating}
-                            onChange={(e) => setEditReview({ ...editReview, rating: e.target.value })}
-                        />
-                    )}
-
-                    <p className="text-start">Review: </p>
-                    {!editClicked ? (
-                        <p>{item.review}</p>
-                    ) : (
-                        <input
-                            className="form-control"
-                            id="review"
-                            aria-describedby="review"
-                            defaultValue={editReview.review}
-                            onChange={(e) => setEditReview({ ...editReview, review: e.target.value })}
-                        />
-                    )}
+                    <div className="d-flex align-items-center"> {/* Wrap label and input in a flex container */}
+                        <label className="text-start mb-1">Rating:&nbsp; </label>
+                        {!editClicked ? (
+                            <p className="mb-1"> {item.rating}</p>
+                        ) : (
+                            <input
+                                className="form-control p-0 mb-1"
+                                id="rating"
+                                aria-describedby="rating"
+                                defaultValue={editReview.rating}
+                                onChange={(e) => setEditReview({ ...editReview, rating: e.target.value })}
+                            />
+                        )}
+                    </div>
+                    <div className="d-flex align-items-center"> {/* Wrap label and input in a flex container */}
+                        <label className="text-start mb-1">Review:&nbsp;</label>
+                        {!editClicked ? (
+                            <p className="mb-1">{item.review}</p>
+                        ) : (
+                            <input
+                                className="form-control p-0 mb-1"
+                                id="review"
+                                aria-describedby="review"
+                                defaultValue={editReview.review}
+                                onChange={(e) => setEditReview({ ...editReview, review: e.target.value })}
+                            />
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

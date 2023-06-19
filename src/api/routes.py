@@ -303,14 +303,20 @@ def add_item_to_cart():
         if "book_id" not in body or not user:
             return jsonify({"error": "Missing required fields"}), 400
         
-        new_item = TransactionItem(
-            book_id=body["book_id"],
-            user_id=user_id,
-            book_format_id=body["book_format_id"],
-            unit = body["unit"]
-        )
-        db.session.add(new_item)
-        db.session.commit()
+        item = TransactionItem.query.filter_by(book_id=body["book_id"], user_id=user_id, book_format_id=body["book_format_id"]).first()
+        if not item:
+            new_item = TransactionItem(
+                book_id=body["book_id"],
+                user_id=user_id,
+                book_format_id=body["book_format_id"],
+                unit = body["unit"]
+            )
+            db.session.add(new_item)
+            db.session.commit()
+        else:
+            db.session.delete(item)
+            db.session.commit()
+            return jsonify({"item": "book deleted from cart"}), 200
 
        
         return jsonify({"transaction": new_item.serialize()}), 200
