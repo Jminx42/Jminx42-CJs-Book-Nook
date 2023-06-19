@@ -12,6 +12,7 @@ export const Home = () => {
 
 	useEffect(() => {
 		actions.getBooks();
+		actions.emptyBook();
 
 	}, []);
 

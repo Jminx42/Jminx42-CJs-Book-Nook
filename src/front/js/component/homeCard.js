@@ -1,7 +1,7 @@
 
 import React, { useContext, useEffect, useState, useRef } from "react";
 import { Context } from "../store/appContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../../styles/index.css";
 import "../../styles/home.css";
 import CartCard from "./cartCard";
@@ -11,16 +11,21 @@ import CartCard from "./cartCard";
 export const HomeCard = ({ item }) => {
     const { store, actions } = useContext(Context);
     const price = item.weeks_on_list ? store.price : "Free";
+    const navigate = useNavigate();
+    const [showCartModal, setShowCartModal] = useState(false);
 
-    const [loggedIn, setLoggedIn] = useState(true);
-    const modal = useRef();
-    const [showModal, setShowModal] = useState(false);
+    // useEffect(() => {
+    //     actions.setPrice(item.weeks_on_list);
 
-    useEffect(() => {
-        actions.setPrice(item.weeks_on_list);
-
-    }, [item.weeks_on_list]);
-
+    // }, [item.weeks_on_list]);
+    const handleAddToWishlist = () => {
+        if (sessionStorage.getItem("token") && store.user) {
+            actions.postWishlist(item.id);
+        } else {
+            navigate("/login");
+            alert("Please log in to add to your wishlist.");
+        }
+    };
 
 
 
@@ -56,73 +61,26 @@ export const HomeCard = ({ item }) => {
 
                 <button
                     type="button"
-
                     className="btn me-2 text-white custom-button"
-
-                    onClick={(e) => {
-                        sessionStorage.getItem("token") && loggedIn
-                            ?
-                            actions.postWishlist(item.id)
-                            :
-                            setLoggedIn(false)
-                        // this is request that the user login
-                        // e.target.setAttribute("data-bs-toggle", "modal") 
-                        // e.target.setAttribute("data-bs-target", "#exampleModal")
-                    }
-
-                    }
+                    onClick={handleAddToWishlist}
                 >
                     {store.user.wishlist.some((wishlistItem) => wishlistItem.book_id.id === item.id) ? (
                         <i className="fas fa-heart"></i>
                     ) : (
-
                         <i className="far fa-heart"></i>
                     )}
                 </button>
-                {/* <!-- Modal --> */}
-                {/* <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h1 className="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div className="modal-body">
-                                ...
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" className="btn btn-primary">Save changes</button>
-                            </div>
-                        </div>
-                    </div>
-                </div> */}
-                {/* <button
-                    type="button"
-                    className="btn text-white custom-button"
 
-                    onClick={() =>
-                        actions.postCheckout(item.id)
-                    }
-                >
-                    {store.checkout.some((checkoutItem) => checkoutItem.isbn === item.isbn) ? (
-                        <i className="bi bi-cart-fill"></i>
-                    ) : (
-                        <i className="bi bi-cart"></i>
-                    )}
-                </button> */}
-                {/* <!-- Button trigger modal --> */}
 
                 <button type="button"
                     className="btn text-white custom-button"
-                    onClick={() => setShowModal(true)}
-                    data-bs-toggle="modal"
-                    data-bs-target="#exampleModal">
+                    onClick={() => setShowCartModal(true)}
+                >
                     <i className="bi bi-cart"></i>
                 </button>
                 {
-                    showModal &&
-                    <CartCard item={item} />
+                    showCartModal &&
+                    <CartCard item={item} setShowModal={setShowCartModal} />
                 }
 
             </div>

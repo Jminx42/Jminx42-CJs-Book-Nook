@@ -1,26 +1,59 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../store/appContext";
-import { Link } from "react-router-dom";
 
-import "../../styles/index.css"
-
-
-import "../../styles/home.css";
-
-export const CartCard = ({ item }) => {
+const CartCard = ({ item, setShowModal }) => {
     const { store, actions } = useContext(Context);
-    // const book = actions.getOneBook(item.isbn)
+    const [isLoading, setIsLoading] = useState(true);
+    const [showBookDetails, setShowBookDetails] = useState(false);
 
     useEffect(() => {
         actions.getOneBook(item.isbn);
-
+        setTimeout(() => {
+            setIsLoading(false);
+            setShowBookDetails(true);
+        }, 2000);
     }, []);
 
-    return (
+    if (isLoading || !showBookDetails) {
+        // Display loading spinner and message
+        return (
+            <div className="modal fade show" tabIndex="-1" style={{ display: "block" }} aria-hidden="true">
+                <div className="modal-dialog modal-dialog-centered modal-xl">
+                    <div className="modal-content">
+                        <div className="modal-body">
+                            <div className="card container mt-3">
+                                <div className="p-4 text-center bg-body-tertiary rounded-3">
+                                    <div className="spinner-border" role="status">
+                                        <span className="visually-hidden">Loading...</span>
+                                    </div>
+                                    <div>Loading book...</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button
+                                type="button"
+                                className="btn btn-secondary"
+                                onClick={() => setShowModal(false)}
+                            >
+                                Close
+                            </button>
+                            <button type="button" className="btn btn-primary">
+                                Save changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+
+        );
+    }
+    return (
+        <div className="modal fade show" tabIndex="-1" style={{ display: "block" }} aria-hidden="true">
             <div className="modal-dialog modal-dialog-centered modal-xl">
-                <div className="modal-content ">
+                <div className="modal-content">
                     <div className="modal-body">
                         <div className="card container mt-3">
                             <div className="p-4 text-center bg-body-tertiary rounded-3">
@@ -72,14 +105,21 @@ export const CartCard = ({ item }) => {
                         </div>
                     </div>
                     <div className="modal-footer">
-                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" className="btn btn-primary">Save changes</button>
+                        <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={() => setShowModal(false)}
+                        >
+                            Close
+                        </button>
+                        <button type="button" className="btn btn-primary">
+                            Save changes
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-
     );
-}
+};
 
-export default CartCard
+export default CartCard;

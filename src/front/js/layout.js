@@ -5,7 +5,7 @@ import ScrollToTop from "./component/scrollToTop";
 
 import { Home } from "./pages/home";
 import { Profile } from "./pages/profile";
-import { Book } from "./pages/book";
+import { BookPage } from "./pages/bookPage";
 import { Register } from "./pages/register";
 import { Login } from "./pages/login.js";
 import { Wishlist } from "./pages/wishlist.js";
@@ -44,7 +44,7 @@ const Layout = () => {
                         <Route element={<Checkout />} path="/checkout" />
 
 
-                        <Route element={<Book />} path="/book/:theisbn" />
+                        <Route element={<BookPage />} path="/book/:theisbn" />
 
                         {/* <Route element={<Book />} path="/book/:theid" /> */}
 

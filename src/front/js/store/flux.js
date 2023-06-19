@@ -34,7 +34,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				if (resp.status == 200) {
 					setStore({ user: data.user })
 				} else {
-					setStore({ user: { wishlist: [] } })
+					setStore({ user: { wishlist: [], review: [], transaction: [] } })
 					sessionStorage.removeItem("token")
 				}
 			},
@@ -44,7 +44,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				sessionStorage.removeItem("wishlist");
 				sessionStorage.removeItem("checkout");
 				console.log("Logging out");
-				setStore({ user: { wishlist: [] } });
+				setStore({ user: { wishlist: [], review: [], transaction: [] } });
 			},
 
 			login: async (email, password) => {
@@ -90,6 +90,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 					setStore({ books: data.books })
 					// console.log(getStore().books)
 				}
+			},
+
+			emptyBook: () => {
+				setStore({ book: { reviews: [] } })
 			},
 
 			getOneBook: async (isbn) => {

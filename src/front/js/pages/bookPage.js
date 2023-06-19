@@ -6,27 +6,30 @@ import { Navbar } from "../component/navbar";
 import { GoogleBooksViewer } from "../component/googleBooksViewer";
 import { GoogleViewer2 } from "../component/googleViewer2";
 
-export const Book = () => {
+export const BookPage = () => {
 	const params = useParams();
-	const [review, setReview] = useState({ review: "", rating: 0 })
-	const [preview, setPreview] = useState(false)
+	const [review, setReview] = useState({ review: "", rating: 0 });
+	const [preview, setPreview] = useState(false);
 	const { store, actions } = useContext(Context);
-
-	const [price, setPrice] = useState(store.bookPrice)
-	const [selectedOption, setSelectedOption] = useState('');
-	const [editClicked, setEditClicked] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
+	const [showBookDetails, setShowBookDetails] = useState(false);
 	const [editReview, setEditReview] = useState({
 		rating: review.rating,
 		review: review.review
 	});
 
-
 	useEffect(() => {
 		actions.getBooks();
-		actions.getOneBook(params.theisbn)
-		actions.getNYTReview(params.theisbn)
+		actions.getOneBook(params.theisbn);
+		actions.getNYTReview(params.theisbn);
 
-	}, [])
+		setTimeout(() => {
+			setIsLoading(false);
+			setShowBookDetails(true);
+		}, 2000);
+
+	}, [params.isbn]);
+
 
 	useEffect(() => {
 		setEditReview({
@@ -61,7 +64,7 @@ export const Book = () => {
 			const reviewData = data.review;
 			await actions.validate_user();
 			alert("Review added successfully");
-			console.log(reviewData); // Access the returned review data as needed
+			console.log(reviewData);
 			actions.getOneBook(params.theisbn)
 			setReview({
 				rating: '',
@@ -88,12 +91,30 @@ export const Book = () => {
 		submitReview(store.book.id, review.review, review.rating)
 	};
 
+	if (isLoading || !showBookDetails) {
+		// Display loading spinner and message
+		return (
+			<div>
+				<Navbar />
+
+				<div className="container text-center mt-5">
+					<div className="spinner-border" role="status">
+						<span className="visually-hidden">Loading...</span>
+					</div>
+					<div>Loading book...</div>
+				</div>
+
+			</div>
+		);
+	}
+
 
 	return (
 		<div>
 			<Navbar />
 
 			<div className="card container mt-3">
+
 				<div className="p-4 text-center bg-body-tertiary rounded-3">
 					<img src={store.book.book_cover == null || store.book.book_cover == "" ? store.book.book_cover_b : store.book.book_cover} className=" w-25 float-start" alt="..." />
 					<div>
@@ -157,8 +178,10 @@ export const Book = () => {
 						</div>
 					</div >
 				</div >
-			</div>
 
+
+
+			</div>
 			<div className="container">
 				{store.nytReview ?
 					<div className="row mb-3 mt-3">

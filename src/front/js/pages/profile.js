@@ -12,7 +12,6 @@ export const Profile = () => {
 	const { store, actions } = useContext(Context);
 	const [user, setUser] = useState(store.user);
 	const [editClicked, setEditClicked] = useState(false);
-	const wishlist = JSON.parse(sessionStorage.getItem("wishlist"));
 	const [reviews, setReviews] = useState([]);
 
 
@@ -185,9 +184,15 @@ export const Profile = () => {
 				<div className="tab-pane fade" id="reviews-tab-pane" role="tabpanel" aria-labelledby="reviews-tab" tabIndex="0">
 					<div className="container mt-4">
 						<div className="row d-flex g-3">
-							{reviews.map(review => (
-								<Review key={review.id} item={review} />
-							))}
+							{reviews.length === 0 ? (
+								<div>
+									Add a review to your latest read now!
+								</div>
+							) : (
+								reviews.map((review) => (
+									<Review key={review.id} item={review} />
+								))
+							)}
 						</div>
 					</div>
 
