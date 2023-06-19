@@ -2,7 +2,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 
-			user: { wishlist: [], review: [], transaction: [], support: [] },
+			user: { wishlist: [], review: [], cart: [], support: [] },
 			books: [],
 			book: { reviews: [] },
 			// externalBooks: [],
@@ -14,6 +14,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			bookPrice: null,
 			loading: true,
 			errorMsg: '',
+			bookFormats: []
 
 
 		},
@@ -34,7 +35,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				if (resp.status == 200) {
 					setStore({ user: data.user })
 				} else {
-					setStore({ user: { wishlist: [], review: [], transaction: [] } })
+					setStore({ user: { wishlist: [], review: [], transaction: [], cart: [] } })
 					sessionStorage.removeItem("token")
 				}
 			},
@@ -44,7 +45,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				sessionStorage.removeItem("wishlist");
 				sessionStorage.removeItem("checkout");
 				console.log("Logging out");
-				setStore({ user: { wishlist: [], review: [], transaction: [] } });
+				setStore({ user: { wishlist: [], review: [], transaction: [], cart: [] } });
 			},
 
 			login: async (email, password) => {
@@ -142,10 +143,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 				if (response.ok) {
 					const data = await response.json();
 					const reviewData = data.review;
-					await actions.validate_user();
-					alert("Review updated successfully");
+					await getActions().validate_user();
+					// alert("Review updated successfully");
 					console.log(reviewData); // Access the returned review data as needed
-					await getActions().getOneBook(getStore().book.isbn)
+
 
 				} else {
 					const data = await response.json();
@@ -181,19 +182,23 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			postCheckout: async (book_id, unit, book_format_id) => {
-
+			postCheckout: async (book_format_id) => {
+				const defaultUnit = 1;
+				console.log("###########################")
+				console.log(book_format_id)
 				const opts = {
 					method: 'POST',
 					headers: {
 						Authorization: "Bearer " + sessionStorage.getItem("token"),
 						"Content-Type": "application/json"
 					},
-					body: JSON.stringify({ "book_id": book_id, "unit": unit, "book_format_id": book_format_id })
+					body: JSON.stringify({ "book_id": getStore().book.id, "unit": defaultUnit, "book_format_id": parseInt(book_format_id) })
 				};
+				console.log(getStore().book.id)
+
 
 				try {
-					const resp = await fetch(process.env.BACKEND_URL + 'api/transaction', opts);
+					const resp = await fetch(process.env.BACKEND_URL + 'api/checkout', opts);
 					if (resp.status !== 200) {
 						const data = await resp.json();
 						const errorMessage = data.error || "Something went wrong";
@@ -205,8 +210,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 						return true;
 					}
 				} catch (error) {
-					console.error(`Error during fetch: ${process.env.BACKEND_URL}api/transaction`, error);
+					console.error(`Error during fetch: ${process.env.BACKEND_URL}api/checkout`, error);
 				}
+			},
+			getBookFormats: async () => {
+				console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+				const response = await fetch(process.env.BACKEND_URL + 'api/bookformat');
+				const data = await response.json();
+				setStore({ bookFormats: data.book_formats })
+				console.log(getStore().bookFormats)
 			},
 
 			setPrice: (weeks_on_list) => {

@@ -5,9 +5,11 @@ const CartCard = ({ item, setShowModal }) => {
     const { store, actions } = useContext(Context);
     const [isLoading, setIsLoading] = useState(true);
     const [showBookDetails, setShowBookDetails] = useState(false);
+    const [format, setFormat] = useState()
 
     useEffect(() => {
         actions.getOneBook(item.isbn);
+        actions.getBookFormats()
         setTimeout(() => {
             setIsLoading(false);
             setShowBookDetails(true);
@@ -38,9 +40,7 @@ const CartCard = ({ item, setShowModal }) => {
                             >
                                 Close
                             </button>
-                            <button type="button" className="btn btn-primary">
-                                Save changes
-                            </button>
+
                         </div>
                     </div>
                 </div>
@@ -89,9 +89,14 @@ const CartCard = ({ item, setShowModal }) => {
                                                 <div className="col-3">Rating: </div>
                                                 <div className="col-9">{store.book.average_rating ? store.book.average_rating + " (out of " + store.book.ratings_count + " votes)" : "Not available"} </div>
                                             </div>
-                                            <div className="col-3">Price:</div>
-                                            <div className="col-9">
-
+                                            <div className="row">
+                                                <div className="col-3">Book Format:</div>
+                                                <select className="form-select" aria-label="Default select example" defaultValue="" onChange={(e) => setFormat(e.target.value)}>
+                                                    <option value="" disabled>Select your format</option>
+                                                    {store.bookFormats.map((format) => (
+                                                        <option key={format.id} value={format.id}>{format.book_format} - {format.book_price}€ </option>
+                                                    ))}
+                                                </select>
                                             </div>
                                         </div>
                                         <div className="row">
@@ -112,8 +117,8 @@ const CartCard = ({ item, setShowModal }) => {
                         >
                             Close
                         </button>
-                        <button type="button" className="btn btn-primary">
-                            Save changes
+                        <button type="button" disabled={!format} className="btn btn-primary" onClick={() => actions.postCheckout(format)}>
+                            Add to Cart
                         </button>
                     </div>
                 </div>

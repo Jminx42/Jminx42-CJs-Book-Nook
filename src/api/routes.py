@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Book, Review, Wishlist, Transaction, Support, PaymentMethod 
+from api.models import db, User, Book, Review, Wishlist, Transaction, Support, PaymentMethod, TransactionItem, BookFormat
 from api.utils import generate_sitemap, APIException
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
@@ -291,9 +291,9 @@ def get_one_transaction_by_id(user_id):
 
     return jsonify(transaction.serialize()), 200 
 
-@api.route("/transaction", methods=["POST"])
+@api.route("/checkout", methods=["POST"])
 @jwt_required()
-def create_transaction():
+def add_item_to_cart():
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
     try:
@@ -303,19 +303,20 @@ def create_transaction():
         if "book_id" not in body or not user:
             return jsonify({"error": "Missing required fields"}), 400
         
-        new_transaction = Transaction(
+        new_item = TransactionItem(
             book_id=body["book_id"],
             user_id=user_id,
             book_format_id=body["book_format_id"],
             unit = body["unit"]
         )
-        db.session.add(new_transaction)
+        db.session.add(new_item)
         db.session.commit()
 
        
-        return jsonify({"transaction": new_transaction.serialize()}), 200
+        return jsonify({"transaction": new_item.serialize()}), 200
            
     except Exception as e:
+        print(e)
         return jsonify({"error": str(e)}), 500
     
     # body = request.json
@@ -328,6 +329,16 @@ def create_transaction():
     # db.session.commit()
 
     # return jsonify({"transaction": "created"}), 200
+
+@api.route("/bookformat", methods=['GET'])
+def get_book_format():
+    book_formats = BookFormat.query.all()
+    serialized_book_formats = [book_format.serialize() for book_format in book_formats]
+  
+    if not book_formats:
+        return jsonify({"error": "There was an error fetching the data you requested"}), 400
+
+    return jsonify({"book_formats": serialized_book_formats}), 200 
 
 @api.route("/payment-method", methods=['GET'])
 def get_all_payment_methods():

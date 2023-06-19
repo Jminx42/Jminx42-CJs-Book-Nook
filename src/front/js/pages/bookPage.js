@@ -11,6 +11,7 @@ export const BookPage = () => {
 	const [review, setReview] = useState({ review: "", rating: 0 });
 	const [preview, setPreview] = useState(false);
 	const { store, actions } = useContext(Context);
+	const [editClicked, setEditClicked] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 	const [showBookDetails, setShowBookDetails] = useState(false);
 	const [editReview, setEditReview] = useState({
@@ -74,6 +75,9 @@ export const BookPage = () => {
 			const data = await response.json();
 			alert(data.error);
 		}
+	}
+	const handleEditReview = async () => {
+		await actions.getOneBook(store.book.isbn)
 	}
 
 	// const handleOptionChange = (event) => {

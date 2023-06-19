@@ -188,14 +188,14 @@ export const Profile = () => {
 				<div className="tab-pane fade" id="reviews-tab-pane" role="tabpanel" aria-labelledby="reviews-tab" tabIndex="0">
 					<div className="container mt-4">
 						<div className="row d-flex g-3">
-							{reviews.length === 0 ? (
+							{store.user.review.length === 0 ? (
 								<div>
 									Add a review to your latest read now!
 								</div>
 							) : (
-								reviews.map((review) => (
-									<Review key={review.id} item={review} />
-								))
+								store.user.review.map((review) => {
+									return <Review key={review.id} item={review} />
+								})
 							)}
 						</div>
 					</div>

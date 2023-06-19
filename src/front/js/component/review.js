@@ -13,14 +13,9 @@ export const Review = ({ item }) => {
         review: item.review
     });
 
-    useEffect(() => {
-        actions.getOneBook(item.book_id.isbn)
 
-    }, [editReview])
 
-    const handleEditReview = async () => {
-        await actions.getOneBook(item.book_id.isbn)
-    }
+
 
     return (
         <div className="container">
@@ -40,7 +35,7 @@ export const Review = ({ item }) => {
                         <button className="btn btn-secondary" onClick={() => {
                             setEditClicked(false)
                             actions.editReview(item.book_id, editReview.review, editReview.rating)
-                            handleEditReview()
+
                         }}>Save</button>}
 
                     <p className="text-start mb-0">Rating: </p>
@@ -51,7 +46,7 @@ export const Review = ({ item }) => {
                             className="form-control"
                             id="rating"
                             aria-describedby="rating"
-                            value={editReview.rating}
+                            defaultValue={editReview.rating}
                             onChange={(e) => setEditReview({ ...editReview, rating: e.target.value })}
                         />
                     )}
@@ -62,9 +57,9 @@ export const Review = ({ item }) => {
                     ) : (
                         <input
                             className="form-control"
-                            id="rating"
-                            aria-describedby="rating"
-                            value={editReview.review}
+                            id="review"
+                            aria-describedby="review"
+                            defaultValue={editReview.review}
                             onChange={(e) => setEditReview({ ...editReview, review: e.target.value })}
                         />
                     )}
