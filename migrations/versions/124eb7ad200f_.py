@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 100ae7e50509
+Revision ID: 124eb7ad200f
 Revises: 
-Create Date: 2023-06-19 07:18:29.911801
+Create Date: 2023-06-20 11:20:22.752696
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import mysql
 
 # revision identifiers, used by Alembic.
-revision = '100ae7e50509'
+revision = '124eb7ad200f'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -80,9 +80,8 @@ def upgrade():
     op.create_table('support',
     sa.Column('ticket_id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('enquiries', sa.Text(), nullable=False),
-    sa.Column('book_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['book_id'], ['book.id'], ),
+    sa.Column('subject', sa.Text(), nullable=False),
+    sa.Column('message', sa.Text(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('ticket_id')
     )
