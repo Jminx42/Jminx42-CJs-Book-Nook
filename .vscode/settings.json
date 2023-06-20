@@ -10,5 +10,8 @@
     "[typescript]": {
         "editor.defaultFormatter": "vscode.typescript-language-features"
     },
-    "livePreview.defaultPreviewPath": "/template.html"
+    "livePreview.defaultPreviewPath": "/template.html",
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    }
 }

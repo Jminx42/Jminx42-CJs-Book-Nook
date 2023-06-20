@@ -2,12 +2,13 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 import os
+import json
 from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from flask_cors import CORS
 from api.utils import APIException, generate_sitemap, retrieve_books, generate_formats
-from api.models import db, Book, BookFormat
+from api.models import db, Book, BookFormat, User
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
@@ -53,6 +54,16 @@ app.register_blueprint(api, url_prefix='/api')
 def handle_invalid_usage(error):
     return jsonify(error.to_dict()), error.status_code
 
+#Table initialization
+# User table
+def user_initialize():
+    if len(User.query.all()) == 0:  
+        with open ("src/table_initial_values/user_initialization.json") as file:
+            data = json.load(file)
+        users = [User(**item) for item in data]
+        db.session.bulk_save_objects(users)
+        db.session.commit()
+
 # generate sitemap with all your endpoints
 @app.route('/')
 def sitemap():
@@ -71,6 +82,8 @@ def sitemap():
 
         db.session.commit()
     if ENV == "development":
+        #table initialization
+        user_initialize()
         return generate_sitemap(app)
     return send_from_directory(static_file_dir, 'index.html')
 

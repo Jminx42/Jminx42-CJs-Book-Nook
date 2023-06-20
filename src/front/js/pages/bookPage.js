@@ -15,13 +15,14 @@ export const BookPage = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [showBookDetails, setShowBookDetails] = useState(false);
 	const [format, setFormat] = useState()
+	const [userHasReview, setUserHasReview] = useState(false)
 	const [editReview, setEditReview] = useState({
 		rating: review.rating,
 		review: review.review
 	});
 
 	useEffect(() => {
-		actions.getBooks();
+		// actions.getBooks();
 		actions.getOneBook(params.theisbn);
 		actions.getNYTReview(params.theisbn);
 
@@ -82,8 +83,14 @@ export const BookPage = () => {
 		}
 	}
 	const handleEditReview = async () => {
-		await actions.getOneBook(store.book.isbn)
-	}
+		try {
+			const bookId = store.book.id;
+			await actions.getOneBook(store.book.isbn); // Wait for getOneBook to complete
+			await actions.editReview(bookId, editReview.review, editReview.rating); // Use the saved bookId
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
 	// const handleOptionChange = (event) => {
 	// 	setSelectedOption(event.target.value);
@@ -98,7 +105,10 @@ export const BookPage = () => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		submitReview(store.book.id, review.review, review.rating)
+		setUserHasReview(true)
 	};
+
+
 
 	if (isLoading || !showBookDetails) {
 		// Display loading spinner and message
@@ -207,14 +217,25 @@ export const BookPage = () => {
 					return (<div key={review.id}>
 						<div className="d-flex justify-content-between align-items-center mb-2">
 							<p className="mb-0">Reviewed by: {review.full_name}</p>
-							{!editClicked ?
-								<button className="btn custom-button" onClick={() => setEditClicked(true)}>Edit</button>
-								:
-								<button className="btn custom-button" onClick={() => {
-									setEditClicked(false)
-									actions.editReview(review.book_id, editReview.review, editReview.rating)
-									handleEditReview()
-								}}>Save</button>}
+							{!editClicked ? (
+								<button
+									className="btn custom-button"
+									onClick={() => setEditClicked(true)}
+								>
+									Edit
+								</button>
+							) : (
+								<button
+									className="btn custom-button"
+									onClick={() => {
+										setEditClicked(false);
+										handleEditReview();
+									}}
+								>
+									Save
+								</button>
+							)}
+
 						</div>
 						<div className="d-flex align-items-center"> {/* Wrap label and input in a flex container */}
 							<label className="text-start mb-1">Rating:&nbsp; </label>
@@ -259,54 +280,60 @@ export const BookPage = () => {
 						<p>Review: {store.user.review.book_id.review}</p>
 						<p>Reviewed by: {store.user.full_name}</p>
 					</div> : null} */}
-				<div className="row mb-3 mt-3">
-					<h4>Submit your review</h4>
-					{sessionStorage.getItem("token") ?
-						<div>
-							<form onSubmit={handleSubmit}>
-								<label>Rating</label>
-								<input
-									className="form-control"
-									id="rating"
-									aria-describedby="rating"
-									value={review.rating || ""}
-									onChange={(e) => setReview({ ...review, rating: parseInt(e.target.value) })}
-								/>
-								<label>Review</label>
-								<textarea
-									className="form-control"
-									id="review"
-									aria-describedby="review"
-									rows="5"
-									value={review.review || ""}
-									onChange={(e) => setReview({ ...review, review: e.target.value })}
-								/>
-								<button className="btn custom-button text-white mt-3 mb-4" onClick={() => {
-									setReview({ ...review, book_id: store.book.id })
 
-								}
-								} type="submit">
-									Submit
-								</button>
+				{!userHasReview ? (
+					<div className="row mb-3 mt-3">
+						<h4>Submit your review</h4>
+						{sessionStorage.getItem("token") ? (
+							<div>
+								<form onSubmit={handleSubmit}>
+									<label>Rating</label>
+									<input
+										className="form-control"
+										id="rating"
+										aria-describedby="rating"
+										value={review.rating || ""}
+										onChange={(e) => setReview({ ...review, rating: parseInt(e.target.value) })}
+									/>
+									<label>Review</label>
+									<textarea
+										className="form-control"
+										id="review"
+										aria-describedby="review"
+										rows="5"
+										value={review.review || ""}
+										onChange={(e) => setReview({ ...review, review: e.target.value })}
+									/>
+									<button
+										className="btn custom-button text-white mt-3 mb-4"
+										onClick={() => {
+											setReview({ ...review, book_id: store.book.id });
+										}}
+										type="submit"
+									>
+										Submit
+									</button>
+								</form>
+							</div>
+						) : userHasReview ? null : (
+							<div>
+								<p>
+									Want to submit your review?&nbsp;
+									<Link to="/login">
+										<sup>
+											<button type="button" className="btn btn-link p-0">
+												Login
+											</button>
+										</sup>
+									</Link>
+									&nbsp;first!
+								</p>
+							</div>
+						)}
+					</div>
+				) : null}
 
-							</form>
-						</div> : <div>
-							<p>Want to submit your review?&nbsp;
-								<Link to="/login">
-									<sup><button
-										type="button"
-										className="btn btn-link p-0"
-									>Login
-									</button></sup></Link>
-								&nbsp;first!</p>
-
-						</div>
-
-					}
-
-				</div>
 			</div>
-
 		</div >
 
 	);
