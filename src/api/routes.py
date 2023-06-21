@@ -1,37 +1,33 @@
 """
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
-from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Book, Review, Wishlist, Transaction, Support, PaymentMethod, TransactionItem, BookFormat
-from api.utils import generate_sitemap, APIException
-from flask_jwt_extended import create_access_token
-from flask_jwt_extended import get_jwt_identity
-from flask_jwt_extended import jwt_required
-import cloudinary
-import cloudinary.uploader
+from flask import Flask, request, jsonify, Blueprint
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 import datetime
 import bcrypt
+import cloudinary
+import cloudinary.uploader
+
+from api.models import db, User, Book, Review, Wishlist, Transaction, Support, PaymentMethod, TransactionItem, BookFormat
+from api.utils import APIException, generate_sitemap
 
 api = Blueprint('api', __name__)    
 
 @api.route("/create/user", methods=["POST"])
 def create_user():
     body = request.json
-    email = body.get("email", None)
-    password = body.get("password", None) 
-    full_name = body.get("full_name", None)
+    email = body.get("email")
+    password = body.get("password")
+    full_name = body.get("full_name")
 
-    if not all(key in body for key in ["email", "password", "full_name"]):
-        return jsonify({"error": "The server cannot process the request due to invalid syntax or parameters."}), 400
-    
+    if not all([email, password, full_name]):
+        return jsonify({"error": "Missing credentials"}), 400
+
     if "@" not in email: 
         return jsonify({"error": "Please enter a valid email, e.g., user@gmail.com"}), 400
 
     if len(password) < 5:
         return jsonify({"error": "Your password must have more than 5 characters"}), 400
-
-    if not email or not password or not full_name:
-        return jsonify({"error": "Missing credentials"}), 400
 
     already_exist = User.query.filter_by(email=email).first()
     if already_exist:
@@ -45,7 +41,7 @@ def create_user():
     )
     db.session.add(new_user)
     db.session.commit()
-    
+
     return jsonify({
         "user": {
             "id": new_user.id,
@@ -53,47 +49,45 @@ def create_user():
             "full_name": new_user.full_name
         }
     }), 200
-    
 
 @api.route("/user/login", methods=["POST"])
 def login():
-    email = request.json.get("email", None)
-    password = request.json.get("password", None)
+    email = request.json.get("email")
+    password = request.json.get("password")
     
-    user = User.query.filter_by(email=email).first() #gives the whole user, including the id
-    if not user and not bcrypt.checkpw(password.encode('utf-8'), user.password_hash):
-        return jsonify ({"error": "Invalid credentials"}), 300        
-    
-    access_token = create_access_token(identity=user.id, expires_delta = datetime.timedelta(minutes=90))
+    user = User.query.filter_by(email=email).first()
+    if not user or not bcrypt.checkpw(password.encode('utf-8'), user.password_hash):
+        return jsonify({"error": "Invalid credentials"}), 401
+        
+    access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(minutes=90))
     return jsonify({"access_token": access_token}), 200
 
 @api.route("/user/validate", methods=["GET"])
 @jwt_required()
 def validate_user():
     user_id = get_jwt_identity()
-    print(user_id)
     user = User.query.get(user_id)
     if not user:
-        return jsonify ({"error": "invalid credentials"}), 300
-    return jsonify({"user": user.serialize()})
+        return jsonify({"error": "Invalid credentials"}), 401
+    return jsonify({"user": user.serialize()}), 200
     
 
-@api.route("/user/all", methods=['GET'])
-def get_all_users():
-    users = User.query.all()
-    serialized_users = [user.serialize() for user in users]
+# @api.route("/user/all", methods=['GET'])
+# def get_all_users():
+#     users = User.query.all()
+#     serialized_users = [user.serialize() for user in users]
 
-    return jsonify(serialized_users), 200  
+#     return jsonify(serialized_users), 200  
 
 @api.route("/user", methods=['GET'])
 @jwt_required()
-def get_one_user_by_id():
+def get_user_by_id():
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
     if not user:
-        return jsonify({"error": "No user found with this id"}), 400
+        return jsonify({"error": "No user found with this id"}), 404
 
-    return jsonify({"user": user.serialize()}), 200 
+    return jsonify({"user": user.serialize()}), 200
 
 @api.route("/user/update", methods=["PUT"])
 @jwt_required()
@@ -102,15 +96,15 @@ def update_user():
     user = User.query.get(user_id)
 
     if not user:
-        return jsonify({"error": "No user found with this id"}), 400
+        return jsonify({"error": "No user found with this id"}), 404
 
     body = request.json
 
     if "password" in body:
-        password = body["password"].strip()
+        password = body.get("password", "").strip()
 
-        if len(password) < 5 or password.isspace():
-            return jsonify({"error": "Your password should be at least 5 characters long and not contain only whitespaces"}), 400
+        if len(password) < 5 or not password:
+            return jsonify({"error": "Your password should be at least 5 characters long and not be empty"}), 400
 
         user.password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
@@ -125,25 +119,28 @@ def update_user():
 @jwt_required()
 def handle_upload():
     user_id = get_jwt_identity()
-    # validate that the front-end request was built correctly
-    if 'profile_image' in request.files:
-        # upload file to uploadcare
-        result = cloudinary.uploader.upload(request.files['profile_image'])
 
-        # fetch for the user
-        user1 = User.query.get(user_id)
-        print("AAAAAAAAAAAAAAA")
-        print(user1)
-        # update the user with the given cloudinary image URL
-        user1.profile_picture = result['secure_url']
-        print(user1.profile_picture)
-        
-       
-        db.session.commit()
+    if 'profile_image' not in request.files:
+        raise APIException('Missing profile_image in the request form data', 400)
 
-        return jsonify(user1.serialize()), 200
-    else:
-        raise APIException('Missing profile_image on the FormData')
+    uploaded_file = request.files['profile_image']
+    if uploaded_file.filename == '':
+        raise APIException('No selected file', 400)
+
+    # Upload file to Cloudinary
+    result = cloudinary.uploader.upload(uploaded_file)
+
+    # Fetch the user
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "No user found with this id"}), 404
+
+    # Update the user with the Cloudinary image URL
+    user.profile_picture = result['secure_url']
+    db.session.commit()
+
+    return jsonify(user.serialize()), 200
+
 
 @api.route("/book", methods=['GET'])
 def get_all_books():
@@ -162,31 +159,32 @@ def get_one_book_by_id(isbn):
 
     return jsonify({"book": book.serialize()}), 200 
 
-@api.route("/review", methods=['GET'])
-def get_all_reviews():
-    reviews = Review.query.all()
-    serialized_reviews = [review.serialize() for review in reviews]
+# @api.route("/review", methods=['GET'])
+# def get_all_reviews():
+#     reviews = Review.query.all()
+#     serialized_reviews = [review.serialize() for review in reviews]
 
-    return jsonify(serialized_reviews), 200  
+#     return jsonify({"reviews": serialized_reviews}), 200
 
 @api.route("/user_reviews", methods=['GET'])
 @jwt_required()
 def get_user_reviews():
     user_id = get_jwt_identity()
-    reviews = Review.query.filter_by(user_id = user_id).all()
+    reviews = Review.query.filter_by(user_id=user_id).all()
     serialized_reviews = [review.serialize() for review in reviews]
 
-    return jsonify({"reviews": serialized_reviews}), 200  
+    return jsonify({"reviews": serialized_reviews}), 200
+ 
 
-@api.route("/review/<int:review_id>", methods=['GET'])
-def get_one_review_by_id(review_id):
-    review = Review.query.get(review_id)
-    if not review:
-        return jsonify({"error": "No review found with this id"}), 400
+# @api.route("/review/<int:review_id>", methods=['GET'])
+# def get_one_review_by_id(review_id):
+#     review = Review.query.get(review_id)
+#     if not review:
+#         return jsonify({"error": "No review found with this id"}), 400
 
-    return jsonify(review.serialize()), 200 
+#     return jsonify(review.serialize()), 200 
 
-@api.route("/review", methods=["PUT"]) #Why don't we need the /<int:book_id>
+@api.route("/edit-review", methods=["PUT"]) #Why don't we need the /<int:book_id>
 @jwt_required()
 def update_review():
     user_id = get_jwt_identity()
@@ -346,40 +344,86 @@ def get_book_format():
 
     return jsonify({"book_formats": serialized_book_formats}), 200 
 
-@api.route("/payment-method", methods=['GET'])
-def get_all_payment_methods():
-    payment_methods = PaymentMethod.query.all()
-    serialized_payment_methods = [payment_methods.serialize() for payment_methods in payment_methods]
+# @api.route("/payment-method", methods=['GET'])
+# def get_all_payment_methods():
+#     payment_methods = PaymentMethod.query.all()
+#     serialized_payment_methods = [payment_methods.serialize() for payment_methods in payment_methods]
 
-    return jsonify(serialized_payment_methods), 200  
+#     return jsonify({"payment-method": serialized_payment_methods}), 200  
 
-@api.route("/user/payment-method/<int:user_id>", methods=['GET'])
-def get_one_payment_method_by_id(user_id):
-    payment_method = PaymentMethod.query.get(user_id)
+# @api.route("/user/payment-method/<int:user_id>", methods=['GET'])
+# def get_one_payment_method_by_id(user_id):
+#     payment_method = PaymentMethod.query.get(user_id)
 
 
-    if not payment_method:
-        return jsonify({"error": "No payment method found for this user id"}), 400
+#     if not payment_method:
+#         return jsonify({"error": "No payment method found for this user id"}), 400
 
-    return jsonify(payment_method.serialize()), 200 
+#     return jsonify(payment_method.serialize()), 200 
 
 @api.route("/user/payment-method", methods=["POST"])
+@jwt_required
 def create_payment_method():
-    body = request.json
+    user_id = get_jwt_identity()
+    data = request.json
+
+
+    required_fields = ["card_type", "card_number", "card_name", "cvc", "expiry_date"]
+    for field in required_fields:
+        if field not in data:
+            return jsonify({"error": f"Missing required field: {field}"}), 400
+
+    card_number = data["card_number"]
+    cvc = data["cvc"]
+
+  
+    card_number_hash = hashpw(card_number.encode("utf-8"), gensalt())
+    cvc_hash = hashpw(cvc.encode("utf-8"), gensalt())
+
     new_payment_method = PaymentMethod(
-        user_id=body["user_id"],
-        payment_methods=body["payment_methods"],
-        card_number=body["card_number"],
-        card_name=body["card_name"],
-        cvc=body["cvc"],
-        expiry_date=body["expiry_date"]
+        user_id=user_id,
+        card_type=data["card_type"],
+        card_number_hash=card_number_hash,
+        card_name=data["card_name"],
+        cvc_hash=cvc_hash,
+        expiry_date=data["expiry_date"]
     )
-    db.session.add(new_payment_method)
-    db.session.commit()
 
-    return jsonify({"payment method": "created"}), 200
+    try:
+        db.session.add(new_payment_method)
+        db.session.commit()
+        return jsonify({"payment-method": "created"}), 200
+    except Exception as e:
+         return jsonify({"error": str(e)}), 500
+    
+@api.route("/user/payment-method/update", methods=["PUT"])
+@jwt_required
+def update_payment_method(payment_method_id):
+    user_id = get_jwt_identity()
+    data = request.get_json()
 
-@api.route("/user/payment-method/<int:user_id>", methods=["DELETE"])
+    payment_method = PaymentMethod.query.filter_by(id=payment_method_id, user_id=user_id).first()
+    if not payment_method:
+        return jsonify({"error": "Payment method not found or unauthorized"}), 404
+
+    if "card_type" in data:
+        payment_method.card_type = data["card_type"]
+    if "card_number" in data:
+        payment_method.card_number_hash = hashpw(data["card_number"].encode("utf-8"), gensalt())
+    if "card_name" in data:
+        payment_method.card_name = data["card_name"]
+    if "cvc" in data:
+        payment_method.cvc_hash = hashpw(data["cvc"].encode("utf-8"), gensalt())
+    if "expiry_date" in data:
+        payment_method.expiry_date = data["expiry_date"]
+
+    try:
+        db.session.commit()
+        return jsonify({"message": "Payment method updated successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@api.route("/user/payment-method/remove", methods=["DELETE"])
 def delete_payment_method(user_id):
     payment_method = PaymentMethod.query.get(user_id)
     if not payment_method:

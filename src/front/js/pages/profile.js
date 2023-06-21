@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import "../../styles/index.css"
 import { Card } from "../component/card";
 import { Review } from "../component/review";
+import { PaymentMethod } from "../component/paymentMethod";
 
 import { Context } from "../store/appContext";
 import { InputProfilePic } from "../component/inputProfilePic";
@@ -204,6 +205,7 @@ export const Profile = () => {
 				<div className="tab-pane fade" id="payment-tab-pane" role="tabpanel" aria-labelledby="payment-tab" tabIndex="0">
 					<div className="container mt-4">
 						Payment Methods
+						<PaymentMethod />
 					</div>
 				</div>
 				<div className="tab-pane fade" id="support-tab-pane" role="tabpanel" aria-labelledby="support-tab" tabIndex="0">

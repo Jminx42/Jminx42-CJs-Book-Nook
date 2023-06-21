@@ -7,7 +7,7 @@ db = SQLAlchemy()
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password_hash = db.Column(db.String(200), nullable=False)
+    password_hash = db.Column(db.Text, nullable=False)
     full_name = db.Column(db.String(120), nullable=True)
     address = db.Column(db.Text, nullable=True)
     user_category = db.Column(db.Integer, db.ForeignKey('user_category.id'), nullable=True)
@@ -217,9 +217,9 @@ class PaymentMethod(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     card_type = db.Column(db.String(100), nullable=True, unique=False)
-    card_number = db.Column(db.Text, unique=True, nullable=False)
+    card_number_hash = db.Column(db.Text, unique=True, nullable=False)
     card_name = db.Column(db.Text, unique=False, nullable=False)
-    cvc = db.Column(db.Text, unique=False, nullable=False)
+    cvc_hash = db.Column(db.Text, unique=False, nullable=False)
     expiry_date = db.Column(db.Date, unique=False, nullable=False)
     transaction_id = db.Column(db.Integer, db.ForeignKey('transaction.id'), nullable=True)
 
@@ -232,8 +232,8 @@ class PaymentMethod(db.Model):
             "user_id": self.user_id,
             "card_type": self.card_type,
             "card_name": self.card_name,
-            "card_number": self.card_number,
-            "cvc": self.cvc,
+            "card_number_hash": "",
+            "cvc_hash": "",
             "expiry_date": self.expiry_date
             # Serializing the payment methods is probably a security breach, so you can exclude it
         }
