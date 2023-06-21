@@ -130,6 +130,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			editReview: async (book_id, review, rating) => {
+
 				const response = await fetch(process.env.BACKEND_URL + 'api/review', {
 					method: "PUT",
 					headers: {
@@ -137,7 +138,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						"Content-Type": "application/json"
 					},
 
-					body: JSON.stringify({ "book_id": book_id.id, "review": review, "rating": rating })
+					body: JSON.stringify({ "book_id": book_id, "review": review, "rating": rating })
 				});
 
 				if (response.ok) {
@@ -213,6 +214,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error(`Error during fetch: ${process.env.BACKEND_URL}api/checkout`, error);
 				}
 			},
+
 			getBookFormats: async () => {
 				console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 				const response = await fetch(process.env.BACKEND_URL + 'api/bookformat');

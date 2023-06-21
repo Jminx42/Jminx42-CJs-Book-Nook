@@ -201,7 +201,7 @@ def update_review():
     review.user_id = user_id
 
     db.session.commit()
-    return jsonify("review updated"), 200
+    return jsonify({"review": "Review was updated successfully"}), 200
 
 @api.route("/review", methods=["POST"])
 @jwt_required()

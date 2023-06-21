@@ -26,6 +26,8 @@ export const BookPage = () => {
 		actions.getOneBook(params.theisbn);
 		actions.getNYTReview(params.theisbn);
 
+
+
 		setTimeout(() => {
 			setIsLoading(false);
 			setShowBookDetails(true);
@@ -34,15 +36,16 @@ export const BookPage = () => {
 	}, [params.isbn]);
 
 
-	useEffect(() => {
-		setEditReview({
-			rating: review.rating,
-			review: review.review
-		});
-	}, [review]);
+	// useEffect(() => {
+	// 	setEditReview({
+	// 		rating: review.rating,
+	// 		review: review.review
+	// 	});
+	// }, [review]);
 
 	useEffect(() => {
 		actions.getBookFormats();
+
 	}, []);
 
 
@@ -74,7 +77,15 @@ export const BookPage = () => {
 			console.log(reviewData);
 			actions.getOneBook(params.theisbn)
 			setReview({
-				rating: '',
+				rating: review.rating,
+				review: review.review
+			});
+			setEditReview({
+				rating: review.rating,
+				review: review.review
+			})
+			setReview({
+				rating: 0,
 				review: ''
 			});
 		} else {
@@ -83,14 +94,8 @@ export const BookPage = () => {
 		}
 	}
 	const handleEditReview = async () => {
-		try {
-			const bookId = store.book.id;
-			await actions.getOneBook(store.book.isbn); // Wait for getOneBook to complete
-			await actions.editReview(bookId, editReview.review, editReview.rating); // Use the saved bookId
-		} catch (error) {
-			console.error(error);
-		}
-	};
+		await actions.getOneBook(store.book.isbn)
+	}
 
 	// const handleOptionChange = (event) => {
 	// 	setSelectedOption(event.target.value);
@@ -215,27 +220,31 @@ export const BookPage = () => {
 				<h4>Reviews</h4>
 				{store.book.reviews.map((review) => {
 					return (<div key={review.id}>
+						{!editClicked ?
+							<button className="btn custom-button"
+								onClick={() => {
+									handleEditReview()
+								}}>Edit</button>
+							:
+							<>
+								<button className="btn custom-button me-3" onClick={() => {
+									setEditClicked(false)
+									console.log(store.book.id)
+									actions.editReview(store.book.id, editReview.review, editReview.rating)
+									setEditReview({ rating: editReview.rating, review: editReview.review })
+								}}>Save</button>
+								<button className="btn custom-button" onClick={() => setEditClicked(false)}>Cancel</button>
+							</>}
 						<div className="d-flex justify-content-between align-items-center mb-2">
 							<p className="mb-0">Reviewed by: {review.full_name}</p>
-							{!editClicked ? (
-								<button
-									className="btn custom-button"
-									onClick={() => setEditClicked(true)}
-								>
-									Edit
-								</button>
-							) : (
-								<button
-									className="btn custom-button"
-									onClick={() => {
-										setEditClicked(false);
-										handleEditReview();
-									}}
-								>
-									Save
-								</button>
-							)}
-
+							{!editClicked ?
+								<button className="btn custom-button" onClick={() => setEditClicked(true)}>Edit</button>
+								:
+								<button className="btn custom-button" onClick={() => {
+									setEditClicked(false)
+									actions.editReview(review.book_id, editReview.review, editReview.rating)
+									handleEditReview()
+								}}>Save</button>}
 						</div>
 						<div className="d-flex align-items-center"> {/* Wrap label and input in a flex container */}
 							<label className="text-start mb-1">Rating:&nbsp; </label>
@@ -246,7 +255,7 @@ export const BookPage = () => {
 									className="form-control p-0 mb-1"
 									id="rating"
 									aria-describedby="rating"
-									defaultValue={editReview.rating}
+									value={editReview.rating}
 									onChange={(e) => setEditReview({ ...editReview, rating: e.target.value })}
 								/>
 							)}
