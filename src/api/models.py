@@ -36,6 +36,7 @@ class User(db.Model):
             "review": [y.serialize() for y in self.review],
             "wishlist": [x.serialize() for x in self.wishlist],
             "items": [item.serialize() for item in self.items if item.in_progress ],
+            "support": [i.serialize_for_support() for i in self.support]
         }
     
 class UserCategory(db.Model):
@@ -140,6 +141,7 @@ class Review(db.Model):
             "review": self.review,
             "rating": self.rating,
             "book_id": self.book_id,
+            "user_id": self.user_id,
             "full_name": User.query.get(self.user_id).full_name,
         }
     
@@ -217,25 +219,23 @@ class PaymentMethod(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     card_type = db.Column(db.String(100), nullable=True, unique=False)
-    card_number = db.Column(db.Text, unique=True, nullable=False)
+    card_number_hash = db.Column(db.Text, unique=True, nullable=False)
     card_name = db.Column(db.Text, unique=False, nullable=False)
-    cvc = db.Column(db.Text, unique=False, nullable=False)
+    cvc_hash = db.Column(db.Text, unique=False, nullable=False)
     expiry_date = db.Column(db.Date, unique=False, nullable=False)
     transaction_id = db.Column(db.Integer, db.ForeignKey('transaction.id'), nullable=True)
-
     def __repr__(self):
         return f'<PaymentMethods {self.card_name}>'
-    
     def serialize(self):
         return {
             "id": self.id,
             "user_id": self.user_id,
             "card_type": self.card_type,
             "card_name": self.card_name,
-            "card_number": self.card_number,
-            "cvc": self.cvc,
+            "card_number_hash": "",
+            "cvc_hash": "",
             "expiry_date": self.expiry_date
-            # Serializing the payment methods is probably a security breach, so you can exclude it
+           
         }
     
 class Support(db.Model):

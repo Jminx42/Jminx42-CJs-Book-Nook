@@ -14,10 +14,7 @@ export const HomeCard = ({ item }) => {
     const navigate = useNavigate();
     const [showCartModal, setShowCartModal] = useState(false);
 
-    // useEffect(() => {
-    //     actions.setPrice(item.weeks_on_list);
 
-    // }, [item.weeks_on_list]);
     const handleAddToWishlist = () => {
         if (sessionStorage.getItem("token") && store.user) {
             actions.postWishlist(item.id);
