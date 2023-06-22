@@ -347,12 +347,14 @@ def create_payment_method():
         if field not in data:
             return jsonify({"error": f"Missing required field: {field}"}), 400
 
+
     card_number = data["card_number"]
     cvc = data["cvc"]
 
   
     card_number_hash = bcrypt.hashpw(card_number.encode("utf-8"), bcrypt.gensalt())
     cvc_hash = bcrypt.hashpw(cvc.encode("utf-8"), bcrypt.gensalt())
+
 
     new_payment_method = PaymentMethod(
         user_id=user_id,
@@ -371,23 +373,27 @@ def create_payment_method():
          return jsonify({"error": str(e)}), 500
     
 @api.route("/user/payment-method/update", methods=["PUT"])
+
 @jwt_required()
 def update_payment_method():
     user_id = get_jwt_identity()
     data = request.get_json()
 
     payment_method = PaymentMethod.query.filter_by( user_id=user_id).first()
+
     if not payment_method:
         return jsonify({"error": "Payment method not found or unauthorized"}), 404
 
     if "card_type" in data:
         payment_method.card_type = data["card_type"]
     if "card_number" in data:
+
         payment_method.card_number_hash = bcrypt.hashpw(data["card_number"].encode("utf-8"), bcrypt.gensalt())
     if "card_name" in data:
         payment_method.card_name = data["card_name"]
     if "cvc" in data:
         payment_method.cvc_hash = bcrypt.hashpw(data["cvc"].encode("utf-8"), bcrypt.gensalt())
+
     if "expiry_date" in data:
         payment_method.expiry_date = data["expiry_date"]
 

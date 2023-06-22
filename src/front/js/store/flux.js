@@ -2,7 +2,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 
-			user: { wishlist: [], review: [], cart: [], support: [] },
+			user: { wishlist: [], review: [], cart: [], support: [], paymentMethod: [] },
 			books: [],
 			book: { reviews: [] },
 			// externalBooks: [],
@@ -35,7 +35,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				if (resp.status == 200) {
 					setStore({ user: data.user })
 				} else {
-					setStore({ user: { wishlist: [], review: [], transaction: [], cart: [] } })
+					setStore({ user: { wishlist: [], review: [], transaction: [], cart: [], support: [], paymentMethod: [] } })
 					sessionStorage.removeItem("token")
 				}
 			},
@@ -45,7 +45,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				sessionStorage.removeItem("wishlist");
 				sessionStorage.removeItem("checkout");
 				console.log("Logging out");
-				setStore({ user: { wishlist: [], review: [], transaction: [], cart: [] } });
+				setStore({ user: { wishlist: [], review: [], transaction: [], cart: [], support: [], paymentMethod: [] } });
 			},
 
 			login: async (email, password) => {
@@ -129,7 +129,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			editReview: async (book_id, review, rating) => {
 
-				const response = await fetch(process.env.BACKEND_URL + 'api/review', {
+				const response = await fetch(process.env.BACKEND_URL + 'api/edit-review', {
 					method: "PUT",
 					headers: {
 						Authorization: "Bearer " + sessionStorage.getItem("token"),

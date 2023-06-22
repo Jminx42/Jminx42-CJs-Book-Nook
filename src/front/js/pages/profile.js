@@ -5,7 +5,9 @@ import "../../styles/index.css"
 import { Card } from "../component/card";
 import { Review } from "../component/review";
 import { PaymentMethod } from "../component/paymentMethod";
+
 import { EmptyPaymentMethod } from "../component/emptyPaymentMethod";
+
 
 import { Context } from "../store/appContext";
 import { InputProfilePic } from "../component/inputProfilePic";
@@ -206,6 +208,7 @@ export const Profile = () => {
 				</div>
 				<div className="tab-pane fade" id="payment-tab-pane" role="tabpanel" aria-labelledby="payment-tab" tabIndex="0">
 					<div className="container mt-4">
+
 						<button className="btn custom-button" onClick={() =>
 							setShowForm(true)}>Add New</button>
 						{showForm ? <EmptyPaymentMethod closeForm={() => setShowForm(false)} /> : null}
@@ -213,6 +216,7 @@ export const Profile = () => {
 						{store.user.payment_method && store.user.payment_method.map((payment_method) => {
 							return <PaymentMethod key={payment_method.id} item={payment_method} />
 						})}
+
 					</div>
 				</div>
 				<div className="tab-pane fade" id="support-tab-pane" role="tabpanel" aria-labelledby="support-tab" tabIndex="0">

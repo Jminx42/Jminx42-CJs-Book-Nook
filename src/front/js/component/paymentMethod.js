@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
+
 import "../../styles/index.css"
 import "../../styles/home.css";
 export const PaymentMethod = ({ item }) => {
@@ -167,3 +168,4 @@ export const PaymentMethod = ({ item }) => {
         </div>
     );
 }
+
