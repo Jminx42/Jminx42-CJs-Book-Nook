@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 import "../../styles/index.css"
 import CJBookNookLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/cjbooknookwhitesmall.png";
@@ -7,6 +7,7 @@ import CJBookNookLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/cjbooknookw
 export const Navbar = () => {
 	const { store, actions } = useContext(Context);
 	const [search, setSearch] = useState("");
+	const navigate = useNavigate();
 
 	const handleSearch = (word) => {
 		setStore({ search: word })
@@ -57,7 +58,11 @@ export const Navbar = () => {
 								<button className="btn btn-secondary me-2 custom-button">Profile</button>
 							</Link>
 
-							<button className="btn btn-secondary  custom-button" onClick={() => actions.logout()}>
+							<button className="btn btn-secondary  custom-button"
+								onClick={async () => {
+									await actions.logout()
+									navigate("/")
+								}}>
 								Logout
 							</button>
 
