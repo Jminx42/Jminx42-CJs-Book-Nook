@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 1691145907b6
+Revision ID: 070cb6cc2a7e
 Revises: 
-Create Date: 2023-06-20 22:10:37.189941
+Create Date: 2023-06-22 10:04:32.955917
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import mysql
 
 # revision identifiers, used by Alembic.
-revision = '1691145907b6'
+revision = '070cb6cc2a7e'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -103,15 +103,15 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('card_type', sa.String(length=100), nullable=True),
-    sa.Column('card_number', sa.Text(), nullable=False),
+    sa.Column('card_number_hash', sa.Text(), nullable=False),
     sa.Column('card_name', sa.Text(), nullable=False),
-    sa.Column('cvc', sa.Text(), nullable=False),
+    sa.Column('cvc_hash', sa.Text(), nullable=False),
     sa.Column('expiry_date', sa.Date(), nullable=False),
     sa.Column('transaction_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['transaction_id'], ['transaction.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('card_number')
+    sa.UniqueConstraint('card_number_hash')
     )
     op.create_table('transaction_item',
     sa.Column('id', sa.Integer(), nullable=False),

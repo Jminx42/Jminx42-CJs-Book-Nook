@@ -118,8 +118,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			getNYTReview: async (isbn13) => {
 				const resp = await fetch('https://api.nytimes.com/svc/books/v3/reviews.json?isbn=' + isbn13 + '&api-key=emRJGQrXQ32EXbl6ThvjL8JdJcoicGWf')
-
-
 				const data = await resp.json()
 
 				if (resp.status !== 200) {
@@ -215,6 +213,33 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
+			postPaymentMethod: async (card_type, card_number, card_name, cvc, expiry_date) => {
+				const opts = {
+					method: 'POST',
+					headers: {
+						Authorization: "Bearer " + sessionStorage.getItem("token"),
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({ "card_type": card_type, "card_number": card_number, "card_name": card_name, "cvc": cvc, "expiry_date": expiry_date })
+				};
+
+				try {
+					const resp = await fetch(process.env.BACKEND_URL + 'api/user/payment-method', opts);
+					if (resp.status !== 200) {
+						const data = await resp.json();
+						const errorMessage = data.error || "Something went wrong";
+						alert(errorMessage);
+						return false;
+					} else {
+						await getActions().validate_user();
+						alert("Your card was added successfully");
+						return true;
+					}
+				} catch (error) {
+					console.error(`Error during fetch: ${process.env.BACKEND_URL}api/user/payment-method`, error);
+				}
+			},
+
 			getBookFormats: async () => {
 				console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 				const response = await fetch(process.env.BACKEND_URL + 'api/bookformat');
@@ -223,43 +248,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				console.log(getStore().bookFormats)
 			},
 
-			setPrice: (weeks_on_list) => {
-				let price = null;
-				if (weeks_on_list <= 10) {
-					price = 18.99;
-				} else if (weeks_on_list > 11 && weeks_on_list <= 30) {
-					price = 16.99;
-				} else if (weeks_on_list > 31 && weeks_on_list <= 60) {
-					price = 14.99;
-				} else {
-					price = 12.99;
-				}
-				setStore({ price });
-			},
-
-			setBookPrice: (publishedDate) => {
-
-				if (!publishedDate) {
-					console.error('Invalid published date');
-					return;
-				}
-
-				const year = new Date(publishedDate).getFullYear();
-				console.log(year);
-				let bookPrice = 0;
-
-				if (year >= 2023) {
-					bookPrice = 18.99;
-				} else if (year >= 2020) {
-					bookPrice = 16.99;
-				} else if (year >= 2015) {
-					bookPrice = 14.99;
-				} else {
-					bookPrice = 12.99;
-				}
-
-				setStore({ bookPrice });
-			},
 
 		}
 	};

@@ -36,6 +36,7 @@ class User(db.Model):
             "review": [y.serialize() for y in self.review],
             "wishlist": [x.serialize() for x in self.wishlist],
             "items": [item.serialize() for item in self.items if item.in_progress ],
+            "support": [i.serialize_for_support() for i in self.support]
         }
     
 class UserCategory(db.Model):
@@ -140,6 +141,7 @@ class Review(db.Model):
             "review": self.review,
             "rating": self.rating,
             "book_id": self.book_id,
+            "user_id": self.user_id,
             "full_name": User.query.get(self.user_id).full_name,
         }
     
@@ -222,10 +224,8 @@ class PaymentMethod(db.Model):
     cvc_hash = db.Column(db.Text, unique=False, nullable=False)
     expiry_date = db.Column(db.Date, unique=False, nullable=False)
     transaction_id = db.Column(db.Integer, db.ForeignKey('transaction.id'), nullable=True)
-
     def __repr__(self):
         return f'<PaymentMethods {self.card_name}>'
-    
     def serialize(self):
         return {
             "id": self.id,
@@ -235,7 +235,7 @@ class PaymentMethod(db.Model):
             "card_number_hash": "",
             "cvc_hash": "",
             "expiry_date": self.expiry_date
-            # Serializing the payment methods is probably a security breach, so you can exclude it
+           
         }
     
 class Support(db.Model):

@@ -5,6 +5,7 @@ import { Context } from "../store/appContext";
 import { Navbar } from "../component/navbar";
 import { GoogleBooksViewer } from "../component/googleBooksViewer";
 import { GoogleViewer2 } from "../component/googleViewer2";
+import ReviewBook from "../component/reviewBook";
 
 export const BookPage = () => {
 	const params = useParams();
@@ -47,15 +48,6 @@ export const BookPage = () => {
 
 	}, []);
 
-
-	// useEffect(() => {
-	// 	actions.getOneBook(params.theisbn)
-	// 	actions.getNYTReview(params.theisbn)
-	// 	console.log(store.book)
-	// 	if (store.book.year) {
-	// 		actions.setBookPrice((store.book.year));
-	// 	}
-	// }, [store.book.year])
 
 	const submitReview = async (book_id) => {
 		const response = await fetch(process.env.BACKEND_URL + 'api/review', {
@@ -226,61 +218,15 @@ export const BookPage = () => {
 				{/* I want to show the user reviews for each book but this function isn't working */}
 				<h4>Reviews</h4>
 				{store.book.reviews.map((review) => {
-					return (<div key={review.id}>
-						{!editClicked ?
-							<button className="btn custom-button"
-								onClick={() => {
-									handleEditReview()
-								}}>Edit</button>
-							:
-							<>
-								<button className="btn custom-button me-3" onClick={() => {
-									setEditClicked(false)
-									console.log(store.book.id)
-									actions.editReview(store.book.id, editReview.review, editReview.rating)
-									setEditReview({ rating: editReview.rating, review: editReview.review })
-								}}>Save</button>
-								<button className="btn custom-button" onClick={() => setEditClicked(false)}>Cancel</button>
-							</>}
-						<div className="d-flex justify-content-between align-items-center mb-2">
-							<p className="mb-0">Reviewed by: {review.full_name}</p>
 
-						</div>
-						<div className="d-flex align-items-center"> {/* Wrap label and input in a flex container */}
-							<label className="text-start mb-1">Rating:&nbsp; </label>
-							{!editClicked ? (
-								<p className="mb-1"> {review.rating}</p>
-							) : (
-								<input
-									className="form-control p-0 mb-1"
-									id="rating"
-									aria-describedby="rating"
-									value={editReview.rating}
-									onChange={(e) => setEditReview({ ...editReview, rating: e.target.value })}
-								/>
-							)}
-						</div>
+					return <ReviewBook key={review.id} item={review} />
 
-						<div className="d-flex align-items-center"> {/* Wrap label and input in a flex container */}
-							<label className="text-start mb-1">Review:&nbsp; </label>
-							{!editClicked ? (
-								<p className="mb-1">{review.review}</p>
-							) : (
-								<input
-									className="form-control"
-									id="review"
-									aria-describedby="review"
-									value={editReview.review}
-									onChange={(e) => setEditReview({ ...editReview, review: e.target.value })}
-								/>
-							)}
-						</div>
 
-						{/* 
+					{/* 
 						<p>Rating: {review.rating}</p>
 						<p>Review: {review.review}</p> */}
 
-					</div>)
+
 				})}
 				{/* {store.user.review.book_id ?
 					<div className="row mb-3 mt-3">

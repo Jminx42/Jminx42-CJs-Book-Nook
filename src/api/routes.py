@@ -117,7 +117,7 @@ def update_user():
 
 @api.route('/user/image', methods=['POST'])
 @jwt_required()
-def handle_upload():
+def handle_upload_image():
     user_id = get_jwt_identity()
 
     if 'profile_image' not in request.files:
@@ -186,7 +186,7 @@ def get_user_reviews():
 
 @api.route("/edit-review", methods=["PUT"]) #Why don't we need the /<int:book_id>
 @jwt_required()
-def update_review():
+def update_review_endpoint():
     user_id = get_jwt_identity()
     body = request.json
     review = Review.query.filter_by(book_id=body["book_id"]).first()
@@ -195,8 +195,7 @@ def update_review():
 
     review.review = body["review"]
     review.rating = body["rating"]
-    review.book_id = body["book_id"]
-    review.user_id = user_id
+    
 
     db.session.commit()
     return jsonify({"review": "Review was updated successfully"}), 200
@@ -323,16 +322,7 @@ def add_item_to_cart():
         print(e)
         return jsonify({"error": str(e)}), 500
     
-    # body = request.json
-    # new_transaction = Transaction(
-    #     book_id=body["book_id"],
-    #     user_id=body["user_id"],
-    #     payment_methods=body["payment_methods"]
-    # )
-    # db.session.add(new_transaction)
-    # db.session.commit()
 
-    # return jsonify({"transaction": "created"}), 200
 
 @api.route("/bookformat", methods=['GET'])
 def get_book_format():
@@ -344,25 +334,9 @@ def get_book_format():
 
     return jsonify({"book_formats": serialized_book_formats}), 200 
 
-# @api.route("/payment-method", methods=['GET'])
-# def get_all_payment_methods():
-#     payment_methods = PaymentMethod.query.all()
-#     serialized_payment_methods = [payment_methods.serialize() for payment_methods in payment_methods]
-
-#     return jsonify({"payment-method": serialized_payment_methods}), 200  
-
-# @api.route("/user/payment-method/<int:user_id>", methods=['GET'])
-# def get_one_payment_method_by_id(user_id):
-#     payment_method = PaymentMethod.query.get(user_id)
-
-
-#     if not payment_method:
-#         return jsonify({"error": "No payment method found for this user id"}), 400
-
-#     return jsonify(payment_method.serialize()), 200 
 
 @api.route("/user/payment-method", methods=["POST"])
-@jwt_required
+@jwt_required()
 def create_payment_method():
     user_id = get_jwt_identity()
     data = request.json
@@ -373,12 +347,14 @@ def create_payment_method():
         if field not in data:
             return jsonify({"error": f"Missing required field: {field}"}), 400
 
+
     card_number = data["card_number"]
     cvc = data["cvc"]
 
   
-    card_number_hash = hashpw(card_number.encode("utf-8"), gensalt())
-    cvc_hash = hashpw(cvc.encode("utf-8"), gensalt())
+    card_number_hash = bcrypt.hashpw(card_number.encode("utf-8"), bcrypt.gensalt())
+    cvc_hash = bcrypt.hashpw(cvc.encode("utf-8"), bcrypt.gensalt())
+
 
     new_payment_method = PaymentMethod(
         user_id=user_id,
@@ -397,23 +373,27 @@ def create_payment_method():
          return jsonify({"error": str(e)}), 500
     
 @api.route("/user/payment-method/update", methods=["PUT"])
-@jwt_required
-def update_payment_method(payment_method_id):
+
+@jwt_required()
+def update_payment_method():
     user_id = get_jwt_identity()
     data = request.get_json()
 
-    payment_method = PaymentMethod.query.filter_by(id=payment_method_id, user_id=user_id).first()
+    payment_method = PaymentMethod.query.filter_by( user_id=user_id).first()
+
     if not payment_method:
         return jsonify({"error": "Payment method not found or unauthorized"}), 404
 
     if "card_type" in data:
         payment_method.card_type = data["card_type"]
     if "card_number" in data:
-        payment_method.card_number_hash = hashpw(data["card_number"].encode("utf-8"), gensalt())
+
+        payment_method.card_number_hash = bcrypt.hashpw(data["card_number"].encode("utf-8"), bcrypt.gensalt())
     if "card_name" in data:
         payment_method.card_name = data["card_name"]
     if "cvc" in data:
-        payment_method.cvc_hash = hashpw(data["cvc"].encode("utf-8"), gensalt())
+        payment_method.cvc_hash = bcrypt.hashpw(data["cvc"].encode("utf-8"), bcrypt.gensalt())
+
     if "expiry_date" in data:
         payment_method.expiry_date = data["expiry_date"]
 
