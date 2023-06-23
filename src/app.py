@@ -83,7 +83,7 @@ def sitemap():
         db.session.commit()
     if ENV == "development":
         #table initialization
-        user_initialize()
+        # user_initialize()
         return generate_sitemap(app)
     return send_from_directory(static_file_dir, 'index.html')
 
