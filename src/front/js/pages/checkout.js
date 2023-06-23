@@ -25,13 +25,13 @@ export const Checkout = () => {
                 <h1>Checkout</h1>
                 <div className="row mb-1">
                     <div className="col-sm-6 col-md-6 col-lg-6">
-                        <h5 className="text-center background-custom p-2"> Book </h5>
+                        <h5 className="text-center background-custom p-2 text-white"> Book </h5>
                     </div>
                     <div className="col-sm-3 col-md-3 col-lg-3">
-                        <h5 className="text-center background-custom p-2"> Units </h5>
+                        <h5 className="text-center background-custom p-2 text-white"> Units </h5>
                     </div>
                     <div className="col-sm-3 col-md-3 col-lg-3 ">
-                        <h5 className="text-center background-custom p-2 "> Price </h5>
+                        <h5 className="text-center background-custom p-2 text-white"> Price </h5>
                     </div>
                 </div>
                 <div className="row d-flex justify-content-center">
@@ -44,7 +44,7 @@ export const Checkout = () => {
                             })}
                             <div className="row d-flex justify-content-end">
                                 <div className="col-sm-3 col-md-3 col-lg-3 text-center">
-                                    <h5 className="text-center background-custom p-2"> Total: {total()}€ </h5>
+                                    <h5 className="text-center background-custom p-2 text-white"> Total: {total()}€ </h5>
 
                                 </div>
                             </div>

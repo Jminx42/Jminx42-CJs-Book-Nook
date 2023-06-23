@@ -22,7 +22,7 @@ export const Navbar = () => {
 
 
 	return (
-		<nav className="navbar navbar-custom">
+		<nav className="navbar background-custom">
 			<div className="container">
 				<Link to="/" className="navbar-brand">
 					<img src={CJBookNookLogo} height={80} alt="CJBookNookLogo" />
