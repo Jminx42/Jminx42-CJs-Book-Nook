@@ -86,7 +86,7 @@ export const PaymentMethod = ({ item }) => {
         };
 
         try {
-            const resp = await fetch(process.env.BACKEND_URL + 'api/user/payment-method', opts);
+            const resp = await fetch(process.env.BACKEND_URL + 'api/user/payment-method/remove', opts);
             if (resp.status !== 200) {
                 const data = await resp.json();
                 const errorMessage = data.error || "Something went wrong";
@@ -98,7 +98,7 @@ export const PaymentMethod = ({ item }) => {
                 return true;
             }
         } catch (error) {
-            console.error(`Error during fetch: ${process.env.BACKEND_URL}api/user/payment-method`, error);
+            console.error(`Error during fetch: ${process.env.BACKEND_URL}api/user/payment-method/remove`, error);
         }
     }
 

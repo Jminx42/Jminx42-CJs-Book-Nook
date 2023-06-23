@@ -2,7 +2,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 
-			user: { wishlist: [], review: [], cart: [], support: [], paymentMethod: [] },
+			user: { wishlist: [], review: [], items: [], support: [], paymentMethod: [] },
 			books: [],
 			book: { reviews: [] },
 			// externalBooks: [],
@@ -35,7 +35,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				if (resp.status == 200) {
 					setStore({ user: data.user })
 				} else {
-					setStore({ user: { wishlist: [], review: [], transaction: [], cart: [], support: [], paymentMethod: [] } })
+					setStore({ user: { wishlist: [], review: [], transaction: [], items: [], support: [], paymentMethod: [] } })
 					sessionStorage.removeItem("token")
 				}
 			},
@@ -45,7 +45,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				sessionStorage.removeItem("wishlist");
 				sessionStorage.removeItem("checkout");
 				console.log("Logging out");
-				setStore({ user: { wishlist: [], review: [], transaction: [], cart: [], support: [], paymentMethod: [] } });
+				setStore({ user: { wishlist: [], review: [], transaction: [], items: [], support: [], paymentMethod: [] } });
 			},
 
 			login: async (email, password) => {
@@ -210,6 +210,33 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 				} catch (error) {
 					console.error(`Error during fetch: ${process.env.BACKEND_URL}api/checkout`, error);
+				}
+			},
+			// we might not need this one
+			removeFromCart: async (payment_method_id) => {
+				const opts = {
+					method: 'DELETE',
+					headers: {
+						Authorization: "Bearer " + sessionStorage.getItem("token"),
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({ "payment_method_id": payment_method_id })
+				};
+
+				try {
+					const resp = await fetch(process.env.BACKEND_URL + 'api/user/payment-method', opts);
+					if (resp.status !== 200) {
+						const data = await resp.json();
+						const errorMessage = data.error || "Something went wrong";
+						alert(errorMessage);
+						return false;
+					} else {
+						await actions.validate_user();
+						alert("Your card was deleted successfully");
+						return true;
+					}
+				} catch (error) {
+					console.error(`Error during fetch: ${process.env.BACKEND_URL}api/user/payment-method`, error);
 				}
 			},
 

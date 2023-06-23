@@ -12,7 +12,13 @@ export const Navbar = () => {
 	const handleSearch = (word) => {
 		setStore({ search: word })
 	}
-
+	const total = () => {
+		let totalCheckout = 0;
+		for (let x = 0; x < store.user.items.length; x++) {
+			totalCheckout += store.user.items[x].unit
+		}
+		return totalCheckout
+	}
 
 
 	return (
@@ -39,8 +45,13 @@ export const Navbar = () => {
 						</button>
 					</div>
 					<Link to="/checkout">
-						<button type="button" className="btn btn-secondary me-2 custom-button">
+						<button type="button" className="btn btn-secondary me-2 custom-button position-relative">
 							<i className="fas fa-shopping-cart"></i>
+							<span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">
+								{total()}
+
+							</span>
+
 						</button>
 					</Link>
 					{!sessionStorage.getItem("token") ? (
