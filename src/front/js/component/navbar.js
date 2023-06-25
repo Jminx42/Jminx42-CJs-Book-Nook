@@ -47,7 +47,7 @@ export const Navbar = () => {
 					<Link to="/checkout">
 						<button type="button" className="btn btn-secondary me-2 custom-button position-relative">
 							<i className="fas fa-shopping-cart"></i>
-							<span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">
+							<span className="position-absolute top-0 start-100 translate-middle badge rounded-pill background-dark">
 								{total()}
 
 							</span>
@@ -66,7 +66,11 @@ export const Navbar = () => {
 					) : (
 						<div className="d-flex">
 							<Link to="/profile">
-								<button className="btn btn-secondary me-2 custom-button">Profile</button>
+								<button className="btn btn-secondary me-2 custom-button"><i className="fa-solid fa-user"></i></button>
+							</Link>
+
+							<Link to="/support">
+								<button className="btn btn-secondary me-2 custom-button"><i className="fa-solid fa-envelope"></i></button>
 							</Link>
 
 							<button className="btn btn-secondary  custom-button"

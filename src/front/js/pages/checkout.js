@@ -22,8 +22,10 @@ export const Checkout = () => {
         <div>
             <Navbar />
             <div className="container mt-4">
-                <h1>Checkout</h1>
-                <div className="row mb-1">
+                <div className="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow={25} aria-valuemin={0} aria-valuemax={100} style={{ height: "50px" }}>
+                    <div className="progress-bar background-custom progress-bar-striped progress-bar-animated" style={{ width: '25%' }}><h4>Order Summary</h4></div>
+                </div>
+                <div className="row mb-1 mt-4">
                     <div className="col-sm-6 col-md-6 col-lg-6">
                         <h5 className="text-center background-custom p-2 text-white"> Book </h5>
                     </div>
@@ -42,12 +44,16 @@ export const Checkout = () => {
                                 return <CheckoutCard key={items.id} item={items} />;
 
                             })}
-                            <div className="row d-flex justify-content-end">
-                                <div className="col-sm-3 col-md-3 col-lg-3 text-center">
-                                    <h5 className="text-center background-custom p-2 text-white"> Total: {total()}€ </h5>
-
+                            <div className="row d-flex justify-content-end pe-0">
+                                <div className="col-sm-3 col-md-3 col-lg-3 text-center d-flex justify-content-end pe-0">
+                                    <h5 className="text-center px-4 py-2 m-0"> Total: {total()}€ </h5>
+                                    <Link to="/confirmDetails">
+                                        <button className="btn custom-button text-center"><i className="fa-solid fa-arrow-right"></i></button>
+                                    </Link>
                                 </div>
+
                             </div>
+
                         </div>
 
                         ) : (

@@ -49,7 +49,7 @@ export const InputProfilePic = () => {
 
                 <div className="mt-2 d-flex justify-content-end">
                     <div className="me-2">
-                        <button className="btn btn-primary">Upload image</button>
+                        <button className="btn custom-button">Upload image</button>
                     </div>
                 </div>
 

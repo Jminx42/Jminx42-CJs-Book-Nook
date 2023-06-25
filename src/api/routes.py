@@ -112,6 +112,9 @@ def update_user():
 
     if "full_name" in body:
         user.full_name = body["full_name"]
+        
+    if "address" in body:
+        user.address = body["address"]
 
     db.session.commit()
 

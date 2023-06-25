@@ -153,6 +153,19 @@ export const Profile = () => {
 									/>
 								)}
 
+								<label className="text-start">Address: </label>
+								{!editClicked ? (
+									<p>{user.address}</p>
+								) : (
+									<input
+										className="form-control"
+										id="address"
+										aria-describedby="address"
+										value={user.address}
+										onChange={(e) => setUser({ ...user, address: e.target.value })}
+									/>
+								)}
+
 
 							</div>
 							<div className="row">

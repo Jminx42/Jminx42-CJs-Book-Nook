@@ -7,6 +7,12 @@
     color: #0c6e68;
 }
 
+.dark-button {
+    background-color: #68B0AB;
+    border-color: #68B0AB;
+    color: white
+}
+
 /* .custom-button {
     background-color: #68B0AB;
     border-color: #68B0AB;
@@ -41,6 +47,10 @@
 
 .background-custom {
     background-color: #68B0AB;
+}
+
+.background-dark {
+    background-color: #128179;
 }
 
 .nav-custom {

@@ -58,7 +58,7 @@ export const HomeCard = ({ item }) => {
 
                 <button
                     type="button"
-                    className="btn me-2 text-white custom-button"
+                    className="btn me-2 text-white dark-button"
                     onClick={handleAddToWishlist}
                 >
                     {store.user.wishlist.some((wishlistItem) => wishlistItem.book_id.id === item.id) ? (
@@ -71,7 +71,7 @@ export const HomeCard = ({ item }) => {
 
 
                 <button type="button"
-                    className="btn text-white custom-button"
+                    className="btn text-white dark-button"
                     onClick={() => setShowCartModal(true)}
                 >
                     <i className="bi bi-cart"></i>
