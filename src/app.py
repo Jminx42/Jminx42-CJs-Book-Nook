@@ -16,6 +16,7 @@ from flask_jwt_extended import JWTManager
 
 
 
+
 #from models import Person
 
 ENV = os.getenv("FLASK_ENV")

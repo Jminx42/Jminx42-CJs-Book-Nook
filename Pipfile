@@ -22,6 +22,7 @@ flask-jwt-extended = "*"
 requests = "*"
 bcrypt = "*"
 apscheduler = "*"
+flask-bcrypt = "*"
 
 [requires]
 python_version = "3.10"

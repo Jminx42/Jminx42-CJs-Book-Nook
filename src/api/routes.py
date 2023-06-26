@@ -2,14 +2,22 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, Blueprint
+
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 import datetime
 import bcrypt
 import cloudinary
 import cloudinary.uploader
+from flask_bcrypt import generate_password_hash
+from flask_bcrypt import check_password_hash
+
+
 
 from api.models import db, User, Book, Review, Wishlist, Transaction, Support, PaymentMethod, TransactionItem, BookFormat
 from api.utils import APIException, generate_sitemap
+
+
+# salt = bcrypt.gensalt()
 
 api = Blueprint('api', __name__)    
 
@@ -33,11 +41,13 @@ def create_user():
     if already_exist:
         return jsonify({"error": "Email already exists in the database"}), 409
 
-    password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    # password_hash = bcrypt.hashpw(password.encode('utf-8'), salt)
+    hashed_password = generate_password_hash(password, rounds=None)
+
     new_user = User(
         email=email,
         # password=password,
-        password_hash=password_hash,
+        password_hash=hashed_password,
         full_name=full_name,
     )
     db.session.add(new_user)
@@ -56,12 +66,24 @@ def login():
     email = request.json.get("email", None)
     password = request.json.get("password", None)
     
-    user = User.query.filter_by(email=email).first() #gives the whole user, including the id
-    if not user or not bcrypt.checkpw(password.encode('utf-8'), user.password_hash.encode('utf-8')):
-        return jsonify({"error": "Invalid credentials"}), 401
     
-    access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(minutes=90))
-    return jsonify({"access_token": access_token}), 200
+    user = User.query.filter_by(email=email).first() #gives the whole user, including the id
+    # print(user.password_hash)
+    # password_hash = bcrypt.hashpw(password.encode('utf-8'), salt)
+    # verify_password=bcrypt.checkpw(user.password_hash, password_hash)
+    # if not user or not bcrypt.checkpw(password.encode('utf-8'), user.password_hash.encode('utf-8')):
+    #     return jsonify({"error": "Invalid credentials"}), 401
+
+    
+    print("aaaaaaaaaeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+    is_valid = check_password_hash(user.password_hash, password)
+
+    if is_valid:
+        print('User succesfully logged in')
+        access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(minutes=90))
+        return jsonify({"access_token": access_token}), 200
+    else:
+        return jsonify({"error": "please try again"}), 400
 
 
 @api.route("/user/validate", methods=["GET"])
@@ -108,7 +130,7 @@ def update_user():
         if len(password) < 5 or not password:
             return jsonify({"error": "Your password should be at least 5 characters long and not be empty"}), 400
 
-        # user.password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        user.password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
     if "full_name" in body:
         user.full_name = body["full_name"]
