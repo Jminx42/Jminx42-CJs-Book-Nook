@@ -13,8 +13,9 @@ export const PaymentMethod = ({ item }) => {
         cvc: "",
         expiry_date: "",
     });
-    const [errors, setErrors] = useState({});
     const [editClicked, setEditClicked] = useState(false);
+    const [alert, setAlert] = useState("");
+    const [error, setError] = useState("");
 
 
     const validateForm = (formData) => {
@@ -64,11 +65,11 @@ export const PaymentMethod = ({ item }) => {
             if (resp.status !== 200) {
                 const data = await resp.json();
                 const errorMessage = data.error || "Something went wrong";
-                alert(errorMessage);
+                setError(errorMessage);
                 return false;
             } else {
                 await actions.validate_user();
-                alert("Your card was added successfully");
+                setAlert("Your card was added successfully");
                 return true;
             }
         } catch (error) {
@@ -90,11 +91,11 @@ export const PaymentMethod = ({ item }) => {
             if (resp.status !== 200) {
                 const data = await resp.json();
                 const errorMessage = data.error || "Something went wrong";
-                alert(errorMessage);
+                setError(errorMessage);
                 return false;
             } else {
                 await actions.validate_user();
-                alert("Your card was deleted successfully");
+                setAlert("Your card was deleted successfully");
                 return true;
             }
         } catch (error) {
@@ -104,6 +105,38 @@ export const PaymentMethod = ({ item }) => {
 
     return (
         <div className="card mx-2 border-0" style={{ width: "18rem" }}>
+            {
+                alert && alert !== ""
+                    ?
+                    <div className="container">
+                        <div className="alert alert-success alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+                            <i className="bi bi-check-circle-fill me-2"></i>
+                            <div>
+                                {alert}
+                            </div>
+                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    :
+                    null
+
+            }
+            {
+                error && error !== ""
+                    ?
+                    <div className="container">
+                        <div className="alert alert-danger alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+                            <i className="bi bi-exclamation-triangle-fill"></i>
+                            <div>
+                                {error}
+                            </div>
+                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    :
+                    null
+
+            }
             <div className="card-body" >
                 {!editClicked ? (
                     <p className="mb-1">Card Type: {item.card_type}</p>
@@ -115,7 +148,11 @@ export const PaymentMethod = ({ item }) => {
                         aria-describedby="card_type"
                         defaultValue={formData.card_type}
                         onChange={(e) => setFormData({ ...formData, card_type: e.target.value })}
-                    /></>)}
+                    />
+                    {errors.card_type && (
+                        <div className="invalid-feedback">{errors.card_type}</div>
+                    )}</>
+                )}
 
                 {!editClicked ? (
                     <p className="mb-1">Card Number: {item.card_number}</p>
@@ -128,7 +165,10 @@ export const PaymentMethod = ({ item }) => {
                             aria-describedby="card_number"
                             defaultValue={formData.card_number}
                             onChange={(e) => setFormData({ ...formData, card_number: e.target.value })}
-                        /></>)}
+                        />
+                        {errors.card_number && (
+                            <div className="invalid-feedback">{errors.card_number}</div>
+                        )}</>)}
 
                 {!editClicked ? (
                     <p className="mb-1">Card Name: {item.card_name}</p>
@@ -142,6 +182,9 @@ export const PaymentMethod = ({ item }) => {
                             defaultValue={formData.card_name}
                             onChange={(e) => setFormData({ ...formData, card_name: e.target.value })}
                         />
+                        {errors.card_name && (
+                            <div className="invalid-feedback">{errors.card_name}</div>
+                        )}
                     </>)}
 
                 {!editClicked ? (
@@ -156,6 +199,9 @@ export const PaymentMethod = ({ item }) => {
                             defaultValue={formData.cvc}
                             onChange={(e) => setFormData({ ...formData, cvc: e.target.value })}
                         />
+                        {errors.cvc && (
+                            <div className="invalid-feedback">{errors.cvc}</div>
+                        )}
                     </>
                 )}
 
@@ -171,6 +217,9 @@ export const PaymentMethod = ({ item }) => {
                         defaultValue={formData.expiry_date}
                         onChange={(e) => setFormData({ ...formData, expiry_date: e.target.value })}
                     />
+                    {errors.expiry_date && (
+                        <div className="invalid-feedback">{errors.expiry_date}</div>
+                    )}
                 </>)}
                 {!editClicked ?
                     <>

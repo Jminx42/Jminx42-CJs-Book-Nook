@@ -16,6 +16,8 @@ export const Register = () => {
 
     const [successfulRegistration, setSuccessfulRegistration] = useState(false);
     const [errors, setErrors] = useState({});
+    const [alert, setAlert] = useState("");
+    const [errorSubmit, setErrorSubmit] = useState("");
 
     const validateForm = (formData) => {
         const { full_name, email, password, confirmPassword, termsAndConditions } =
@@ -84,13 +86,11 @@ export const Register = () => {
             const resp = await fetch(process.env.BACKEND_URL + "api/create/user", opts);
             if (resp.status !== 200) {
                 const data = await resp.json();
-                // toast.error(data.error); // Display error message using toast
-                alert(data.error); // Display error message using toast
+                setErrorSubmit(data.error);
                 return false;
             } else {
                 setSuccessfulRegistration(true);
-                // toast.success("Your registration was successful"); // Display success message using toast
-                alert("Your registration was successful"); // Display success message using toast
+                setAlert("Your registration was successful");
                 sessionStorage.removeItem("token");
                 return true;
             }
@@ -102,6 +102,38 @@ export const Register = () => {
     return (
 
         <div className="Auth-form container-lg container-md container-sm p-5">
+            {
+                alert && alert !== ""
+                    ?
+                    <div className="container">
+                        <div className="alert alert-success alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+                            <i className="bi bi-check-circle-fill me-2"></i>
+                            <div>
+                                {alert}
+                            </div>
+                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    :
+                    null
+
+            }
+            {
+                errorSubmit && errorSubmit !== ""
+                    ?
+                    <div className="container">
+                        <div className="alert alert-success alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+                            <i className="bi bi-check-circle-fill me-2"></i>
+                            <div>
+                                {errorSubmit}
+                            </div>
+                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    :
+                    null
+
+            }
             {successfulRegistration ? (
                 <div className="card text-center">
                     <div className="card-body">

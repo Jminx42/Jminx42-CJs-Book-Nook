@@ -7,6 +7,8 @@ import "../../styles/home.css";
 
 export const CheckoutCard = ({ item }) => {
     const { store, actions } = useContext(Context);
+    const [errorMessage, setErrorMessage] = useState("");
+    const [alertMsg, setAlertMsg] = useState("");
 
     const handleAddUnit = async (transaction_id) => {
         const opts = {
@@ -24,11 +26,11 @@ export const CheckoutCard = ({ item }) => {
             if (resp.status !== 200) {
                 const data = await resp.json();
                 const errorMessage = data.error || "Something went wrong";
-                alert(errorMessage);
+                setErrorMessage(errorMessage);
                 return false;
             } else {
                 await actions.validate_user();
-                alert("Your cart was updated successfully");
+                setAlertMsg("Your cart was updated successfully");
                 return true;
             }
         } catch (error) {
@@ -52,11 +54,11 @@ export const CheckoutCard = ({ item }) => {
             if (resp.status !== 200) {
                 const data = await resp.json();
                 const errorMessage = data.error || "Something went wrong";
-                alert(errorMessage);
+                setErrorMessage(errorMessage);
                 return false;
             } else {
                 await actions.validate_user();
-                alert("Your cart was updated successfully");
+                setAlertMsg("Your cart was updated successfully");
                 return true;
             }
         } catch (error) {
@@ -67,6 +69,38 @@ export const CheckoutCard = ({ item }) => {
 
     return (
         <div className="container">
+            {
+                store.alert && store.alert !== "" || alertMsg && alertMsg !== ""
+                    ?
+                    <div className="container">
+                        <div className="alert alert-success alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+                            <i className="bi bi-check-circle-fill me-2"></i>
+                            <div>
+                                {store.alert}
+                            </div>
+                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    :
+                    null
+
+            }
+            {
+                store.errorMsg && store.errorMsg !== "" || errorMessage && errorMessage !== ""
+                    ?
+                    <div className="container">
+                        <div className="alert alert-danger alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+                            <i className="bi bi-exclamation-triangle-fill"></i>
+                            <div>
+                                {store.errorMsg}
+                            </div>
+                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    :
+                    null
+
+            }
 
             <div className="row mb-2">
                 <div className="col-sm-2 col-md-2 col-lg-2">
