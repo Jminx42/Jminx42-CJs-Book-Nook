@@ -56,13 +56,13 @@ def handle_invalid_usage(error):
 
 #Table initialization
 # User table
-def user_initialize():
-    if len(User.query.all()) == 0:  
-        with open ("src/table_initial_values/user_initialization.json") as file:
-            data = json.load(file)
-        users = [User(**item) for item in data]
-        db.session.bulk_save_objects(users)
-        db.session.commit()
+# def user_initialize():
+#     if len(User.query.all()) == 0:  
+#         with open ("src/table_initial_values/user_initialization.json") as file:
+#             data = json.load(file)
+#         users = [User(**item) for item in data]
+#         db.session.bulk_save_objects(users)
+#         db.session.commit()
 
 # generate sitemap with all your endpoints
 @app.route('/')

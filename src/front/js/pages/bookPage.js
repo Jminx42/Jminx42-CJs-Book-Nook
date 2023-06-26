@@ -65,7 +65,7 @@ export const BookPage = () => {
 			const reviewData = data.review;
 			await actions.validate_user();
 			alert("Review added successfully");
-			console.log(reviewData);
+			// console.log(reviewData);
 			actions.getOneBook(params.theisbn)
 			setReview({
 				rating: review.rating,
@@ -228,6 +228,59 @@ export const BookPage = () => {
 
 
 				})}
+
+				{
+					store.book.reviews.find((item) => item.user_id === store.user.id)
+						?
+						null
+						:
+						<div className="row mb-3 mt-3">
+							<h4>Submit your review</h4>
+							{sessionStorage.getItem("token") ?
+								<div>
+									<form onSubmit={handleSubmit}>
+										<label>Rating</label>
+										<input
+											className="form-control"
+											id="rating"
+											aria-describedby="rating"
+											value={review.rating || ""}
+											onChange={(e) => setReview({ ...review, rating: parseInt(e.target.value) })}
+										/>
+										<label>Review</label>
+										<textarea
+											className="form-control"
+											id="review"
+											aria-describedby="review"
+											rows="5"
+											value={review.review || ""}
+											onChange={(e) => setReview({ ...review, review: e.target.value })}
+										/>
+										<button className="btn custom-button text-white mt-3 mb-4" onClick={() => {
+											setReview({ ...review, book_id: store.book.id })
+
+										}
+										} type="submit">
+											Submit
+										</button>
+
+									</form>
+								</div> : <div>
+									<p>Want to submit your review?&nbsp;
+										<Link to="/login">
+											<sup><button
+												type="button"
+												className="btn btn-link p-0"
+											>Login
+											</button></sup></Link>
+										&nbsp;first!</p>
+
+								</div>
+
+							}
+
+						</div>
+				}
 				{/* {store.user.review.book_id ?
 					<div className="row mb-3 mt-3">
 						<h4>Reviews</h4>
@@ -235,52 +288,7 @@ export const BookPage = () => {
 						<p>Review: {store.user.review.book_id.review}</p>
 						<p>Reviewed by: {store.user.full_name}</p>
 					</div> : null} */}
-				<div className="row mb-3 mt-3">
-					<h4>Submit your review</h4>
-					{sessionStorage.getItem("token") ?
-						<div>
-							<form onSubmit={handleSubmit}>
-								<label>Rating</label>
-								<input
-									className="form-control"
-									id="rating"
-									aria-describedby="rating"
-									value={review.rating || ""}
-									onChange={(e) => setReview({ ...review, rating: parseInt(e.target.value) })}
-								/>
-								<label>Review</label>
-								<textarea
-									className="form-control"
-									id="review"
-									aria-describedby="review"
-									rows="5"
-									value={review.review || ""}
-									onChange={(e) => setReview({ ...review, review: e.target.value })}
-								/>
-								<button className="btn custom-button text-white mt-3 mb-4" onClick={() => {
-									setReview({ ...review, book_id: store.book.id })
 
-								}
-								} type="submit">
-									Submit
-								</button>
-
-							</form>
-						</div> : <div>
-							<p>Want to submit your review?&nbsp;
-								<Link to="/login">
-									<sup><button
-										type="button"
-										className="btn btn-link p-0"
-									>Login
-									</button></sup></Link>
-								&nbsp;first!</p>
-
-						</div>
-
-					}
-
-				</div>
 			</div>
 
 		</div >
