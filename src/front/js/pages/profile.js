@@ -79,20 +79,20 @@ export const Profile = () => {
 			{/* Creating the different tabs: */}
 			<div className="container mt-3">
 				<ul className="nav nav-tabs" id="myTab" role="tablist">
-					<li className="nav-item" role="presentation">
-						<button className="nav-link active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal-tab-pane" type="button" role="tab" aria-controls="personal-tab-pane" aria-selected="true">Personal Information</button>
+					<li className="nav-item nav-custom" role="presentation">
+						<button className="nav-link active nav-custom" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal-tab-pane" type="button" role="tab" aria-controls="personal-tab-pane" aria-selected="true">Personal Information</button>
 					</li>
-					<li className="nav-item" role="presentation">
-						<button className="nav-link" id="wishlist-tab" data-bs-toggle="tab" data-bs-target="#wishlist-tab-pane" type="button" role="tab" aria-controls="wishlist-tab-pane" aria-selected="false">Wishlist</button>
+					<li className="nav-item nav-custom" role="presentation">
+						<button className="nav-link nav-custom" id="wishlist-tab" data-bs-toggle="tab" data-bs-target="#wishlist-tab-pane" type="button" role="tab" aria-controls="wishlist-tab-pane" aria-selected="false">Wishlist</button>
 					</li>
-					<li className="nav-item" role="presentation">
-						<button className="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews-tab-pane" type="button" role="tab" aria-controls="reviews-tab-pane" aria-selected="false">My Reviews</button>
+					<li className="nav-item nav-custom" role="presentation">
+						<button className="nav-link nav-custom" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews-tab-pane" type="button" role="tab" aria-controls="reviews-tab-pane" aria-selected="false">My Reviews</button>
 					</li>
-					<li className="nav-item" role="presentation">
-						<button className="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment-tab-pane" type="button" role="tab" aria-controls="payment-tab-pane" aria-selected="false">Payment</button>
+					<li className="nav-item nav-custom" role="presentation">
+						<button className="nav-link nav-custom" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment-tab-pane" type="button" role="tab" aria-controls="payment-tab-pane" aria-selected="false">Payment</button>
 					</li>
-					<li className="nav-item" role="presentation">
-						<button className="nav-link" id="support-tab" data-bs-toggle="tab" data-bs-target="#support-tab-pane" type="button" role="tab" aria-controls="support-tab-pane" aria-selected="false">Support</button>
+					<li className="nav-item nav-custom" role="presentation">
+						<button className="nav-link nav-custom" id="support-tab" data-bs-toggle="tab" data-bs-target="#support-tab-pane" type="button" role="tab" aria-controls="support-tab-pane" aria-selected="false">Support</button>
 					</li>
 				</ul>
 			</div>
@@ -155,16 +155,19 @@ export const Profile = () => {
 
 								<label className="text-start">Address: </label>
 								{!editClicked ? (
-									<p> {user.address}</p>
+
+									<p>{user.address}</p>
 								) : (
 									<input
 										className="form-control"
-										id="full_name"
-										aria-describedby="full_name"
+										id="address"
+										aria-describedby="address"
 										value={user.address || ""}
 										onChange={(e) => setUser({ ...user, address: e.target.value })}
 									/>
 								)}
+
+
 
 							</div>
 							<div className="row">

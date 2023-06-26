@@ -36,6 +36,7 @@ def create_user():
     password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     new_user = User(
         email=email,
+        # password=password,
         password_hash=password_hash,
         full_name=full_name,
     )
@@ -55,11 +56,14 @@ def login():
     email = request.json.get("email", None)
     password = request.json.get("password", None)
     
+
+
     user = User.query.filter_by(email=email).first() #gives the whole user, including the id
     if not user and not bcrypt.checkpw(password.encode('utf-8'), user.password_hash):
         return jsonify ({"error": "Invalid credentials"}), 300        
     
     access_token = create_access_token(identity=user.id, expires_delta = datetime.timedelta(minutes=90))
+
     return jsonify({"access_token": access_token}), 200
 
 @api.route("/user/validate", methods=["GET"])
@@ -106,10 +110,13 @@ def update_user():
         if len(password) < 5 or not password:
             return jsonify({"error": "Your password should be at least 5 characters long and not be empty"}), 400
 
-        user.password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        # user.password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
     if "full_name" in body:
         user.full_name = body["full_name"]
+        
+    if "address" in body:
+        user.address = body["address"]
 
     db.session.commit()
 
@@ -295,7 +302,6 @@ def add_item_to_cart():
     user = User.query.get(user_id)
     try:
         body = request.json
-        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
        
         if "book_id" not in body or not user:
             return jsonify({"error": "Missing required fields"}), 400
@@ -321,8 +327,55 @@ def add_item_to_cart():
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)}), 500
-    
 
+@api.route("/addunit", methods=["PUT"])
+@jwt_required()
+def add_unit():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    try:
+        body = request.json
+        
+        if "transaction_id" not in body or not user:
+            return jsonify({"error": "Missing required fields"}), 400
+        
+        item = TransactionItem.query.get(body["transaction_id"])
+        
+        if item:
+            item.unit =item.unit+1
+            db.session.commit()
+            return jsonify({"item": "book was added to cart"}), 200
+       
+        return jsonify({"transaction": item.serialize()}), 200
+           
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)}), 500
+    
+@api.route("/removeunit", methods=["PUT"])
+@jwt_required()
+def remove_unit():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    try:
+        body = request.json
+        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        print(body["transaction_id"])     
+        if "transaction_id" not in body or not user:
+            return jsonify({"error": "Missing required fields"}), 400
+        
+        item = TransactionItem.query.get(body["transaction_id"])
+       
+        if item and item.unit > 1:
+            item.unit =item.unit-1
+            db.session.commit()
+            return jsonify({"item": "book was removed from cart"}), 200
+       
+        return jsonify({"transaction": item.serialize()}), 200
+           
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)}), 500
 
 @api.route("/bookformat", methods=['GET'])
 def get_book_format():
@@ -373,7 +426,6 @@ def create_payment_method():
          return jsonify({"error": str(e)}), 500
     
 @api.route("/user/payment-method/update", methods=["PUT"])
-
 @jwt_required()
 def update_payment_method():
     user_id = get_jwt_identity()
@@ -404,8 +456,10 @@ def update_payment_method():
         return jsonify({"error": str(e)}), 500
 
 @api.route("/user/payment-method/remove", methods=["DELETE"])
-def delete_payment_method(user_id):
-    payment_method = PaymentMethod.query.get(user_id)
+@jwt_required()
+def delete_payment_method():
+    user_id = get_jwt_identity()
+    payment_method = PaymentMethod.query.filter_by( user_id=user_id).first()
     if not payment_method:
         return jsonify({"error": "No payment method found for this user id"}), 400
 

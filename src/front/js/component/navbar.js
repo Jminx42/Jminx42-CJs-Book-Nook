@@ -12,11 +12,17 @@ export const Navbar = () => {
 	const handleSearch = (word) => {
 		setStore({ search: word })
 	}
-
+	const total = () => {
+		let totalCheckout = 0;
+		for (let x = 0; x < store.user.items.length; x++) {
+			totalCheckout += store.user.items[x].unit
+		}
+		return totalCheckout
+	}
 
 
 	return (
-		<nav className="navbar navbar-custom">
+		<nav className="navbar background-custom">
 			<div className="container">
 				<Link to="/" className="navbar-brand">
 					<img src={CJBookNookLogo} height={80} alt="CJBookNookLogo" />
@@ -39,8 +45,13 @@ export const Navbar = () => {
 						</button>
 					</div>
 					<Link to="/checkout">
-						<button type="button" className="btn btn-secondary me-2 custom-button">
+						<button type="button" className="btn btn-secondary me-2 custom-button position-relative">
 							<i className="fas fa-shopping-cart"></i>
+							<span className="position-absolute top-0 start-100 translate-middle badge rounded-pill background-dark">
+								{total()}
+
+							</span>
+
 						</button>
 					</Link>
 					{!sessionStorage.getItem("token") ? (
@@ -55,7 +66,11 @@ export const Navbar = () => {
 					) : (
 						<div className="d-flex">
 							<Link to="/profile">
-								<button className="btn btn-secondary me-2 custom-button">Profile</button>
+								<button className="btn btn-secondary me-2 custom-button"><i className="fa-solid fa-user"></i></button>
+							</Link>
+
+							<Link to="/support">
+								<button className="btn btn-secondary me-2 custom-button"><i className="fa-solid fa-envelope"></i></button>
 							</Link>
 
 							<button className="btn btn-secondary  custom-button"

@@ -86,7 +86,7 @@ export const PaymentMethod = ({ item }) => {
         };
 
         try {
-            const resp = await fetch(process.env.BACKEND_URL + 'api/user/payment-method', opts);
+            const resp = await fetch(process.env.BACKEND_URL + 'api/user/payment-method/remove', opts);
             if (resp.status !== 200) {
                 const data = await resp.json();
                 const errorMessage = data.error || "Something went wrong";
@@ -98,7 +98,7 @@ export const PaymentMethod = ({ item }) => {
                 return true;
             }
         } catch (error) {
-            console.error(`Error during fetch: ${process.env.BACKEND_URL}api/user/payment-method`, error);
+            console.error(`Error during fetch: ${process.env.BACKEND_URL}api/user/payment-method/remove`, error);
         }
     }
 
@@ -106,64 +106,85 @@ export const PaymentMethod = ({ item }) => {
         <div className="card mx-2 border-0" style={{ width: "18rem" }}>
             <div className="card-body" >
                 {!editClicked ? (
-                    <p className="mb-1">Card type: {item.card_type}</p>
-                ) : (
+                    <p className="mb-1">Card Type: {item.card_type}</p>
+                ) : (<>
+                    <label>Card Type:</label>
                     <input
                         className="form-control p-0 mb-1"
                         id="card_type"
                         aria-describedby="card_type"
                         defaultValue={formData.card_type}
                         onChange={(e) => setFormData({ ...formData, card_type: e.target.value })}
-                    />)}
+                    /></>)}
 
                 {!editClicked ? (
                     <p className="mb-1">Card Number: {item.card_number}</p>
-                ) : (<input
-                    className="form-control p-0 mb-1"
-                    id="card_number"
-                    aria-describedby="card_number"
-                    defaultValue={formData.card_number}
-                    onChange={(e) => setFormData({ ...formData, card_number: e.target.value })}
-                />)}
+                ) : (
+                    <>
+                        <label>Card Number:</label>
+                        <input
+                            className="form-control p-0 mb-1"
+                            id="card_number"
+                            aria-describedby="card_number"
+                            defaultValue={formData.card_number}
+                            onChange={(e) => setFormData({ ...formData, card_number: e.target.value })}
+                        /></>)}
 
                 {!editClicked ? (
                     <p className="mb-1">Card Name: {item.card_name}</p>
-                ) : (<input
-                    className="form-control p-0 mb-1"
-                    id="card_name"
-                    aria-describedby="card_name"
-                    defaultValue={formData.card_name}
-                    onChange={(e) => setFormData({ ...formData, card_name: e.target.value })}
-                />)}
+                ) : (
+                    <>
+                        <label>Card Name:</label>
+                        <input
+                            className="form-control p-0 mb-1"
+                            id="card_name"
+                            aria-describedby="card_name"
+                            defaultValue={formData.card_name}
+                            onChange={(e) => setFormData({ ...formData, card_name: e.target.value })}
+                        />
+                    </>)}
 
                 {!editClicked ? (
                     <p className="mb-1">CVC: {item.cvc}</p>
-                ) : (<input
-                    className="form-control p-0 mb-1"
-                    id="cvc"
-                    aria-describedby="cvc"
-                    defaultValue={formData.cvc}
-                    onChange={(e) => setFormData({ ...formData, cvc: e.target.value })}
-                />)}
+                ) : (
+                    <>
+                        <label>CVC:</label>
+                        <input
+                            className="form-control p-0 mb-1"
+                            id="cvc"
+                            aria-describedby="cvc"
+                            defaultValue={formData.cvc}
+                            onChange={(e) => setFormData({ ...formData, cvc: e.target.value })}
+                        />
+                    </>
+                )}
 
                 {!editClicked ? (
                     <p className="mb-1">Expiry Date: {item.expiry_date}</p>
-                ) : (<input
-                    className="form-control p-0 mb-1"
-                    id="expiry_date"
-                    type="date"
-                    aria-describedby="expiry_date"
-                    defaultValue={formData.expiry_date}
-                    onChange={(e) => setFormData({ ...formData, expiry_date: e.target.value })}
-                />)}
+                ) : (<>
+                    <label>Expiry Date:</label>
+                    <input
+                        className="form-control p-0 mb-1"
+                        id="expiry_date"
+                        type="date"
+                        aria-describedby="expiry_date"
+                        defaultValue={formData.expiry_date}
+                        onChange={(e) => setFormData({ ...formData, expiry_date: e.target.value })}
+                    />
+                </>)}
                 {!editClicked ?
-                    <button className="btn custom-button" onClick={() => {
-                        setEditClicked(true)
+                    <>
+                        <button className="btn custom-button me-2" onClick={() => {
+                            setEditClicked(true)
 
-                    }}>Edit</button>
+                        }}>Edit</button>
+                        <button className="btn custom-button me-2" onClick={() => deletePaymentMethod(item.id)}>Delete</button>
+                    </>
                     :
-                    <button className="btn custom-button" onClick={handleEditPaymentMethod}>Save</button>}
-                <button className="btn custom-button" onClick={() => deletePaymentMethod(item.id)}>Delete</button>
+                    <>
+                        <button className="btn custom-button me-2" onClick={handleEditPaymentMethod}>Save</button>
+                        <button className="btn custom-button me-2" onClick={() => setEditClicked(false)}>Close</button></>}
+
             </div>
         </div>
     );

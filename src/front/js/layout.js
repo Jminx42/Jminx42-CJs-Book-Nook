@@ -11,6 +11,7 @@ import { Login } from "./pages/login.js";
 import { Support } from "./pages/support.js";
 import { GooglePreview } from "./pages/googlePreview.js";
 import { Checkout } from "./pages/checkout";
+import { ConfirmDetails } from "./pages/confirmDetails";
 
 
 
@@ -42,6 +43,7 @@ const Layout = () => {
                         <Route element={<Support />} path="/support" />
                         <Route element={<GooglePreview />} path="/googlePreview/:theisbn" />
                         <Route element={<Checkout />} path="/checkout" />
+                        <Route element={<ConfirmDetails />} path="/confirmDetails" />
 
 
                         <Route element={<BookPage />} path="/book/:theisbn" />

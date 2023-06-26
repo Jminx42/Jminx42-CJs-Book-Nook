@@ -2,10 +2,22 @@
     General Styles used on every website (Don't Repeat Yourself)
 */
 .custom-button {
+    background-color: #cdeeec;
+    border-color: #cdeeec;
+    color: #0c6e68;
+}
+
+.dark-button {
+    background-color: #68B0AB;
+    border-color: #68B0AB;
+    color: white
+}
+
+/* .custom-button {
     background-color: #68B0AB;
     border-color: #68B0AB;
     color: white;
-}
+} */
 
 .custom-button:hover {
     background-color: #128179;
@@ -21,13 +33,60 @@
 .link-like {
     color: #68B0AB;
     text-decoration: underline;
-   
-  }
 
-  .custom-bg-img {
+}
+
+.custom-bg-img {
     background-color: #68B0AB;
-  }
+}
 
+/* Not using this one
   .navbar-custom {
     background-color: #C8D5B9;
+} */
+
+.background-custom {
+    background-color: #68B0AB;
+}
+
+.background-dark {
+    background-color: #128179;
+}
+
+.nav-custom {
+    color: #128179;
+    background-color: #cdeeec;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-color: #ffffff;
+
+
+}
+
+.nav-custom:hover {
+    color: #ffffff;
+    background-color: #68B0AB;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-color: #ffffff;
+
+
+}
+
+.nav-custom:active {
+    color: #ffffff;
+    background-color: #68B0AB;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-color: #ffffff;
+
+}
+
+.nav-custom .nav-link.active {
+    color: #ffffff;
+    background-color: #68B0AB;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-color: #ffffff;
+
 }
