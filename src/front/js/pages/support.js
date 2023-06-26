@@ -7,7 +7,9 @@ import { Card } from "../component/card";
 
 export const Support = () => {
     const { store, actions } = useContext(Context);
-    const [formData, setFormData] = useState({ subject: "", message: "" })
+    const [formData, setFormData] = useState({ subject: "", message: "" });
+    const [alert, setAlert] = useState("");
+    const [error, setError] = useState("");
 
     const submitSupport = async () => {
         const response = await fetch(process.env.BACKEND_URL + 'api/support', {
@@ -24,14 +26,14 @@ export const Support = () => {
             const data = await response.json();
             const supportData = data.support;
             await actions.validate_user();
-            alert(supportData);
+            setAlert(supportData);
             setFormData({
                 subject: '',
                 message: ''
             });
         } else {
             const data = await response.json();
-            alert(data.error);
+            setError(data.error);
         }
     }
 
@@ -44,6 +46,38 @@ export const Support = () => {
     return (
         <div>
             <Navbar />
+            {
+                alert && alert !== ""
+                    ?
+                    <div className="container">
+                        <div className="alert alert-success alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+                            <i className="bi bi-check-circle-fill me-2"></i>
+                            <div>
+                                {alert}
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    :
+                    null
+
+            }
+            {
+                error && error !== ""
+                    ?
+                    <div className="container">
+                        <div className="alert alert-danger alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <div>
+                                {error}
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    :
+                    null
+
+            }
             <div className="container mt-4">
 
                 <form onSubmit={handleSupport}>

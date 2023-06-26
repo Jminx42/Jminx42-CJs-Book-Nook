@@ -20,6 +20,8 @@ export const BookPage = () => {
 		rating: review.rating,
 		review: review.review
 	});
+	const [alert, setAlert] = useState("");
+	const [error, setError] = useState("");
 
 	useEffect(() => {
 		actions.getBooks();
@@ -64,7 +66,7 @@ export const BookPage = () => {
 			const data = await response.json();
 			const reviewData = data.review;
 			await actions.validate_user();
-			alert("Review added successfully");
+			setAlert("Review added successfully");
 			// console.log(reviewData);
 			actions.getOneBook(params.theisbn)
 			setReview({
@@ -81,7 +83,7 @@ export const BookPage = () => {
 			});
 		} else {
 			const data = await response.json();
-			alert(data.error);
+			setError(data.error);
 		}
 	}
 
@@ -134,7 +136,40 @@ export const BookPage = () => {
 
 	return (
 		<div>
+
 			<Navbar />
+			{
+				alert && alert !== ""
+					?
+					<div className="container">
+						<div className="alert alert-success alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+							<i className="bi bi-check-circle-fill me-2"></i>
+							<div>
+								{alert}
+							</div>
+							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>
+					</div>
+					:
+					null
+
+			}
+			{
+				error && error !== ""
+					?
+					<div className="container">
+						<div className="alert alert-danger alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+							<i class="bi bi-exclamation-triangle-fill"></i>
+							<div>
+								{error}
+							</div>
+							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>
+					</div>
+					:
+					null
+
+			}
 
 			<div className="card container mt-3">
 

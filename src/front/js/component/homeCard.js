@@ -24,6 +24,16 @@ export const HomeCard = ({ item }) => {
         }
     };
 
+    //yes this function is repeated... need to think a bit longer about how to handle it better
+    const handleAddToCart = () => {
+        if (sessionStorage.getItem("token") && store.user) {
+            setShowCartModal(true);
+        } else {
+            navigate("/login");
+            alert("Please log in to add to your cart.");
+        }
+    };
+
 
 
     return (
@@ -72,7 +82,7 @@ export const HomeCard = ({ item }) => {
 
                 <button type="button"
                     className="btn text-white dark-button"
-                    onClick={() => setShowCartModal(true)}
+                    onClick={handleAddToCart}
                 >
                     <i className="bi bi-cart"></i>
                 </button>

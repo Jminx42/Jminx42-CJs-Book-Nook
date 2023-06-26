@@ -19,6 +19,8 @@ export const Profile = () => {
 	const [editClicked, setEditClicked] = useState(false);
 	const [reviews, setReviews] = useState([]);
 	const [showForm, setShowForm] = useState(false)
+	const [alert, setAlert] = useState("");
+	const [error, setError] = useState("");
 
 
 	// useEffect(() => {
@@ -39,10 +41,10 @@ export const Profile = () => {
 		});
 		if (response.ok) {
 			await actions.validate_user()
-			alert("Profile successfully updated");
+			setAlert("Profile successfully updated");
 		} else {
 			const data = await response.json()
-			alert(data.error)
+			setError(data.error)
 		}
 	};
 
@@ -66,7 +68,7 @@ export const Profile = () => {
 				console.log(data.reviews)
 			} else {
 				const data = await response.json();
-				alert(data.error);
+				setError(data.error);
 			}
 		} catch (error) {
 			console.error("Error fetching reviews:", error);
@@ -77,6 +79,38 @@ export const Profile = () => {
 		<div>
 			<Navbar />
 			{/* Creating the different tabs: */}
+			{
+				alert && alert !== ""
+					?
+					<div className="container">
+						<div className="alert alert-success alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+							<i className="bi bi-check-circle-fill me-2"></i>
+							<div>
+								{alert}
+							</div>
+							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>
+					</div>
+					:
+					null
+
+			}
+			{
+				error && error !== ""
+					?
+					<div className="container">
+						<div className="alert alert-danger alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+							<i class="bi bi-exclamation-triangle-fill"></i>
+							<div>
+								{error}
+							</div>
+							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>
+					</div>
+					:
+					null
+
+			}
 			<div className="container mt-3">
 				<ul className="nav nav-tabs" id="myTab" role="tablist">
 					<li className="nav-item nav-custom" role="presentation">
