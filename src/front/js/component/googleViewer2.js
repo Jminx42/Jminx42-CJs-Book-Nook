@@ -3,10 +3,11 @@ import React, { useEffect, useState, useRef } from "react";
 export const GoogleViewer2 = ({ isbn }) => {
     const [loaded, setLoaded] = useState(false);
     const canvasRef = useRef();
+    const [alert, setAlert] = useState("");
 
     useEffect(() => {
         function alertNotFound() {
-            alert("Could not embed the book!");
+            setAlert("Could not embed the book!");
         }
 
         const scriptTag = document.createElement("script");
@@ -38,6 +39,22 @@ export const GoogleViewer2 = ({ isbn }) => {
 
     return (
         <div>
+            {
+                alert && alert !== ""
+                    ?
+                    <div className="container">
+                        <div className="alert alert-success alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+                            <i className="bi bi-check-circle-fill me-2"></i>
+                            <div>
+                                {alert}
+                            </div>
+                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    :
+                    null
+
+            }
             {loaded ? (
                 <div>
                     <div ref={canvasRef} id="viewerCanvas"></div>

@@ -13,7 +13,7 @@ export const EmptyPaymentMethod = ({ closeForm }) => {
         cvc: "",
         expiry_date: "",
     });
-    const [errors, setErrors] = useState({});
+
 
 
     const validateForm = (formData) => {
@@ -49,7 +49,39 @@ export const EmptyPaymentMethod = ({ closeForm }) => {
     }
 
     return (
-        <div>
+        <div className="container">
+            {
+                store.alert && store.alert !== ""
+                    ?
+                    <div className="container">
+                        <div className="alert alert-success alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+                            <i className="bi bi-check-circle-fill me-2"></i>
+                            <div>
+                                {store.alert}
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    :
+                    null
+
+            }
+            {
+                store.errorMsg && store.errorMsg !== ""
+                    ?
+                    <div className="container">
+                        <div className="alert alert-danger alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+                            <i className="bi bi-exclamation-triangle-fill"></i>
+                            <div>
+                                {store.errorMsg}
+                            </div>
+                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    :
+                    null
+
+            }
             <label>Card type:</label>
             <input
                 className="form-control p-0 mb-1"
@@ -58,6 +90,9 @@ export const EmptyPaymentMethod = ({ closeForm }) => {
                 defaultValue={formData.card_type}
                 onChange={(e) => setFormData({ ...formData, card_type: e.target.value })}
             />
+            {errors.card_type && (
+                <div className="invalid-feedback">{errors.card_type}</div>
+            )}
             <label>Card number:</label>
             <input
                 className="form-control p-0 mb-1"
@@ -66,6 +101,9 @@ export const EmptyPaymentMethod = ({ closeForm }) => {
                 defaultValue={formData.card_number}
                 onChange={(e) => setFormData({ ...formData, card_number: e.target.value })}
             />
+            {errors.card_number && (
+                <div className="invalid-feedback">{errors.card_number}</div>
+            )}
             <label>Card name:</label>
             <input
                 className="form-control p-0 mb-1"
@@ -74,6 +112,9 @@ export const EmptyPaymentMethod = ({ closeForm }) => {
                 defaultValue={formData.card_name}
                 onChange={(e) => setFormData({ ...formData, card_name: e.target.value })}
             />
+            {errors.card_name && (
+                <div className="invalid-feedback">{errors.card_name}</div>
+            )}
             <label>CVC:</label>
             <input
                 className="form-control p-0 mb-1"
@@ -82,6 +123,9 @@ export const EmptyPaymentMethod = ({ closeForm }) => {
                 defaultValue={formData.cvc}
                 onChange={(e) => setFormData({ ...formData, cvc: e.target.value })}
             />
+            {errors.cvc && (
+                <div className="invalid-feedback">{errors.cvc}</div>
+            )}
             <label>Expiry date:</label>
             <input
                 className="form-control p-0 mb-1"
@@ -91,6 +135,9 @@ export const EmptyPaymentMethod = ({ closeForm }) => {
                 defaultValue={formData.expiry_date}
                 onChange={(e) => setFormData({ ...formData, expiry_date: e.target.value })}
             />
+            {errors.expiry_date && (
+                <div className="invalid-feedback">{errors.expiry_date}</div>
+            )}
             <button className="btn custom-button" onClick={submitPaymentMethod}>Save</button>
 
 

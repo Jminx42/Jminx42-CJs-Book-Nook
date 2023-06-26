@@ -88,7 +88,7 @@ export const Profile = () => {
 							<div>
 								{alert}
 							</div>
-							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+							<button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 						</div>
 					</div>
 					:
@@ -100,11 +100,11 @@ export const Profile = () => {
 					?
 					<div className="container">
 						<div className="alert alert-danger alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
-							<i class="bi bi-exclamation-triangle-fill"></i>
+							<i className="bi bi-exclamation-triangle-fill"></i>
 							<div>
 								{error}
 							</div>
-							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+							<button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 						</div>
 					</div>
 					:

@@ -12,11 +12,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 			checkout: [],
 			loading: true,
 			errorMsg: '',
-			bookFormats: []
+			bookFormats: [],
+			alert: ''
 
 
 		},
 		actions: {
+			createAlertMsg: (msg) => {
+				setStore({ alert: msg })
+			},
 
 			handleSearch: (word) => {
 				setStore({ search: word })
@@ -84,7 +88,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const resp = await fetch(process.env.BACKEND_URL + 'api/book')
 				const data = await resp.json()
 				if (resp.status !== 200) {
-					alert(data.error)
+					setStore({ errorMsg: data.error })
 				} else {
 					setStore({ books: data.books })
 					// console.log(getStore().books)
@@ -107,7 +111,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const resp = await fetch('https://www.googleapis.com/books/v1/volumes?q=' + search_text + '&key=AIzaSyAhG7q0MvYbiWzXeuSBlhqNATkUVSKhFq0')
 				const data = await resp.json()
 				if (resp.status !== 200) {
-					alert(data.error)
+					setStore({ errorMsg: data.error })
 				} else {
 					setStore({ externalBooks: data })
 				}
@@ -119,7 +123,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const data = await resp.json()
 
 				if (resp.status !== 200) {
-					alert(data.error)
+					setStore({ errorMsg: data.error })
 				} else {
 					setStore({ nytReview: data.results[0] });
 				}
@@ -141,13 +145,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const data = await response.json();
 					const reviewData = data.review;
 					await getActions().validate_user();
-					// alert("Review updated successfully");
+					getActions().createAlertMsg("Review was successfully updated.")
 					console.log(reviewData); // Access the returned review data as needed
 
 
 				} else {
 					const data = await response.json();
-					alert(data.error);
+					setStore({ errorMsg: data.error })
 				}
 			},
 
@@ -167,11 +171,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 					if (resp.status !== 200) {
 						const data = await resp.json();
 						const errorMessage = data.error || "Something went wrong";
-						alert(errorMessage); // Display error message using toast
+						setStore({ errorMsg: errorMessage });
 						return false;
 					} else {
 						await getActions().validate_user();
-						alert("Your wishlist was updated successfully"); // Display success message using toast
+						getActions().createAlertMsg("Your wishlist was updated successfully");
 						return true;
 					}
 				} catch (error) {
@@ -199,11 +203,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 					if (resp.status !== 200) {
 						const data = await resp.json();
 						const errorMessage = data.error || "Something went wrong";
-						alert(errorMessage); // Display error message using toast
+						setStore({ errorMsg: errorMessage });
 						return false;
 					} else {
 						await getActions().validate_user();
-						alert("Your cart was updated successfully"); // Display success message using toast
+						getActions().createAlertMsg("Your cart was updated successfully");
 						return true;
 					}
 				} catch (error) {
@@ -226,11 +230,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 					if (resp.status !== 200) {
 						const data = await resp.json();
 						const errorMessage = data.error || "Something went wrong";
-						alert(errorMessage);
+						setStore({ errorMsg: errorMessage });
 						return false;
 					} else {
 						await actions.validate_user();
-						alert("Your card was deleted successfully");
+						getActions().createAlertMsg("Your card was deleted successfully");
 						return true;
 					}
 				} catch (error) {
@@ -253,11 +257,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 					if (resp.status !== 200) {
 						const data = await resp.json();
 						const errorMessage = data.error || "Something went wrong";
-						alert(errorMessage);
+						setStore({ errorMsg: errorMessage });
 						return false;
 					} else {
 						await getActions().validate_user();
-						alert("Your card was added successfully");
+						getActions().createAlertMsg("Your card was added successfully");
 						return true;
 					}
 				} catch (error) {

@@ -18,6 +18,38 @@ export const ReviewBook = ({ item }) => {
 
     return (
         <div className="container">
+            {
+                store.alert && store.alert !== ""
+                    ?
+                    <div className="container">
+                        <div className="alert alert-success alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+                            <i className="bi bi-check-circle-fill me-2"></i>
+                            <div>
+                                {store.alert}
+                            </div>
+                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    :
+                    null
+
+            }
+            {
+                store.errorMsg && store.errorMsg !== ""
+                    ?
+                    <div className="container">
+                        <div className="alert alert-danger alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+                            <i className="bi bi-exclamation-triangle-fill"></i>
+                            <div>
+                                {store.errorMsg}
+                            </div>
+                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    :
+                    null
+
+            }
             <div className="row">
                 <div className="col-sm-6 col-md-9 col-lg-9">
                     <div className="d-flex justify-content-between align-items-center mb-2">

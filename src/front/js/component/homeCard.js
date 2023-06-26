@@ -13,14 +13,16 @@ export const HomeCard = ({ item }) => {
     const price = item.weeks_on_list ? store.price : "Free";
     const navigate = useNavigate();
     const [showCartModal, setShowCartModal] = useState(false);
+    const [alert, setAlert] = useState("");
 
 
     const handleAddToWishlist = () => {
         if (sessionStorage.getItem("token") && store.user) {
             actions.postWishlist(item.id);
         } else {
+            setAlert("Please log in to add to your wishlist.");
             navigate("/login");
-            alert("Please log in to add to your wishlist.");
+
         }
     };
 
@@ -29,8 +31,9 @@ export const HomeCard = ({ item }) => {
         if (sessionStorage.getItem("token") && store.user) {
             setShowCartModal(true);
         } else {
+            setAlert("Please log in to add to your cart.");
             navigate("/login");
-            alert("Please log in to add to your cart.");
+
         }
     };
 
@@ -38,6 +41,22 @@ export const HomeCard = ({ item }) => {
 
     return (
         <div className="card d-flex flex-column m-2 p-0" style={{ width: "18rem" }}>
+            {
+                alert && alert !== ""
+                    ?
+                    <div className="container">
+                        <div className="alert alert-success alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+                            <i className="bi bi-check-circle-fill me-2"></i>
+                            <div>
+                                {alert}
+                            </div>
+                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    :
+                    null
+
+            }
             <Link to={`/book/${item.isbn}`} className="card-body-custom flex-grow-1">
                 {item.book_cover == null || item.book_cover == ""
                     ?

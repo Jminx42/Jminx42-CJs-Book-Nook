@@ -56,15 +56,13 @@ def login():
     email = request.json.get("email", None)
     password = request.json.get("password", None)
     
-
-
     user = User.query.filter_by(email=email).first() #gives the whole user, including the id
-    if not user and not bcrypt.checkpw(password.encode('utf-8'), user.password_hash):
-        return jsonify ({"error": "Invalid credentials"}), 300        
+    if not user or not bcrypt.checkpw(password.encode('utf-8'), user.password_hash.encode('utf-8')):
+        return jsonify({"error": "Invalid credentials"}), 401
     
-    access_token = create_access_token(identity=user.id, expires_delta = datetime.timedelta(minutes=90))
-
+    access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(minutes=90))
     return jsonify({"access_token": access_token}), 200
+
 
 @api.route("/user/validate", methods=["GET"])
 @jwt_required()
