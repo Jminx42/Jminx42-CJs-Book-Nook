@@ -16,9 +16,9 @@ api = Blueprint('api', __name__)
 @api.route("/create/user", methods=["POST"])
 def create_user():
     body = request.json
-    email = body.get("email")
-    password = body.get("password")
-    full_name = body.get("full_name")
+    email = body.get("email", None)
+    password = body.get("password", None) 
+    full_name = body.get("full_name", None)
 
     if not all([email, password, full_name]):
         return jsonify({"error": "Missing credentials"}), 400
@@ -52,14 +52,14 @@ def create_user():
 
 @api.route("/user/login", methods=["POST"])
 def login():
-    email = request.json.get("email")
-    password = request.json.get("password")
+    email = request.json.get("email", None)
+    password = request.json.get("password", None)
     
-    user = User.query.filter_by(email=email).first()
-    if not user or not bcrypt.checkpw(password.encode('utf-8'), user.password_hash):
-        return jsonify({"error": "Invalid credentials"}), 401
-        
-    access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(minutes=90))
+    user = User.query.filter_by(email=email).first() #gives the whole user, including the id
+    if not user and not bcrypt.checkpw(password.encode('utf-8'), user.password_hash):
+        return jsonify ({"error": "Invalid credentials"}), 300        
+    
+    access_token = create_access_token(identity=user.id, expires_delta = datetime.timedelta(minutes=90))
     return jsonify({"access_token": access_token}), 200
 
 @api.route("/user/validate", methods=["GET"])

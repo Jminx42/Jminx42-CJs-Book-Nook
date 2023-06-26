@@ -10,8 +10,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			// oneGoogleBook: {},
 			nytReview: {},
 			checkout: [],
-			price: null,
-			bookPrice: null,
 			loading: true,
 			errorMsg: '',
 			bookFormats: []
@@ -101,7 +99,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const response = await fetch(process.env.BACKEND_URL + 'api/book/' + isbn);
 				const data = await response.json();
 				setStore({ book: data.book })
-				console.log(getStore().book)
+				// console.log(getStore().book)
 
 			},
 
@@ -183,8 +181,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			postCheckout: async (book_format_id) => {
 				const defaultUnit = 1;
-				console.log("###########################")
-				console.log(book_format_id)
+				// console.log("###########################")
+				// console.log(book_format_id)
 				const opts = {
 					method: 'POST',
 					headers: {
@@ -193,7 +191,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					},
 					body: JSON.stringify({ "book_id": getStore().book.id, "unit": defaultUnit, "book_format_id": parseInt(book_format_id) })
 				};
-				console.log(getStore().book.id)
+				// console.log(getStore().book.id)
 
 
 				try {
@@ -245,7 +243,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const response = await fetch(process.env.BACKEND_URL + 'api/bookformat');
 				const data = await response.json();
 				setStore({ bookFormats: data.book_formats })
-				console.log(getStore().bookFormats)
+				// console.log(getStore().bookFormats)
 			},
 
 
