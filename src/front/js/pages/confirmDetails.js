@@ -39,15 +39,6 @@ export const ConfirmDetails = () => {
         }
     };
 
-    const handleCheckboxChange = async () => {
-        setChecked(!checked);
-
-        if (!checked) {
-            setUser({ ...user, billing_address: user.address });
-            await handleSave(); // Wait for the API call to complete before updating user and validating
-        }
-    };
-
     useEffect(() => {
         actions.validate_user();
     }, []);
@@ -127,13 +118,11 @@ export const ConfirmDetails = () => {
                     <div className="col-sm-6 md-col-6 lg-col-6">
                         <h5 className="text-start">Confirm Billing Address:</h5>
                         <div className="form-check">
-                            <input
-                                className="form-check-input"
-                                type="checkbox"
-                                value=""
-                                id="flexCheckDefault"
-                                onChange={handleCheckboxChange} // Add the event handler
-                            />
+                            <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" onChange={async () => {
+                                setChecked(true)
+                                setUser({ ...user, billing_address: user.address })
+                                await handleSave()
+                            }} />
                             <label className="form-check-label" htmlFor="flexCheckDefault">
                                 Is the billing address the same as the shipping address?
                             </label>
