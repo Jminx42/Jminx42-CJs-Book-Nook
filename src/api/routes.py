@@ -11,13 +11,9 @@ import cloudinary.uploader
 from flask_bcrypt import generate_password_hash
 from flask_bcrypt import check_password_hash
 
-
-
 from api.models import db, User, Book, Review, Wishlist, Transaction, Support, PaymentMethod, TransactionItem, BookFormat
 from api.utils import APIException, generate_sitemap
 
-
-# salt = bcrypt.gensalt()
 
 api = Blueprint('api', __name__)    
 
@@ -41,12 +37,10 @@ def create_user():
     if already_exist:
         return jsonify({"error": "Email already exists in the database"}), 409
 
-    # password_hash = bcrypt.hashpw(password.encode('utf-8'), salt)
     hashed_password = generate_password_hash(password, rounds=None)
 
     new_user = User(
         email=email,
-        # password=password,
         password_hash=hashed_password,
         full_name=full_name,
     )
@@ -65,17 +59,9 @@ def create_user():
 def login():
     email = request.json.get("email", None)
     password = request.json.get("password", None)
-    
-    
-    user = User.query.filter_by(email=email).first() #gives the whole user, including the id
-    # print(user.password_hash)
-    # password_hash = bcrypt.hashpw(password.encode('utf-8'), salt)
-    # verify_password=bcrypt.checkpw(user.password_hash, password_hash)
-    # if not user or not bcrypt.checkpw(password.encode('utf-8'), user.password_hash.encode('utf-8')):
-    #     return jsonify({"error": "Invalid credentials"}), 401
 
-    
-    print("aaaaaaaaaeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+    user = User.query.filter_by(email=email).first() #gives the whole user, including the id
+
     is_valid = check_password_hash(user.password_hash, password)
 
     if is_valid:
@@ -137,6 +123,9 @@ def update_user():
         
     if "address" in body:
         user.address = body["address"]
+
+    if "billing_address" in body:
+        user.billing_address = body["billing_address"]
 
     db.session.commit()
 

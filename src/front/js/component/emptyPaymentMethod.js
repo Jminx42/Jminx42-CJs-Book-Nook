@@ -13,6 +13,7 @@ export const EmptyPaymentMethod = ({ closeForm }) => {
         cvc: "",
         expiry_date: "",
     });
+    const [errors, setErrors] = useState("")
 
 
 
@@ -39,7 +40,7 @@ export const EmptyPaymentMethod = ({ closeForm }) => {
         if (!expiry_date) {
             errors.expiry_date = "Please select the correct expiry date";
         }
-        return errors;
+        return setErrors(errors);
     };
 
     const submitPaymentMethod = async () => {
@@ -59,7 +60,7 @@ export const EmptyPaymentMethod = ({ closeForm }) => {
                             <div>
                                 {store.alert}
                             </div>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     </div>
                     :
@@ -69,7 +70,7 @@ export const EmptyPaymentMethod = ({ closeForm }) => {
             {
                 store.errorMsg && store.errorMsg !== ""
                     ?
-                    <div className="container">
+                    <div NameName="container">
                         <div className="alert alert-danger alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
                             <i className="bi bi-exclamation-triangle-fill"></i>
                             <div>

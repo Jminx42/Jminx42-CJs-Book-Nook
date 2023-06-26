@@ -11,6 +11,7 @@ class User(db.Model):
     password_hash = db.Column(db.LargeBinary, nullable=False)
     full_name = db.Column(db.String(120), nullable=True)
     address = db.Column(db.Text, nullable=True)
+    billing_address = db.Column(db.Text, nullable=True)
     user_category = db.Column(db.Integer, db.ForeignKey('user_category.id'), nullable=True)
     payment_method = db.relationship("PaymentMethod", backref="user")
     wishlist = db.relationship("Wishlist", backref="user")
@@ -30,8 +31,8 @@ class User(db.Model):
             "full_name": self.full_name,
             "profile_picture": self.profile_picture,
             "password": "",
-
             "address": self.address,
+            "billing_address": self.billing_address,
             "payment_method": [x.serialize() for x in self.payment_method],
             # payment method.... way to serialize without revealing user private info?
             "review": [y.serialize() for y in self.review],

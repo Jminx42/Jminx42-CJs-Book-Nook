@@ -16,9 +16,11 @@ export const ConfirmDetails = () => {
     const [showForm, setShowForm] = useState(false);
     const [alert, setAlert] = useState("");
     const [error, setError] = useState("");
+    const [checked, setChecked] = useState(false)
 
     const handleSave = async () => {
         setEditAddress(false);
+        setEditBilling(false);
 
         const response = await fetch(process.env.BACKEND_URL + 'api/user/update', {
             method: "PUT",
@@ -36,6 +38,19 @@ export const ConfirmDetails = () => {
             setError(data.error)
         }
     };
+
+    const handleCheckboxChange = async () => {
+        setChecked(!checked);
+
+        if (!checked) {
+            setUser({ ...user, billing_address: user.address });
+            await handleSave(); // Wait for the API call to complete before updating user and validating
+        }
+    };
+
+    useEffect(() => {
+        actions.validate_user();
+    }, []);
 
     return (
         <div>
@@ -81,7 +96,7 @@ export const ConfirmDetails = () => {
                     <div className="col-sm-6 md-col-6 lg-col-6">
                         <h5 className="text-start">Confirm Shipping Address:</h5>
                         {!editAddress ? (
-                            <p>{user.address}</p>
+                            <p>{store.user.address}</p>
                         ) : (
                             <input
                                 className="form-control"
@@ -112,20 +127,26 @@ export const ConfirmDetails = () => {
                     <div className="col-sm-6 md-col-6 lg-col-6">
                         <h5 className="text-start">Confirm Billing Address:</h5>
                         <div className="form-check">
-                            <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                value=""
+                                id="flexCheckDefault"
+                                onChange={handleCheckboxChange} // Add the event handler
+                            />
                             <label className="form-check-label" htmlFor="flexCheckDefault">
                                 Is the billing address the same as the shipping address?
                             </label>
                         </div>
-                        {!editBilling ? (
-                            <p>{user.address}</p>
+                        {checked ? <p>{store.user.address}</p> : !editBilling ? (
+                            <p>{store.user.billing_address}</p>
                         ) : (
                             <input
                                 className="form-control"
-                                id="address"
-                                aria-describedby="address"
-                                value={user.address}
-                                onChange={(e) => setUser({ ...user, address: e.target.value })}
+                                id="billing_address"
+                                aria-describedby="billing_address"
+                                value={user.billing_address}
+                                onChange={(e) => setUser({ ...user, billing_address: e.target.value })}
                             />
                         )}
                         {!editBilling ? (

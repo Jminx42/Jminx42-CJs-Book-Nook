@@ -187,7 +187,7 @@ export const Profile = () => {
 									/>
 								)}
 
-								<label className="text-start">Address: </label>
+								<label className="text-start">Shipping Address: </label>
 								{!editClicked ? (
 
 									<p>{user.address}</p>
@@ -198,6 +198,20 @@ export const Profile = () => {
 										aria-describedby="address"
 										value={user.address || ""}
 										onChange={(e) => setUser({ ...user, address: e.target.value })}
+									/>
+								)}
+
+								<label className="text-start">Billing Address: </label>
+								{!editClicked ? (
+
+									<p>{user.billing_address}</p>
+								) : (
+									<input
+										className="form-control"
+										id="billing_address"
+										aria-describedby="billing_address"
+										value={user.billing_address || ""}
+										onChange={(e) => setUser({ ...user, billing_address: e.target.value })}
 									/>
 								)}
 
