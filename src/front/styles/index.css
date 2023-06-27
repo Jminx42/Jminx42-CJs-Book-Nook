@@ -36,6 +36,12 @@
 
 }
 
+.filter-link {
+    color: #0c6e68;
+
+
+}
+
 .custom-bg-img {
     background-color: #68B0AB;
 }
@@ -89,4 +95,26 @@
     border-top-right-radius: 5px;
     border-color: #ffffff;
 
+}
+
+.custom-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #68B0AB;
+    border-radius: 3px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+/* I want to change the color surrounding the checkbox when you click it but it's not like this!*/
+.custom-checkbox:click {
+    box-shadow: 0 0 2px 2px #68B0AB;
+}
+
+.custom-checkbox:checked {
+    background-color: #68B0AB;
+    border-color: #68B0AB;
 }
