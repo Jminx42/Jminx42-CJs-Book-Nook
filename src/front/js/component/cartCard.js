@@ -155,6 +155,7 @@ const CartCard = ({ item, setShowModal }) => {
                             onClick={() => {
                                 actions.postCheckout(format)
                                 setShowModal(false)
+                                actions.createAlertMsg("Your cart was updated successfully");
                             }}>
                             Add to Cart
                         </button>

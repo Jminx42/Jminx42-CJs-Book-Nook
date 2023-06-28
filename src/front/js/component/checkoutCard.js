@@ -70,22 +70,6 @@ export const CheckoutCard = ({ item }) => {
     return (
         <div className="container">
             {
-                store.alert && store.alert !== "" || alertMsg && alertMsg !== ""
-                    ?
-                    <div className="container">
-                        <div className="alert alert-success alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
-                            <i className="bi bi-check-circle-fill me-2"></i>
-                            <div>
-                                {store.alert}
-                            </div>
-                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    </div>
-                    :
-                    null
-
-            }
-            {
                 store.errorMsg && store.errorMsg !== "" || errorMessage && errorMessage !== ""
                     ?
                     <div className="container">

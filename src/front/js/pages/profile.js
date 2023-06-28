@@ -248,7 +248,10 @@ export const Profile = () => {
 							}) : null} */}
 							{store.user.wishlist && store.user.wishlist.length !== 0 ? store.user.wishlist.map((book) => {
 								return <Card key={book.id} item={book.book_id} />
-							}) : null}
+							}) :
+								<div>
+									Add books to your wishlist!
+								</div>}
 						</div>
 					</div>
 
@@ -286,7 +289,9 @@ export const Profile = () => {
 					<div className="container mt-4">
 						{store.user.support && store.user.support.length !== 0 ? store.user.support.map((ticket) => {
 							return <SupportCard key={ticket.ticket_id} item={ticket} />
-						}) : null}
+						}) : <div>
+							Want to contact us? Go to our support page.
+						</div>}
 					</div>
 				</div>
 

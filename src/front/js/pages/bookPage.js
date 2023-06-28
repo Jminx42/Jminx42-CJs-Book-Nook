@@ -219,9 +219,25 @@ export const BookPage = () => {
 									</select>
 								</div>
 								<div className="col-2">
-									<button type="button" disabled={!format} className="btn me-2 custom-button" onClick={() => actions.postCheckout(format)}>
-										<i className="fas fa-shopping-cart"></i>
-									</button>
+									{
+										sessionStorage.getItem("token") ?
+											<button type="button" disabled={!format} className="btn me-2 custom-button" onClick={() => actions.postCheckout(format)}>
+												<i className="fas fa-shopping-cart"></i>
+											</button>
+											:
+											<div>
+												<p>Want to add to your cart?&nbsp;
+													<Link to="/login">
+														<sup><button
+															type="button"
+															className="btn btn-link p-0"
+														>Login
+														</button></sup></Link>
+													&nbsp;first!</p>
+
+											</div>
+									}
+
 								</div>
 							</div>
 							<div className="row">
@@ -300,7 +316,9 @@ export const BookPage = () => {
 										</button>
 
 									</form>
-								</div> : <div>
+								</div>
+								:
+								<div>
 									<p>Want to submit your review?&nbsp;
 										<Link to="/login">
 											<sup><button
@@ -309,7 +327,6 @@ export const BookPage = () => {
 											>Login
 											</button></sup></Link>
 										&nbsp;first!</p>
-
 								</div>
 
 							}
