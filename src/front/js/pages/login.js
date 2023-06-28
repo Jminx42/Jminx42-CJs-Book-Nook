@@ -15,6 +15,10 @@ export const Login = () => {
     const navigate = useNavigate();
     const [errors, setErrors] = useState({});
 
+    useEffect(() => {
+        actions.clearError();
+    }, []);
+
     const validateForm = () => {
         let isValid = true;
         const newErrors = {};

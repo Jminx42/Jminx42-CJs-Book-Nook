@@ -13,6 +13,10 @@ export const Review = ({ item }) => {
         review: item.review
     });
 
+    useEffect(() => {
+        actions.clearError();
+        actions.clearAlert();
+    }, []);
 
 
 

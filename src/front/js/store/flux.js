@@ -5,9 +5,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			user: { wishlist: [], review: [], items: [], support: [], paymentMethod: [] },
 			books: [],
 			book: { reviews: [] },
-			// externalBooks: [],
 			search: "",
-			// oneGoogleBook: {},
 			nytReview: {},
 			checkout: [],
 			loading: true,
@@ -20,6 +18,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 		actions: {
 			createAlertMsg: (msg) => {
 				setStore({ alert: msg })
+			},
+
+			clearError: () => {
+				setStore({ errorMsg: '' })
+			},
+
+			clearAlert: () => {
+				setStore({ alert: '' })
 			},
 
 			handleSearch: (word) => {
@@ -44,8 +50,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			logout: () => {
 				sessionStorage.removeItem("token");
-				sessionStorage.removeItem("wishlist");
-				sessionStorage.removeItem("checkout");
 				console.log("Logging out");
 				setStore({ user: { wishlist: [], review: [], transaction: [], items: [], support: [], paymentMethod: [] } });
 			},
@@ -270,7 +274,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			getBookFormats: async () => {
-				console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 				const response = await fetch(process.env.BACKEND_URL + 'api/bookformat');
 				const data = await response.json();
 				setStore({ bookFormats: data.book_formats })

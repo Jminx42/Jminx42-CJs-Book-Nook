@@ -16,6 +16,11 @@ const CartCard = ({ item, setShowModal }) => {
         }, 2000);
     }, []);
 
+    useEffect(() => {
+        actions.clearError();
+        actions.clearAlert();
+    }, []);
+
     if (isLoading || !showBookDetails) {
         // Display loading spinner and message
         return (

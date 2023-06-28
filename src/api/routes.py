@@ -62,15 +62,17 @@ def login():
 
     user = User.query.filter_by(email=email).first() #gives the whole user, including the id
 
-    is_valid = check_password_hash(user.password_hash, password)
+    if user:
+        is_valid = check_password_hash(user.password_hash, password)
 
-    if is_valid:
-        print('User succesfully logged in')
-        access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(minutes=90))
-        return jsonify({"access_token": access_token}), 200
-    else:
-        return jsonify({"error": "please try again"}), 400
-
+        if is_valid:
+            print('User succesfully logged in')
+            access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(minutes=90))
+            return jsonify({"access_token": access_token}), 200
+        else:
+            return jsonify({"error": "please try again"}), 400
+        
+    return jsonify({"error": "Your username or password is incorrect."}), 400
 
 @api.route("/user/validate", methods=["GET"])
 @jwt_required()

@@ -8,7 +8,7 @@ import { PaymentMethod } from "../component/paymentMethod";
 import { CheckoutCard } from "../component/checkoutCard";
 import "../../styles/index.css"
 
-export const ConfirmDetails = () => {
+export const OrderSummary = () => {
     const { store, actions } = useContext(Context);
     const [user, setUser] = useState(store.user);
     const [editAddress, setEditAddress] = useState(false);
@@ -85,7 +85,7 @@ export const ConfirmDetails = () => {
             }
             <div className="container mt-4">
                 <div className="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow={25} aria-valuemin={0} aria-valuemax={100} style={{ height: "50px" }}>
-                    <div className="progress-bar background-custom progress-bar-striped progress-bar-animated" style={{ width: '50%' }}><h4>Confirm Order Details</h4></div>
+                    <div className="progress-bar background-custom progress-bar-striped progress-bar-animated" style={{ width: '75%' }}><h4>Order Summary</h4></div>
                 </div>
 
                 <div className="row mb-1 mt-4 d-flex">
@@ -173,12 +173,12 @@ export const ConfirmDetails = () => {
                     </div>
                     <div className="row d-flex justify-content-end pe-0">
                         <div className="col-sm-3 col-md-3 col-lg-3 text-center d-flex justify-content-start ps-0">
-                            <Link to="/checkout">
+                            <Link to="/confirmDetails">
                                 <button className="btn custom-button text-center"><i class="fa-solid fa-arrow-left"></i></button>
                             </Link>
                         </div>
                         <div className="col-sm-3 col-md-3 col-lg-3 text-center d-flex justify-content-end pe-0">
-                            <Link to="/orderSummary">
+                            <Link to="/confirmDetails">
                                 <button className="btn custom-button text-center"><i className="fa-solid fa-arrow-right"></i></button>
                             </Link>
                         </div>
