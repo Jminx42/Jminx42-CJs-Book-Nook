@@ -10,6 +10,11 @@ export const CheckoutCard = ({ item }) => {
     const [errorMessage, setErrorMessage] = useState("");
     const [alertMsg, setAlertMsg] = useState("");
 
+    useEffect(() => {
+        actions.clearError();
+
+    }, []);
+
     const handleAddUnit = async (transaction_id) => {
         const opts = {
             method: 'PUT',

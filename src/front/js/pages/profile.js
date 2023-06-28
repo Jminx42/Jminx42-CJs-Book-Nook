@@ -176,7 +176,7 @@ export const Profile = () => {
 
 								<label className="text-start">Password: </label>
 								{!editClicked ? (
-									<p>###############</p>
+									<p>{user.password}</p>
 								) : (
 									<input
 										className="form-control"

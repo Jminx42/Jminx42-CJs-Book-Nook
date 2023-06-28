@@ -12,7 +12,7 @@ import { Support } from "./pages/support.js";
 import { GooglePreview } from "./pages/googlePreview.js";
 import { Checkout } from "./pages/checkout";
 import { ConfirmDetails } from "./pages/confirmDetails";
-
+import { OrderSummary } from "./pages/orderSummary";
 
 
 import injectContext from "./store/appContext";
@@ -44,7 +44,7 @@ const Layout = () => {
                         <Route element={<GooglePreview />} path="/googlePreview/:theisbn" />
                         <Route element={<Checkout />} path="/checkout" />
                         <Route element={<ConfirmDetails />} path="/confirmDetails" />
-
+                        <Route element={<OrderSummary />} path="/orderSummary" />
 
                         <Route element={<BookPage />} path="/book/:theisbn" />
 

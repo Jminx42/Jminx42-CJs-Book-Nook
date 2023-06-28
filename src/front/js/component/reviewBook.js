@@ -15,7 +15,10 @@ export const ReviewBook = ({ item }) => {
     console.log(item.user_id)
     console.log(store.user.id)
 
-
+    useEffect(() => {
+        actions.clearError();
+        actions.clearAlert();
+    }, []);
     return (
         <div className="container">
             {

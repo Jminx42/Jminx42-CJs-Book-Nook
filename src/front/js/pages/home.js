@@ -25,6 +25,7 @@ export const Home = () => {
 	useEffect(() => {
 		actions.getBooks();
 		actions.emptyBook();
+		actions.clearAlert();
 	}, []);
 
 	const handleGenreCheckboxChange = (value) => {

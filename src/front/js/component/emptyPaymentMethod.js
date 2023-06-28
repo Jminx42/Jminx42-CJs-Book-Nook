@@ -15,6 +15,10 @@ export const EmptyPaymentMethod = ({ closeForm }) => {
     });
     const [errors, setErrors] = useState("")
 
+    useEffect(() => {
+        actions.clearError();
+        actions.clearAlert();
+    }, []);
 
 
     const validateForm = (formData) => {
