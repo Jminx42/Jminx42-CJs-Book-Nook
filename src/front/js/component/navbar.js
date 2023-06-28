@@ -20,7 +20,7 @@ export const Navbar = () => {
 		return totalCheckout
 	}
 
-
+	// We need to add a hamburger icon for mobile view!
 	return (
 		<nav className="navbar background-custom">
 			<div className="container">
