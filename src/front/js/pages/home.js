@@ -311,10 +311,6 @@ export const Home = () => {
 										</div>
 									</div>
 								</div>
-
-							</div>
-							{/* Another possibility of showing the filters
-							<div className="col-sm-3 col-md-3 col-lg-3">
 								<div className="card">
 									<div className="card-body">
 										<h5 className="card-title">Filter</h5>
@@ -350,77 +346,81 @@ export const Home = () => {
 												Crime
 											</label>
 										</div>
-										{/* Add more genre checkboxes as needed */}
-							<button className="btn btn-sm btn-secondary" onClick={handleClearGenreFilters}>
-								Clear Genre Filters
-							</button>
-							<hr />
-							<h6>Publisher</h6>
-							<div className="form-check">
-								<input
-									className="form-check-input"
-									type="checkbox"
-									id="penguin"
-									checked={penguinChecked}
-									onChange={() => {
-										setPenguinChecked(!penguinChecked);
-										handlePublisherCheckboxChange("Penguin");
-									}}
-								/>
-								<label className="form-check-label" htmlFor="penguin">
-									Penguin
-								</label>
+
+										<button className="btn btn-sm btn-secondary" onClick={handleClearGenreFilters}>
+											Clear Genre Filters
+										</button>
+										<hr />
+										<h6>Publisher</h6>
+										<div className="form-check">
+											<input
+												className="form-check-input"
+												type="checkbox"
+												id="penguin"
+												checked={penguinChecked}
+												onChange={() => {
+													setPenguinChecked(!penguinChecked);
+													handlePublisherCheckboxChange("Penguin");
+												}}
+											/>
+											<label className="form-check-label" htmlFor="penguin">
+												Penguin
+											</label>
+										</div>
+										<div className="form-check">
+											<input
+												className="form-check-input"
+												type="checkbox"
+												id="national"
+												checked={nationalChecked}
+												onChange={() => {
+													setNationalChecked(!nationalChecked);
+													handlePublisherCheckboxChange("National");
+												}}
+											/>
+											<label className="form-check-label" htmlFor="national">
+												National
+											</label>
+										</div>
+
+										<button className="btn btn-sm btn-secondary" onClick={handleClearPublisherFilters}>
+											Clear Publisher Filters
+										</button>
+										<hr />
+										<h6>Year</h6>
+										<div className="form-group">
+											<input
+												type="text"
+												className="form-control"
+												placeholder="Enter year"
+												value={year}
+												onChange={(e) => setYear(e.target.value)}
+											/>
+										</div>
+									</div>
+								</div>
 							</div>
-							<div className="form-check">
-								<input
-									className="form-check-input"
-									type="checkbox"
-									id="national"
-									checked={nationalChecked}
-									onChange={() => {
-										setNationalChecked(!nationalChecked);
-										handlePublisherCheckboxChange("National");
-									}}
-								/>
-								<label className="form-check-label" htmlFor="national">
-									National
-								</label>
+
+
+
+
+
+						</div>
+					)
+						:
+						<div>
+							<div className="spinner-border" role="status">
+								<span className="visually-hidden">Loading...</span>
 							</div>
-							{/* Add more publisher checkboxes as needed */}
-							<button className="btn btn-sm btn-secondary" onClick={handleClearPublisherFilters}>
-								Clear Publisher Filters
-							</button>
-							<hr />
-							<h6>Year</h6>
-							<div className="form-group">
-								<input
-									type="text"
-									className="form-control"
-									placeholder="Enter year"
-									value={year}
-									onChange={(e) => setYear(e.target.value)}
-								/>
+							<div>
+								Loading books...
 							</div>
 						</div>
-								</div>
-			</div> */}
-
-		</div>
-	)
-						:
-<div>
-	<div className="spinner-border" role="status">
-		<span className="visually-hidden">Loading...</span>
-	</div>
-	<div>
-		Loading books...
-	</div>
-</div>
 					}
 				</div >
 			</div >
 
-	<Footer />
+			<Footer />
 		</div >
 	);
 };

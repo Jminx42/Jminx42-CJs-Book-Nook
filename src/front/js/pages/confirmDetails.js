@@ -174,12 +174,12 @@ export const ConfirmDetails = () => {
                     <div className="row d-flex justify-content-end pe-0">
                         <div className="col-sm-3 col-md-3 col-lg-3 text-center d-flex justify-content-start ps-0">
                             <Link to="/checkout">
-                                <button className="btn custom-button text-center"><i class="fa-solid fa-arrow-left"></i></button>
+                                <button className="btn custom-button text-center"><i className="fa-solid fa-arrow-left">&nbsp; Go Back</i></button>
                             </Link>
                         </div>
                         <div className="col-sm-3 col-md-3 col-lg-3 text-center d-flex justify-content-end pe-0">
                             <Link to="/orderSummary">
-                                <button className="btn custom-button text-center"><i className="fa-solid fa-arrow-right"></i></button>
+                                <button className="btn custom-button text-center"><i className="fa-solid">Proceed &nbsp;</i><i className="fa-solid fa-arrow-right"></i></button>
                             </Link>
                         </div>
 

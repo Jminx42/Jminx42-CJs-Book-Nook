@@ -247,13 +247,21 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			postPaymentMethod: async (card_type, card_number, card_name, cvc, expiry_date) => {
+				const first_four_numbers = card_number.slice(0, 4);
 				const opts = {
 					method: 'POST',
 					headers: {
 						Authorization: "Bearer " + sessionStorage.getItem("token"),
 						"Content-Type": "application/json"
 					},
-					body: JSON.stringify({ "card_type": card_type, "card_number": card_number, "card_name": card_name, "cvc": cvc, "expiry_date": expiry_date })
+					body: JSON.stringify({
+						card_type: card_type,
+						card_number: card_number,
+						card_name: card_name,
+						cvc: cvc,
+						expiry_date: expiry_date,
+						first_four_numbers: first_four_numbers
+					})
 				};
 
 				try {
@@ -264,7 +272,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 						setStore({ errorMsg: errorMessage });
 						return false;
 					} else {
+						const data = await resp.json();
 						await getActions().validate_user();
+						const paymentMethod = { first_four_numbers: first_four_numbers };
+						setStore((prevState) => ({
+							...prevState,
+							user: {
+								...prevState.user,
+								paymentMethod: paymentMethod
+							}
+						}));
+						sessionStorage.setItem("card_number", data.payment_method);
 						getActions().createAlertMsg("Your card was added successfully");
 						return true;
 					}

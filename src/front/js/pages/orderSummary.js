@@ -85,109 +85,82 @@ export const OrderSummary = () => {
             }
             <div className="container mt-4">
                 <div className="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow={25} aria-valuemin={0} aria-valuemax={100} style={{ height: "50px" }}>
-                    <div className="progress-bar background-custom progress-bar-striped progress-bar-animated" style={{ width: '75%' }}><h4>Order Summary</h4></div>
+                    <div className="progress-bar background-custom progress-bar-striped progress-bar-animated" style={{ width: '75%' }}><h4>Confirm Your Order</h4></div>
                 </div>
+                <div className="row mb-1 mt-4">
+                    <div className="col-sm-6 col-md-6 col-lg-6">
+                        <h5 className="text-center background-custom p-2 text-white"> Book </h5>
+                    </div>
+                    <div className="col-sm-3 col-md-3 col-lg-3">
+                        <h5 className="text-center background-custom p-2 text-white"> Units </h5>
+                    </div>
+                    <div className="col-sm-3 col-md-3 col-lg-3 ">
+                        <h5 className="text-center background-custom p-2 text-white"> Price </h5>
+                    </div>
+                </div>
+                <div className="row d-flex justify-content-center">
+                    {store.user.items && store.user.items.length > 0 ?
 
-                <div className="row mb-1 mt-4 d-flex">
-                    <div className="col-sm-6 md-col-6 lg-col-6">
-                        <h5 className="text-start">Confirm Shipping Address:</h5>
-                        {!editAddress ? (
-                            <p>{store.user.address}</p>
-                        ) : (
-                            <input
-                                className="form-control"
-                                id="address"
-                                aria-describedby="address"
-                                value={user.address}
-                                onChange={(e) => setUser({ ...user, address: e.target.value })}
-                            />
-                        )}
-                        {!editAddress ? (
+                        (<div className="row d-flex justify-content-center">
+                            {store.user.items.sort((a, b) => a.id - b.id).map((items) => {
+                                return <CheckoutCard key={items.id} item={items} />;
 
-                            <button className="btn btn-secondary custom-button" onClick={() => setEditAddress(true)}>
-                                Edit
-                            </button>
+                            })}
+                            <div className="row d-flex justify-content-end pe-0">
+                                <div className="col-sm-3 col-md-3 col-lg-3 text-center d-flex justify-content-end pe-0">
+                                    <h5 className="text-center px-4 py-2 m-0"> Total: calculate from total_price€ </h5>
+                                    <Link to="/confirmDetails">
+                                        <button className="btn custom-button text-center"><i className="fa-solid fa-arrow-right"></i></button>
+                                    </Link>
+                                </div>
 
-                        ) : (
-                            <div className="d-flex">
-                                <button className="btn btn-secondary me-2 custom-button" onClick={handleSave}>
-                                    Save
-                                </button>
-                                <button className="btn btn-secondary " onClick={() => setEditAddress(false)}>
-                                    Close
-                                </button>
                             </div>
 
-                        )}
-                    </div>
-                    <div className="col-sm-6 md-col-6 lg-col-6">
-                        <h5 className="text-start">Confirm Billing Address:</h5>
-                        <div className="form-check">
-                            <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked={checked} onChange={handleBillingAddressChange} />
-                            <label className="form-check-label" htmlFor="flexCheckDefault">
-                                Is the billing address the same as the shipping address?
-                            </label>
+
+
                         </div>
-                        {checked ? (
-                            <p>{store.user.address}</p>
-                        ) : !editBilling ? (
-                            <p>{store.user.billing_address}</p>
-                        ) : (
-                            <input
-                                className="form-control"
-                                id="billing_address"
-                                aria-describedby="billing_address"
-                                value={user.billing_address}
-                                onChange={(e) => setUser({ ...user, billing_address: e.target.value })}
-                            />
-                        )}
-                        {!editBilling ? (
-
-                            <button className="btn btn-secondary custom-button" onClick={() => setEditBilling(true)}>
-                                Edit
-                            </button>
 
                         ) : (
-                            <div className="d-flex">
-                                <button className="btn btn-secondary me-2 custom-button" onClick={handleSave}>
-                                    Save
-                                </button>
-                                <button className="btn btn-secondary " onClick={() => setEditBilling(false)}>
-                                    Close
-                                </button>
-                            </div>
-
+                            <div>Add a book to purchase!</div>
                         )}
-
-
+                    <div className="row d-flex">
+                        <div className="d-flex align-items-baseline m-1">
+                            <h5 className="me-2">Shipping Address:</h5>
+                            <p className="">{store.user.address}</p>
+                        </div>
+                        <div className="d-flex align-items-baseline m-1">
+                            <h5 className="me-2">Billing Address:</h5>
+                            <p className="">{store.user.billing_address}</p>
+                        </div>
                     </div>
-                    <div className="row mb-1 mt-4 d-flex">
-                        <h5 className="text-start">Select your payment method:</h5>
-                        <button className="btn custom-button" onClick={() =>
-                            setShowForm(true)}>Add Payment Method</button>
-                        {showForm ? <EmptyPaymentMethod closeForm={() => setShowForm(false)} /> : null}
-                        {store.user.payment_method && store.user.payment_method.map((payment_method) => {
-                            return <PaymentMethod key={payment_method.id} item={payment_method} />
-                        })}
-
+                    <div className="row d-flex">
+                        <div className="d-flex align-items-baseline m-1">
+                            <h5 className="me-2">Payment Method:</h5>
+                            {store.user.payment_method && store.user.payment_method.map((payment_method) => {
+                                return <PaymentMethod key={payment_method.id} item={payment_method} />
+                            })}
+                        </div>
                     </div>
+
+
                     <div className="row d-flex justify-content-end pe-0">
                         <div className="col-sm-3 col-md-3 col-lg-3 text-center d-flex justify-content-start ps-0">
                             <Link to="/confirmDetails">
-                                <button className="btn custom-button text-center"><i class="fa-solid fa-arrow-left"></i></button>
+                                <button className="btn custom-button text-center"><i className="fa-solid fa-arrow-left">&nbsp; Go back</i></button>
                             </Link>
                         </div>
                         <div className="col-sm-3 col-md-3 col-lg-3 text-center d-flex justify-content-end pe-0">
                             <Link to="/confirmDetails">
-                                <button className="btn custom-button text-center"><i className="fa-solid fa-arrow-right"></i></button>
+                                <button className="btn custom-button text-center"><i className="fa-solid">Proceed &nbsp;</i><i className="fa-solid fa-arrow-right"></i></button>
                             </Link>
                         </div>
 
                     </div>
                 </div>
             </div>
+        </div >
 
-        </div>
+
 
     );
 };

@@ -185,6 +185,7 @@ class TransactionItem(db.Model):
     transaction_id = db.Column(db.Integer, db.ForeignKey('transaction.id'), nullable=True)
     book_format_id = db.Column(db.Integer, db.ForeignKey('book_format.id'), nullable=False)
     unit = db.Column(db.Integer, unique= False, nullable=False)
+    total_price = db.Column(db.Float, unique= False, nullable=True)
 
     def __repr__(self):
         return f'<TransactionItem {self.id}>'
@@ -198,12 +199,13 @@ class TransactionItem(db.Model):
             "transaction_id": self.transaction_id,
             "book_format_id": BookFormat.query.get(self.book_format_id).serialize(),       
             "unit": self.unit,
+            "total_price": self.total_price
         }
 
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    payment_methods = db.relationship("PaymentMethod", backref="transaction")
+    payment_method_id = db.Column(db.Integer, db.ForeignKey('payment_method.id'), nullable=False)
     items = db.relationship("TransactionItem", backref="transaction")
 
     def __repr__(self):
@@ -213,7 +215,7 @@ class Transaction(db.Model):
         return {
             "id": self.id,
             "user_id": User.query.get(self.user_id).serialize(),
-            "payment_methods": self.payment_methods,
+            "payment_method_id": self.payment_method_id,
             "items": TransactionItem.query.get(self.transaction_item_id).serialize(),
         }
         
@@ -222,29 +224,33 @@ class PaymentMethod(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     card_type = db.Column(db.String(100), nullable=True, unique=False)
     card_number_hash = db.Column(db.Text, unique=True, nullable=False)
+    first_four_numbers = db.Column(db.Integer, unique=False, nullable=True)
     card_name = db.Column(db.Text, unique=False, nullable=False)
     cvc_hash = db.Column(db.Text, unique=False, nullable=False)
-    expiry_date = db.Column(db.Date, unique=False, nullable=False)
-    transaction_id = db.Column(db.Integer, db.ForeignKey('transaction.id'), nullable=True)
+    expiry_date = db.Column(db.DateTime, default=datetime.utcnow)
+    transactions = db.relationship("Transaction", backref="payment_method")
+    
     def __repr__(self):
         return f'<PaymentMethods {self.card_name}>'
+    
     def serialize(self):
         return {
             "id": self.id,
             "user_id": self.user_id,
             "card_type": self.card_type,
+            "first_four_numbers": self.first_four_numbers,
             "card_name": self.card_name,
             "card_number_hash": "",
             "cvc_hash": "",
-            "expiry_date": self.expiry_date
-           
+            "expiry_date": self.expiry_date.strftime("%d/%m/%Y")    
         }
     
 class Support(db.Model):
     ticket_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     subject = db.Column(db.Text, nullable=False)
-    message = db.Column(db.Text, nullable=False)    
+    message = db.Column(db.Text, nullable=False)  
+    support_created = db.Column(db.DateTime, default=datetime.utcnow)  
 
     def __repr__(self):
         return f'<Support {self.ticket_id}>'
@@ -255,6 +261,7 @@ class Support(db.Model):
             "user_id": User.query.get(self.user_id).serialize(),
             "subject": self.subject,
             "message": self.message,
+            "support_created": self.support_created.strftime("%b %d, %Y"),
            
         }
     def serialize_for_support(self):
@@ -262,6 +269,7 @@ class Support(db.Model):
             "ticket_id": self.ticket_id,
             "user_id": self.user_id,
             "subject": self.subject,
-            "message": self.message,      
+            "message": self.message,
+            "support_created": self.support_created.strftime("%b %d, %Y"),      
         }
 

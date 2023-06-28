@@ -126,6 +126,9 @@ export const Profile = () => {
 						<button className="nav-link nav-custom" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment-tab-pane" type="button" role="tab" aria-controls="payment-tab-pane" aria-selected="false">Payment</button>
 					</li>
 					<li className="nav-item nav-custom" role="presentation">
+						<button className="nav-link nav-custom" id="purchase-tab" data-bs-toggle="tab" data-bs-target="#purchase-tab-pane" type="button" role="tab" aria-controls="purchase-tab-pane" aria-selected="false">Purchase History</button>
+					</li>
+					<li className="nav-item nav-custom" role="presentation">
 						<button className="nav-link nav-custom" id="support-tab" data-bs-toggle="tab" data-bs-target="#support-tab-pane" type="button" role="tab" aria-controls="support-tab-pane" aria-selected="false">Support</button>
 					</li>
 				</ul>
@@ -285,12 +288,24 @@ export const Profile = () => {
 
 					</div>
 				</div>
+				<div className="tab-pane fade" id="purchase-tab-pane" role="tabpanel" aria-labelledby="purchase-tab" tabIndex="0">
+					<div className="container mt-4">
+
+						Purchase History
+
+					</div>
+				</div>
 				<div className="tab-pane fade" id="support-tab-pane" role="tabpanel" aria-labelledby="support-tab" tabIndex="0">
 					<div className="container mt-4">
 						{store.user.support && store.user.support.length !== 0 ? store.user.support.map((ticket) => {
 							return <SupportCard key={ticket.ticket_id} item={ticket} />
 						}) : <div>
-							Want to contact us? Go to our support page.
+							Want to contact us? Go to our <Link to="/support">
+								<span className="link-like">
+									support
+								</span>
+							</Link> page.
+
 						</div>}
 					</div>
 				</div>

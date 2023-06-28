@@ -155,7 +155,7 @@ export const PaymentMethod = ({ item }) => {
                 )}
 
                 {!editClicked ? (
-                    <p className="mb-1">Card Number: {item.card_number}</p>
+                    <p className="mb-1">Card Number: {item.first_four_numbers} **** **** ****</p>
                 ) : (
                     <>
                         <label>Card Number:</label>
@@ -188,7 +188,7 @@ export const PaymentMethod = ({ item }) => {
                     </>)}
 
                 {!editClicked ? (
-                    <p className="mb-1">CVC: {item.cvc}</p>
+                    <p className="mb-1">CVC: ***</p>
                 ) : (
                     <>
                         <label>CVC:</label>

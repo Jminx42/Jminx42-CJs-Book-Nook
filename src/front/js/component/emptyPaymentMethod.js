@@ -74,7 +74,7 @@ export const EmptyPaymentMethod = ({ closeForm }) => {
             {
                 store.errorMsg && store.errorMsg !== ""
                     ?
-                    <div NameName="container">
+                    <div className="container">
                         <div className="alert alert-danger alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
                             <i className="bi bi-exclamation-triangle-fill"></i>
                             <div>
