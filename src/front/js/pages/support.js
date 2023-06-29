@@ -12,6 +12,14 @@ export const Support = () => {
     const [error, setError] = useState("");
 
     const submitSupport = async () => {
+        if (formData.message.trim() === "") {
+            setError("Please enter a message");
+            return;
+        }
+        if (formData.subject.trim() === "") {
+            setError("Please enter a subject");
+            return;
+        }
         const response = await fetch(process.env.BACKEND_URL + 'api/support', {
             method: "POST",
             headers: {

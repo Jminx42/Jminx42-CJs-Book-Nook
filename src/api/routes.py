@@ -10,6 +10,9 @@ import cloudinary
 import cloudinary.uploader
 from flask_bcrypt import generate_password_hash
 from flask_bcrypt import check_password_hash
+from datetime import datetime
+import pytz
+
 
 from api.models import db, User, Book, Review, Wishlist, Transaction, Support, PaymentMethod, TransactionItem, BookFormat
 from api.utils import APIException, generate_sitemap
@@ -306,7 +309,7 @@ def get_one_transaction_by_id():
         return jsonify({"error": "No transaction found for this user id"}), 400
 
     return jsonify(transaction.serialize()), 200 
-
+#still working on this one below!
 @api.route("/createtransaction", methods=["POST"])
 @jwt_required()
 def create_transaction():
@@ -559,10 +562,12 @@ def create_support():
     if not body:
         return jsonify({"error": "missing requirements"}), 400
     else:
+        support_created = datetime.now(pytz.utc)
         new_support = Support(
             user_id=user_id,
             subject=body["subject"],
             message=body["message"],
+            support_created=support_created
             
         )
         db.session.add(new_support)
