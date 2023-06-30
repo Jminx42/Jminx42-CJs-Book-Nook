@@ -10,7 +10,8 @@ import cloudinary
 import cloudinary.uploader
 from flask_bcrypt import generate_password_hash
 from flask_bcrypt import check_password_hash
-from datetime import timedelta
+
+from datetime import datetime, timedelta
 import pytz
 
 
@@ -70,7 +71,7 @@ def login():
 
         if is_valid:
             print('User succesfully logged in')
-            access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(minutes=90))
+            access_token = create_access_token(identity=user.id, expires_delta=timedelta(minutes=90))
             return jsonify({"access_token": access_token}), 200
         else:
             return jsonify({"error": "Your username or password is incorrect."}), 400
@@ -320,23 +321,20 @@ def create_transaction():
 
         if "book_id" not in body or not user:
             return jsonify({"error": "Missing required fields"}), 400
-
-        item = TransactionItem.query.filter_by(book_id=body["book_id"], user_id=user_id, book_format_id=body["book_format_id"]).first()
+        #We need to loop to get all the items in the cart
+        item = TransactionItem.query.filter_by(book_id=body["book_id"], user_id=user_id, book_format_id=body["book_format_id"]).all()
+        order_price = TransactionItem.query.get(body["transaction_id"]).price_per_book
         if not item:
             new_item = TransactionItem(
                 book_id=body["book_id"],
                 user_id=user_id,
                 book_format_id=body["book_format_id"],
                 unit=body["unit"],
-                # total_price=body["unit"] * body["book_format_id"]["book_price"],
+                total_price=order_price,
             )
             db.session.add(new_item)
             db.session.commit()
-        else:
-            db.session.delete(item)
-            db.session.commit()
-            return jsonify({"item": "Book deleted from cart"}), 200
-
+        
         return jsonify({"transaction": new_item.serialize()}), 200
 
     except Exception as e:
@@ -363,13 +361,13 @@ def add_item_to_cart():
                 user_id=user_id,
                 book_format_id=body["book_format_id"],
                 unit=body["unit"],
-                total_price=body["unit"] * price,
+                price_per_book=body["unit"] * price,
             )
             db.session.add(new_item)
             db.session.commit()
         else:
             item.unit =item.unit+1
-            item.total_price = item.unit*price
+            item.price_per_book = item.unit*price
             db.session.commit()
             return jsonify({"item": "book was added to cart"}), 200
 
@@ -395,7 +393,7 @@ def add_unit():
         price = BookFormat.query.get(item.book_format_id).book_price
         if item:
             item.unit =item.unit+1
-            item.total_price = item.unit*price
+            item.price_per_book = item.unit*price
             db.session.commit()
             return jsonify({"item": "book was added to cart"}), 200
        
@@ -419,7 +417,7 @@ def remove_unit():
         price = BookFormat.query.get(item.book_format_id).book_price
         if item and item.unit > 1:
             item.unit =item.unit-1
-            item.total_price = item.unit*price
+            item.price_per_book = item.unit*price
             db.session.commit()
             return jsonify({"item": "book was removed from cart"}), 200
         elif item.unit == 1:

@@ -57,8 +57,8 @@ export const ReviewBook = ({ item }) => {
             <div className="row">
                 <div className="col-sm-6 col-md-9 col-lg-9">
                     <div className="d-flex justify-content-between align-items-center mb-2">
-                        <p className="text-start mb-0">Posted on {item.created_at}</p>
                         <p className="text-start mb-0">Reviewed by {item.full_name}</p>
+                        <p className="text-start mb-0">Posted on {item.created_at}</p>
                         {item.user_id != store.user.id ? null : !editClicked ?
                             <button className="btn custom-button" onClick={() => setEditClicked(true)}>Edit</button> :
                             <button className="btn custom-button" onClick={async () => {

@@ -104,7 +104,7 @@ export const PaymentMethod = ({ item }) => {
     }
 
     return (
-        <div className="card mx-2 border-0" style={{ width: "18rem" }}>
+        <div className="card p-0" style={{ width: "18rem" }}>
             {
                 alert && alert !== ""
                     ?
@@ -138,6 +138,7 @@ export const PaymentMethod = ({ item }) => {
 
             }
             <div className="card-body" >
+                <h5 className="">Card {item.id}</h5>
                 {!editClicked ? (
                     <p className="mb-1">Card Type: {item.card_type}</p>
                 ) : (<>
@@ -222,13 +223,13 @@ export const PaymentMethod = ({ item }) => {
                     )}
                 </>)}
                 {!editClicked ?
-                    <>
+                    <div className="d-flex justify-content-end mt-3">
                         <button className="btn custom-button me-2" onClick={() => {
                             setEditClicked(true)
 
-                        }}>Edit</button>
-                        <button className="btn custom-button me-2" onClick={() => deletePaymentMethod(item.id)}>Delete</button>
-                    </>
+                        }}><i className="fa-solid fa-pen-to-square"></i></button>
+                        <button className="btn custom-button me-2" onClick={() => deletePaymentMethod(item.id)}><i className="fa-solid fa-trash"></i></button>
+                    </div>
                     :
                     <>
                         <button className="btn custom-button me-2" onClick={handleEditPaymentMethod}>Save</button>
