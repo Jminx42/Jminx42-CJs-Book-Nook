@@ -18,7 +18,7 @@ export const SupportCard = ({ item }) => {
             <div className="card-body" >
                 <h5 className="card-text text-start">Subject: {item.subject}</h5>
                 <p className="card-text text-start">Message: {item.message}</p>
-                {/* <p className="card-text text-start">Date Created: {ticket.timestamp}</p> We want to add the timestamp for which each ticket was created */}
+                <p className="card-text text-start">Date Created: {item.support_created}</p>
             </div>
         </div>
     );

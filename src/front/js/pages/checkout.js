@@ -25,18 +25,21 @@ export const Checkout = () => {
                 <div className="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow={25} aria-valuemin={0} aria-valuemax={100} style={{ height: "50px" }}>
                     <div className="progress-bar background-custom progress-bar-striped progress-bar-animated" style={{ width: '25%' }}><h4>Order Summary</h4></div>
                 </div>
-                <div className="row mb-1 mt-4">
+                {/* <div className="row mb-1 mt-4">
                     <div className="col-sm-6 col-md-6 col-lg-6">
                         <h5 className="text-center background-custom p-2 text-white"> Book </h5>
                     </div>
                     <div className="col-sm-3 col-md-3 col-lg-3">
                         <h5 className="text-center background-custom p-2 text-white"> Units </h5>
                     </div>
-                    <div className="col-sm-3 col-md-3 col-lg-3 ">
+                    <div className="col-sm-2 col-md-2 col-lg-2 ">
                         <h5 className="text-center background-custom p-2 text-white"> Price </h5>
                     </div>
-                </div>
-                <div className="row d-flex justify-content-center">
+                    <div className="col-sm-1 col-md-1 col-lg-1 ">
+
+                    </div>
+                </div> */}
+                <div className="row d-flex justify-content-center mt-4">
                     {store.user.items && store.user.items.length > 0 ?
 
                         (<div className="row d-flex justify-content-center">
@@ -45,10 +48,10 @@ export const Checkout = () => {
 
                             })}
                             <div className="row d-flex justify-content-end pe-0">
-                                <div className="col-sm-3 col-md-3 col-lg-3 text-center d-flex justify-content-end pe-0">
+                                <div className="col-sm-4 col-md-4 col-lg-4 text-center d-flex justify-content-end pe-0">
                                     <h5 className="text-center px-4 py-2 m-0"> Total: {parseFloat(total().toFixed(2))}€ </h5>
                                     <Link to="/confirmDetails">
-                                        <button className="btn custom-button text-center"><i className="fa-solid fa-arrow-right"></i></button>
+                                        <button className="btn custom-button text-center"><i className="fa-solid">Proceed &nbsp;</i><i className="fa-solid fa-arrow-right"></i></button>
                                     </Link>
                                 </div>
 

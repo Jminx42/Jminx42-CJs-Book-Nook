@@ -12,8 +12,6 @@ export const ReviewBook = ({ item }) => {
         rating: item.rating,
         review: item.review
     });
-    console.log(item.user_id)
-    console.log(store.user.id)
 
     useEffect(() => {
         actions.clearError();

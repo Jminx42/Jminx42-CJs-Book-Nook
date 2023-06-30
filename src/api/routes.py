@@ -10,6 +10,9 @@ import cloudinary
 import cloudinary.uploader
 from flask_bcrypt import generate_password_hash
 from flask_bcrypt import check_password_hash
+from datetime import datetime
+import pytz
+
 
 from api.models import db, User, Book, Review, Wishlist, Transaction, Support, PaymentMethod, TransactionItem, BookFormat
 from api.utils import APIException, generate_sitemap
@@ -297,14 +300,48 @@ def create_wishlist():
 
 
 @api.route("/transaction", methods=['GET'])
-# @jwt_required()
-def get_one_transaction_by_id(user_id):
+@jwt_required()
+def get_one_transaction_by_id():
+    user_id = get_jwt_identity()
     transaction = Transaction.query.get(user_id)
   
     if not transaction:
         return jsonify({"error": "No transaction found for this user id"}), 400
 
     return jsonify(transaction.serialize()), 200 
+#still working on this one below!
+@api.route("/createtransaction", methods=["POST"])
+@jwt_required()
+def create_transaction():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    try:
+        body = request.json
+
+        if "book_id" not in body or not user:
+            return jsonify({"error": "Missing required fields"}), 400
+
+        item = TransactionItem.query.filter_by(book_id=body["book_id"], user_id=user_id, book_format_id=body["book_format_id"]).first()
+        if not item:
+            new_item = TransactionItem(
+                book_id=body["book_id"],
+                user_id=user_id,
+                book_format_id=body["book_format_id"],
+                unit=body["unit"],
+                # total_price=body["unit"] * body["book_format_id"]["book_price"],
+            )
+            db.session.add(new_item)
+            db.session.commit()
+        else:
+            db.session.delete(item)
+            db.session.commit()
+            return jsonify({"item": "Book deleted from cart"}), 200
+
+        return jsonify({"transaction": new_item.serialize()}), 200
+
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)}), 500
 
 @api.route("/checkout", methods=["POST"])
 @jwt_required()
@@ -313,31 +350,35 @@ def add_item_to_cart():
     user = User.query.get(user_id)
     try:
         body = request.json
-       
+        print(body)
         if "book_id" not in body or not user:
             return jsonify({"error": "Missing required fields"}), 400
-        
+
         item = TransactionItem.query.filter_by(book_id=body["book_id"], user_id=user_id, book_format_id=body["book_format_id"]).first()
+        price = BookFormat.query.get(body["book_format_id"]).book_price
+
         if not item:
             new_item = TransactionItem(
                 book_id=body["book_id"],
                 user_id=user_id,
                 book_format_id=body["book_format_id"],
-                unit = body["unit"]
+                unit=body["unit"],
+                total_price=body["unit"] * price,
             )
             db.session.add(new_item)
             db.session.commit()
         else:
-            db.session.delete(item)
+            item.unit =item.unit+1
+            item.total_price = item.unit*price
             db.session.commit()
-            return jsonify({"item": "book deleted from cart"}), 200
+            return jsonify({"item": "book was added to cart"}), 200
 
-       
         return jsonify({"transaction": new_item.serialize()}), 200
-           
+
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)}), 500
+
 
 @api.route("/addunit", methods=["PUT"])
 @jwt_required()
@@ -351,9 +392,10 @@ def add_unit():
             return jsonify({"error": "Missing required fields"}), 400
         
         item = TransactionItem.query.get(body["transaction_id"])
-        
+        price = BookFormat.query.get(item.book_format_id).book_price
         if item:
             item.unit =item.unit+1
+            item.total_price = item.unit*price
             db.session.commit()
             return jsonify({"item": "book was added to cart"}), 200
        
@@ -369,24 +411,40 @@ def remove_unit():
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
     try:
-        body = request.json
-        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-        print(body["transaction_id"])     
+        body = request.json 
         if "transaction_id" not in body or not user:
             return jsonify({"error": "Missing required fields"}), 400
         
         item = TransactionItem.query.get(body["transaction_id"])
-       
+        price = BookFormat.query.get(item.book_format_id).book_price
         if item and item.unit > 1:
             item.unit =item.unit-1
+            item.total_price = item.unit*price
             db.session.commit()
             return jsonify({"item": "book was removed from cart"}), 200
-       
+        elif item.unit == 1:
+            db.session.delete(item)
+            db.session.commit()
+            return jsonify({"item": "Book deleted from cart"}), 200
+
         return jsonify({"transaction": item.serialize()}), 200
            
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)}), 500
+    
+@api.route("/removeitem", methods=["DELETE"])
+@jwt_required()
+def delete_item():
+    user_id = get_jwt_identity()
+    body = request.json 
+    item = TransactionItem.query.get(body["transaction_id"])
+    if not item:
+        return jsonify({"error": "No item found with this id"}), 400
+
+    db.session.delete(item)
+    db.session.commit()
+    return jsonify("item deleted"), 200
 
 @api.route("/bookformat", methods=['GET'])
 def get_book_format():
@@ -413,6 +471,7 @@ def create_payment_method():
 
 
     card_number = data["card_number"]
+    first_four_numbers = card_number[:4]
     cvc = data["cvc"]
 
   
@@ -426,13 +485,14 @@ def create_payment_method():
         card_number_hash=card_number_hash,
         card_name=data["card_name"],
         cvc_hash=cvc_hash,
-        expiry_date=data["expiry_date"]
+        expiry_date=data["expiry_date"],
+        first_four_numbers=first_four_numbers,
     )
 
     try:
         db.session.add(new_payment_method)
         db.session.commit()
-        return jsonify({"payment-method": "created"}), 200
+        return jsonify({"payment_method": first_four_numbers}), 200
     except Exception as e:
          return jsonify({"error": str(e)}), 500
     
@@ -502,10 +562,12 @@ def create_support():
     if not body:
         return jsonify({"error": "missing requirements"}), 400
     else:
+        support_created = datetime.now(pytz.utc)
         new_support = Support(
             user_id=user_id,
             subject=body["subject"],
             message=body["message"],
+            support_created=support_created
             
         )
         db.session.add(new_support)

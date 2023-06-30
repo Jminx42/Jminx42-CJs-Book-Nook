@@ -260,90 +260,68 @@ export const BookPage = () => {
 			<div className="container">
 				{store.nytReview ?
 					<div className="row mb-3 mt-3">
-						<h4>Reviews</h4>
-						<p>{store.nytReview.byline}</p>
-						<p>Reviewed in: {store.nytReview.publication_dt}</p>
+						<h4>New York Times' Reviews</h4>
+						<p>By {store.nytReview.byline.split(' ').map(name => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()).join(' ')}</p>
+						<p>Reviewed in {store.nytReview.publication_dt}</p>
 						<p>Excerpt: {store.nytReview.summary}</p>
 						<p>Review Link: <a href={store.nytReview.url} target="_blank" rel="noopener noreferrer">Click here</a></p>
 					</div> : null}
-				{/* I want to show the user reviews for each book but this function isn't working */}
+
 				<h4>Reviews</h4>
 				{store.book.reviews.map((review) => {
-
 					return <ReviewBook key={review.id} item={review} />
-
-
-					{/* 
-						<p>Rating: {review.rating}</p>
-						<p>Review: {review.review}</p> */}
-
-
 				})}
-
-				{
-					store.book.reviews.find((item) => item.user_id === store.user.id)
-						?
-						null
-						:
-						<div className="row mb-3 mt-3">
-							<h4>Submit your review</h4>
-							{sessionStorage.getItem("token") ?
-								<div>
-									<form onSubmit={handleSubmit}>
-										<label>Rating</label>
-										<input
-											className="form-control"
-											id="rating"
-											aria-describedby="rating"
-											value={review.rating || ""}
-											onChange={(e) => setReview({ ...review, rating: parseInt(e.target.value) })}
-										/>
-										<label>Review</label>
-										<textarea
-											className="form-control"
-											id="review"
-											aria-describedby="review"
-											rows="5"
-											value={review.review || ""}
-											onChange={(e) => setReview({ ...review, review: e.target.value })}
-										/>
-										<button className="btn custom-button text-white mt-3 mb-4" onClick={() => {
-											setReview({ ...review, book_id: store.book.id })
-
-										}
-										} type="submit">
-											Submit
-										</button>
-
-									</form>
-								</div>
-								:
-								<div>
-									<p>Want to submit your review?&nbsp;
-										<Link to="/login">
-											<sup><button
-												type="button"
-												className="btn btn-link p-0"
-											>Login
-											</button></sup></Link>
-										&nbsp;first!</p>
-								</div>
-
-							}
-
-						</div>
-				}
-				{/* {store.user.review.book_id ?
+				{store.book.reviews.find((item) => item.user_id === store.user.id)
+					?
+					null
+					:
 					<div className="row mb-3 mt-3">
-						<h4>Reviews</h4>
-						<p>Rating: {store.user.review.book_id.rating}</p>
-						<p>Review: {store.user.review.book_id.review}</p>
-						<p>Reviewed by: {store.user.full_name}</p>
-					</div> : null} */}
+						<h4>Submit your review</h4>
+						{sessionStorage.getItem("token") ?
+							<div>
+								<form onSubmit={handleSubmit}>
+									<label>Rating</label>
+									<input
+										className="form-control"
+										id="rating"
+										aria-describedby="rating"
+										value={review.rating || ""}
+										onChange={(e) => setReview({ ...review, rating: parseInt(e.target.value) })}
+									/>
+									<label>Review</label>
+									<textarea
+										className="form-control"
+										id="review"
+										aria-describedby="review"
+										rows="5"
+										value={review.review || ""}
+										onChange={(e) => setReview({ ...review, review: e.target.value })}
+									/>
+									<button className="btn custom-button text-white mt-3 mb-4" onClick={() => {
+										setReview({ ...review, book_id: store.book.id })
 
+									}
+									} type="submit">
+										Submit
+									</button>
+
+								</form>
+							</div>
+							:
+							<div>
+								<p>Want to submit your review?&nbsp;
+									<Link to="/login">
+										<sup><button
+											type="button"
+											className="btn btn-link p-0"
+										>Login
+										</button></sup></Link>
+									&nbsp;first!</p>
+							</div>
+						}
+					</div>
+				}
 			</div>
-
 		</div >
-
 	);
 };
