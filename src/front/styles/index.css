@@ -30,9 +30,14 @@
     color: black;
 }
 
+.link-like:hover {
+    text-decoration: underline;
+    color: #0c6e68;
+}
+
 .link-like {
     color: #68B0AB;
-    text-decoration: underline;
+    text-decoration: none;
 
 }
 

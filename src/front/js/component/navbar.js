@@ -6,12 +6,8 @@ import CJBookNookLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/cjbooknookw
 
 export const Navbar = () => {
 	const { store, actions } = useContext(Context);
-	const [search, setSearch] = useState("");
 	const navigate = useNavigate();
 
-	const handleSearch = (word) => {
-		setStore({ search: word })
-	}
 	const total = () => {
 		let totalCheckout = 0;
 		for (let x = 0; x < store.user.items.length; x++) {
@@ -22,71 +18,80 @@ export const Navbar = () => {
 
 	// We need to add a hamburger icon for mobile view!
 	return (
-		<nav className="navbar background-custom">
-			<div className="container">
+		<nav className="navbar navbar-expand-lg background-custom px-5">
+			<div className="container-fluid">
 				<Link to="/" className="navbar-brand">
 					<img src={CJBookNookLogo} height={80} alt="CJBookNookLogo" />
 				</Link>
-				<div className="ml-auto d-flex align-items-center">
-					<div className="input-group me-2">
-						<div className="form-outline">
-							<input
-								type="search"
-								id="search"
-								className="form-control"
-								aria-describedby="search-field"
-								value={store.search}
-								onChange={(e) => actions.handleSearch(e.target.value)}
-								placeholder="Search" />
+				<button className="navbar-toggler border p-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+					<i className="bi bi-list"></i>
+				</button>
 
-						</div>
-						<button type="button" className="btn btn-secondary custom-button" >
-							<i className="fas fa-search"></i>
-						</button>
-					</div>
-					<Link to="/checkout">
-						<button type="button" className="btn btn-secondary me-2 custom-button position-relative">
-							<i className="fas fa-shopping-cart"></i>
-							<span className="position-absolute top-0 start-100 translate-middle badge rounded-pill background-dark">
-								{total()}
+				<div className="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+					<ul className="navbar-nav">
+						<li className="nav-item  me-2">
+							{!sessionStorage.getItem("token") ? (
+								<div className="d-flex">
 
-							</span>
+									<Link to="/register">
+										<button className="btn btn-secondary me-2 custom-button">Register</button>
+									</Link>
+									<Link to="/login">
+										<button className="btn btn-secondary custom-button">Login</button>
+									</Link>
+								</div>
+							) : (
 
-						</button>
-					</Link>
-					{!sessionStorage.getItem("token") ? (
-						<div className="d-flex">
-							<Link to="/register">
-								<button className="btn btn-secondary me-2 custom-button">Register</button>
-							</Link>
-							<Link to="/login">
-								<button className="btn btn-secondary custom-button">Login</button>
-							</Link>
-						</div>
-					) : (
-						<div className="d-flex">
-							<Link to="/profile">
-								<button className="btn btn-secondary me-2 custom-button"><i className="fa-solid fa-user"></i></button>
-							</Link>
+								<div className="d-flex">
+									<Link to="/checkout">
+										<button type="button" className="btn btn-secondary me-2 custom-button position-relative">
+											<i className="fas fa-shopping-cart"></i>
+											<span className="position-absolute top-0 start-100 translate-middle badge rounded-pill background-dark">
+												{total()}
 
-							<Link to="/support">
-								<button className="btn btn-secondary me-2 custom-button"><i className="fa-solid fa-envelope"></i></button>
-							</Link>
+											</span>
 
-							<button className="btn btn-secondary  custom-button"
-								onClick={async () => {
-									await actions.logout()
-									navigate("/")
-								}}>
-								Logout
-							</button>
+										</button>
+									</Link>
+									<Link to="/profile">
+										<button className="btn btn-secondary me-2 custom-button"><i className="fa-solid fa-user"></i></button>
+									</Link>
+
+									<Link to="/support">
+										<button className="btn btn-secondary me-2 custom-button"><i className="fa-solid fa-envelope"></i></button>
+									</Link>
+
+									<button className="btn btn-secondary  custom-button"
+										onClick={async () => {
+											await actions.logout()
+											navigate("/")
+										}}>
+										Logout
+									</button>
 
 
 
-						</div>
-					)}
-
+								</div>
+							)}
+						</li>
+						<li className="nav-item">
+							<div className="input-group ">
+								<input
+									type="search"
+									id="search"
+									className="form-control"
+									aria-describedby="button-addon2"
+									value={store.search}
+									onChange={(e) => actions.handleSearch(e.target.value)}
+									placeholder="Search" />
+								<button type="button" className="btn custom-button" id="button-addon2">
+									<i className="fas fa-search"></i>
+								</button >
+							</div>
+						</li>
+					</ul>
 				</div>
+
 			</div>
 		</nav>
 	);

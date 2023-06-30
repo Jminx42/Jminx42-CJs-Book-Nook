@@ -14,8 +14,11 @@ export const ReviewBook = ({ item }) => {
     });
 
     useEffect(() => {
-        actions.clearError();
-        actions.clearAlert();
+
+        setTimeout(() => {
+            actions.clearError();
+            actions.clearAlert();
+        }, 3000);
     }, []);
     return (
         <div className="container">
