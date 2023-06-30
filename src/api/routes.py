@@ -10,7 +10,7 @@ import cloudinary
 import cloudinary.uploader
 from flask_bcrypt import generate_password_hash
 from flask_bcrypt import check_password_hash
-from datetime import datetime
+from datetime import timedelta
 import pytz
 
 
@@ -73,7 +73,7 @@ def login():
             access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(minutes=90))
             return jsonify({"access_token": access_token}), 200
         else:
-            return jsonify({"error": "please try again"}), 400
+            return jsonify({"error": "Your username or password is incorrect."}), 400
         
     return jsonify({"error": "Your username or password is incorrect."}), 400
 

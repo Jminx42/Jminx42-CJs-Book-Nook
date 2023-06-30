@@ -13,7 +13,7 @@ const CartCard = ({ item, setShowModal }) => {
         setTimeout(() => {
             setIsLoading(false);
             setShowBookDetails(true);
-        }, 2000);
+        }, 3000);
     }, []);
 
     useEffect(() => {
