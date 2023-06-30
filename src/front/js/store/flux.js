@@ -2,12 +2,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 
-			user: { wishlist: [], review: [], items: [], support: [], paymentMethod: [] },
+			user: { wishlist: [], review: [], items: [], support: [], paymentMethod: [], transaction: [] },
 			books: [],
 			book: { reviews: [] },
 			search: "",
 			nytReview: {},
-			checkout: [],
 			loading: true,
 			errorMsg: '',
 			bookFormats: [],
@@ -43,7 +42,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				if (resp.status == 200) {
 					setStore({ user: data.user })
 				} else {
-					setStore({ user: { wishlist: [], review: [], transaction: [], items: [], support: [], paymentMethod: [] } })
+					setStore({ user: { wishlist: [], review: [], transaction: [], items: [], support: [], paymentMethod: [], transaction: [] } })
 					sessionStorage.removeItem("token")
 				}
 			},
@@ -51,7 +50,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			logout: () => {
 				sessionStorage.removeItem("token");
 				console.log("Logging out");
-				setStore({ user: { wishlist: [], review: [], transaction: [], items: [], support: [], paymentMethod: [] } });
+				setStore({ user: { wishlist: [], review: [], transaction: [], items: [], support: [], paymentMethod: [], transaction: [] } });
 			},
 
 			login: async (email, password) => {
@@ -298,7 +297,21 @@ const getState = ({ getStore, getActions, setStore }) => {
 				// console.log(getStore().bookFormats)
 			},
 
+			getTransaction: async () => {
+				const response = await fetch(process.env.BACKEND_URL + 'api/transaction');
+				if (response.status !== 200) {
+					const data = await response.json();
+					const errorMessage = data.error || "Something went wrong";
+					console.log(data)
+					setStore({ errorMsg: errorMessage });
+					return false;
+				} else {
+					await getActions().validate_user();
 
+				}
+
+
+			}
 		}
 	};
 };

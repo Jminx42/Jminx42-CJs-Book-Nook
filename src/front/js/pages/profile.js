@@ -5,10 +5,8 @@ import "../../styles/index.css"
 import { Card } from "../component/card";
 import { Review } from "../component/review";
 import { PaymentMethod } from "../component/paymentMethod";
-
+import { TransactionCard } from "../component/transactionCard";
 import { EmptyPaymentMethod } from "../component/emptyPaymentMethod";
-
-
 import { Context } from "../store/appContext";
 import { InputProfilePic } from "../component/inputProfilePic";
 import { SupportCard } from "../component/supportCard";
@@ -298,7 +296,11 @@ export const Profile = () => {
 				<div className="tab-pane fade" id="purchase-tab-pane" role="tabpanel" aria-labelledby="purchase-tab" tabIndex="0">
 					<div className="container mt-4">
 
-						Purchase History
+						<div className="row d-flex mx-1 gap-2">
+							{store.user.transaction && store.user.transaction.map((transaction) => {
+								return <TransactionCard key={transaction.id} item={transaction} />
+							})}
+						</div>
 
 					</div>
 				</div>

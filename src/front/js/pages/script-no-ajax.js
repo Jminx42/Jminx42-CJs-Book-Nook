@@ -1,0 +1,1 @@
+var stripe = checkout_public_key

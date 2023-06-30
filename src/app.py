@@ -13,7 +13,7 @@ from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
 from flask_jwt_extended import JWTManager
-
+import stripe
 
 
 
@@ -26,6 +26,10 @@ app.url_map.strict_slashes = False
 
 app.config["JWT_SECRET_KEY"] = os.environ.get('JWT_SECRET')
 jwt = JWTManager(app)
+
+app.config["STRIPE_PUBLIC_KEY"] = "pk_test_51NOm30LDriABBO71EslVAUR52crSoSLYDfGJgAF61S1HyL5sxQ63PGMxS2xffxW2x9ugJm1sPSuNfhNibLoODb6M00SiS5BrMT"
+app.config["STRIPE_SECRET_KEY"] = "sk_test_51NOm30LDriABBO719nhvoZuy8msaKkmkekKWuLucfqiLlWMxYAdiuPKvGjUi8XIqrtsJ8UW5NUcMFboDWROSV1fS00mXbmKzvJ"
+
 
 # database condiguration
 db_url = os.getenv("DATABASE_URL")
@@ -58,7 +62,7 @@ def handle_invalid_usage(error):
 #Table initialization
 # User table
 # def user_initialize():
-#     if len(User.query.all()) == 0:  
+#     if len(User.query.all()) == 0:
 #         with open ("src/table_initial_values/user_initialization.json") as file:
 #             data = json.load(file)
 #         users = [User(**item) for item in data]
@@ -87,6 +91,31 @@ def sitemap():
         # user_initialize()
         return generate_sitemap(app)
     return send_from_directory(static_file_dir, 'index.html')
+
+# This is your test secret API key.
+# Stripe.api_key = 'sk_test_51NOm30LDriABBO719nhvoZuy8msaKkmkekKWuLucfqiLlWMxYAdiuPKvGjUi8XIqrtsJ8UW5NUcMFboDWROSV1fS00mXbmKzvJ'
+# @app.route('/transaction')
+# def stripe_transaction():
+
+#   session = stripe.checkout.Session.create({
+#     payment_method_types=['card'],
+#     line_items: [{
+#       # Provide the exact Price ID (e.g. pr_1234) of the product you want to sell
+#       price: 'price_1NOmITLDriABBO71zYhNNV1c',
+#       quantity: 1,
+#     },
+#     {
+#       # Provide the exact Price ID (e.g. pr_1234) of the product you want to sell
+#       price: 'price_1NOmITLDriABBO71zYhNNV1c',
+#       quantity: 1,
+#     }],
+#     mode: 'payment',
+#     success_url: 'https://carolina-hora-curly-engine-44679qp76gxfj6rq-3000.preview.app.github.dev' + '/success' + '?session_id={CHECKOUT_SESSION_ID}',
+#     cancel_url: 'https://carolina-hora-curly-engine-44679qp76gxfj6rq-3000.preview.app.github.dev' + '/cancel',
+#   })
+# return (checkout_session_id=session['id'],
+#         checkout_public_key="pk_test_51NOm30LDriABBO71EslVAUR52crSoSLYDfGJgAF61S1HyL5sxQ63PGMxS2xffxW2x9ugJm1sPSuNfhNibLoODb6M00SiS5BrMT")
+#   redirect session.url, 303
 
 # any other endpoint will try to serve it like a static file
 @app.route('/<path:path>', methods=['GET'])

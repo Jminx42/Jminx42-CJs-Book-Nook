@@ -299,18 +299,6 @@ def create_wishlist():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
-@api.route("/transaction", methods=['GET'])
-@jwt_required()
-def get_one_transaction_by_id():
-    user_id = get_jwt_identity()
-    transaction = Transaction.query.get(user_id)
-  
-    if not transaction:
-        return jsonify({"error": "No transaction found for this user id"}), 400
-
-    return jsonify(transaction.serialize()), 200 
-#still working on this one below!
 @api.route("/createtransaction", methods=["POST"])
 @jwt_required()
 def create_transaction():
@@ -318,24 +306,24 @@ def create_transaction():
     user = User.query.get(user_id)
     try:
         body = request.json
-
-        if "book_id" not in body or not user:
-            return jsonify({"error": "Missing required fields"}), 400
+              
+        total_price = 0
         #We need to loop to get all the items in the cart
-        item = TransactionItem.query.filter_by(book_id=body["book_id"], user_id=user_id, book_format_id=body["book_format_id"]).all()
-        order_price = TransactionItem.query.get(body["transaction_id"]).price_per_book
-        if not item:
-            new_item = TransactionItem(
-                book_id=body["book_id"],
-                user_id=user_id,
-                book_format_id=body["book_format_id"],
-                unit=body["unit"],
-                total_price=order_price,
-            )
-            db.session.add(new_item)
-            db.session.commit()
+        items = TransactionItem.query.filter_by(user_id=user_id, in_progress=True).all()
+        for x in items:
+            total_price += x.total_price_per_book
         
-        return jsonify({"transaction": new_item.serialize()}), 200
+        
+        new_transaction = Transaction(
+            payment_method = body["payment_method_id"],
+            user = user,
+            total_price = total_price,
+            items = items,
+            in_progress = True
+            )
+        db.session.add(new_transaction)
+        db.session.commit()
+        return jsonify({"transaction": new_transaction.serialize()}), 200
 
     except Exception as e:
         print(e)
@@ -361,13 +349,13 @@ def add_item_to_cart():
                 user_id=user_id,
                 book_format_id=body["book_format_id"],
                 unit=body["unit"],
-                price_per_book=body["unit"] * price,
+                total_price_per_book=body["unit"] * price,
             )
             db.session.add(new_item)
             db.session.commit()
         else:
             item.unit =item.unit+1
-            item.price_per_book = item.unit*price
+            item.total_price_per_book = item.unit*price
             db.session.commit()
             return jsonify({"item": "book was added to cart"}), 200
 
@@ -393,7 +381,7 @@ def add_unit():
         price = BookFormat.query.get(item.book_format_id).book_price
         if item:
             item.unit =item.unit+1
-            item.price_per_book = item.unit*price
+            item.total_price_per_book = item.unit*price
             db.session.commit()
             return jsonify({"item": "book was added to cart"}), 200
        
@@ -417,7 +405,7 @@ def remove_unit():
         price = BookFormat.query.get(item.book_format_id).book_price
         if item and item.unit > 1:
             item.unit =item.unit-1
-            item.price_per_book = item.unit*price
+            item.total_price_per_book = item.unit*price
             db.session.commit()
             return jsonify({"item": "book was removed from cart"}), 200
         elif item.unit == 1:

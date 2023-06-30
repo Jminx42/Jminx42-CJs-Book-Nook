@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Navbar } from "../component/navbar";
 import { EmptyPaymentMethod } from "../component/emptyPaymentMethod";
@@ -17,6 +17,7 @@ export const ConfirmDetails = () => {
     const [alert, setAlert] = useState("");
     const [error, setError] = useState("");
     const [checked, setChecked] = useState(false)
+    const navigate = useNavigate()
 
     const handleSave = async () => {
         setEditAddress(false);
@@ -45,7 +46,11 @@ export const ConfirmDetails = () => {
     };
 
     useEffect(() => {
-        actions.validate_user();
+        if (sessionStorage.getItem("token")) {
+            actions.validate_user()
+        } else {
+            navigate("/")
+        };
     }, []);
 
     return (
@@ -166,10 +171,12 @@ export const ConfirmDetails = () => {
                         <button className="btn custom-button" onClick={() =>
                             setShowForm(true)}>Add Payment Method</button>
                         {showForm ? <EmptyPaymentMethod closeForm={() => setShowForm(false)} /> : null}
-                        {store.user.payment_method && store.user.payment_method.map((payment_method) => {
-                            return <PaymentMethod key={payment_method.id} item={payment_method} />
-                        })}
-
+                        <div className="row d-flex mt-2 gap-2">
+                            {store.user.payment_method && store.user.payment_method.map((payment_method) => {
+                                return <PaymentMethod key={payment_method.id} item={payment_method} />
+                            })}
+                            Add select button here!!!
+                        </div>
                     </div>
                     <div className="row d-flex justify-content-end pe-0">
                         <div className="col-sm-3 col-md-3 col-lg-3 text-center d-flex justify-content-start ps-0">
@@ -187,7 +194,7 @@ export const ConfirmDetails = () => {
                 </div>
             </div>
 
-        </div>
+        </div >
 
     );
 };
