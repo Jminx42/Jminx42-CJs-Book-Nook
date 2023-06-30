@@ -145,6 +145,7 @@ class Review(db.Model):
             "book_id": self.book_id,
             "user_id": self.user_id,
             "full_name": User.query.get(self.user_id).full_name,
+            "created_at": self.created_at.strftime("%b %d, %Y"),
         }
     
 class ExternalReview(db.Model):
@@ -185,7 +186,7 @@ class TransactionItem(db.Model):
     transaction_id = db.Column(db.Integer, db.ForeignKey('transaction.id'), nullable=True)
     book_format_id = db.Column(db.Integer, db.ForeignKey('book_format.id'), nullable=False)
     unit = db.Column(db.Integer, unique= False, nullable=False)
-    total_price = db.Column(db.Float, unique= False, nullable=True)
+    price_per_book = db.Column(db.Float, unique= False, nullable=True)
 
     def __repr__(self):
         return f'<TransactionItem {self.id}>'
@@ -199,7 +200,7 @@ class TransactionItem(db.Model):
             "transaction_id": self.transaction_id,
             "book_format_id": BookFormat.query.get(self.book_format_id).serialize(),       
             "unit": self.unit,
-            "total_price": self.total_price
+            "price_per_book": self.price_per_book
         }
 
 class Transaction(db.Model):
@@ -207,6 +208,8 @@ class Transaction(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     payment_method_id = db.Column(db.Integer, db.ForeignKey('payment_method.id'), nullable=False)
     items = db.relationship("TransactionItem", backref="transaction")
+    total_price = db.Column(db.Float, unique= False, nullable=True)
+    transaction_created = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
         return f'<Transaction {self.id}>'
@@ -217,6 +220,8 @@ class Transaction(db.Model):
             "user_id": User.query.get(self.user_id).serialize(),
             "payment_method_id": self.payment_method_id,
             "items": TransactionItem.query.get(self.transaction_item_id).serialize(),
+            "total_price": self.total_price,
+            "transaction_created": self.transaction_created.strftime("%d/%m/%Y"),
         }
         
 class PaymentMethod(db.Model):

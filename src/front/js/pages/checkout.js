@@ -48,7 +48,7 @@ export const Checkout = () => {
 
                             })}
                             <div className="row d-flex justify-content-end pe-0">
-                                <div className="col-sm-4 col-md-4 col-lg-4 text-center d-flex justify-content-end pe-0">
+                                <div className="col-sm-6 col-md-6 col-lg-4 text-center d-flex justify-content-end pe-0">
                                     <h5 className="text-center px-4 py-2 m-0"> Total: {parseFloat(total().toFixed(2))}€ </h5>
                                     <Link to="/confirmDetails">
                                         <button className="btn custom-button text-center"><i className="fa-solid">Proceed &nbsp;</i><i className="fa-solid fa-arrow-right"></i></button>

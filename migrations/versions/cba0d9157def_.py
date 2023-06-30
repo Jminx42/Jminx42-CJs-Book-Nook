@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 4b9d1b4585e0
+Revision ID: cba0d9157def
 Revises: 
-Create Date: 2023-06-28 19:45:15.232197
+Create Date: 2023-06-30 10:33:51.239883
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import mysql
 
 # revision identifiers, used by Alembic.
-revision = '4b9d1b4585e0'
+revision = 'cba0d9157def'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -96,6 +96,7 @@ def upgrade():
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('subject', sa.Text(), nullable=False),
     sa.Column('message', sa.Text(), nullable=False),
+    sa.Column('support_created', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('ticket_id')
     )
@@ -123,7 +124,7 @@ def upgrade():
     sa.Column('transaction_id', sa.Integer(), nullable=True),
     sa.Column('book_format_id', sa.Integer(), nullable=False),
     sa.Column('unit', sa.Integer(), nullable=False),
-    sa.Column('total_price', sa.Float(), nullable=True),
+    sa.Column('price_per_book', sa.Float(), nullable=True),
     sa.ForeignKeyConstraint(['book_format_id'], ['book_format.id'], ),
     sa.ForeignKeyConstraint(['book_id'], ['book.id'], ),
     sa.ForeignKeyConstraint(['transaction_id'], ['transaction.id'], ),

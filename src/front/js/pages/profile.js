@@ -221,11 +221,11 @@ export const Profile = () => {
 
 
 							</div>
-							<div className="row">
+							<div className="d-flex justify-content-end">
 								{!editClicked ? (
 
 									<button className="btn btn-secondary custom-button" onClick={() => setEditClicked(true)}>
-										Edit
+										<i className="fa-solid fa-pen-to-square"></i>
 									</button>
 
 								) : (
@@ -278,13 +278,20 @@ export const Profile = () => {
 				<div className="tab-pane fade" id="payment-tab-pane" role="tabpanel" aria-labelledby="payment-tab" tabIndex="0">
 					<div className="container mt-4">
 
+
 						<button className="btn custom-button" onClick={() =>
 							setShowForm(true)}>Add New</button>
 						{showForm ? <EmptyPaymentMethod closeForm={() => setShowForm(false)} /> : null}
-						<h5 className="card-title">Saved Payment Method(s)</h5>
-						{store.user.payment_method && store.user.payment_method.map((payment_method) => {
-							return <PaymentMethod key={payment_method.id} item={payment_method} />
-						})}
+						{store.user.payment_method && store.user.payment_method.length === 1 ?
+							<h4 className="mt-2 mb-2">Saved Payment Method</h4>
+							: store.user.payment_method && store.user.payment_method.length > 1 ?
+								<h4 className="mt-2 mb-2">Saved Payment Methods</h4> : null}
+
+						<div className="row d-flex mx-1 gap-2">
+							{store.user.payment_method && store.user.payment_method.map((payment_method) => {
+								return <PaymentMethod key={payment_method.id} item={payment_method} />
+							})}
+						</div>
 
 					</div>
 				</div>
