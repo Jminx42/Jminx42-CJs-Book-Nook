@@ -186,7 +186,7 @@ class TransactionItem(db.Model):
     transaction_id = db.Column(db.Integer, db.ForeignKey('transaction.id'), nullable=True)
     book_format_id = db.Column(db.Integer, db.ForeignKey('book_format.id'), nullable=False)
     unit = db.Column(db.Integer, unique= False, nullable=False)
-    price_per_book = db.Column(db.Float, unique= False, nullable=True)
+    total_price_per_book = db.Column(db.Float, unique= False, nullable=True)
 
     def __repr__(self):
         return f'<TransactionItem {self.id}>'
@@ -200,7 +200,7 @@ class TransactionItem(db.Model):
             "transaction_id": self.transaction_id,
             "book_format_id": BookFormat.query.get(self.book_format_id).serialize(),       
             "unit": self.unit,
-            "price_per_book": self.price_per_book
+            "total_price_per_book": self.total_price_per_book
         }
 
 class Transaction(db.Model):
@@ -210,6 +210,8 @@ class Transaction(db.Model):
     items = db.relationship("TransactionItem", backref="transaction")
     total_price = db.Column(db.Float, unique= False, nullable=True)
     transaction_created = db.Column(db.DateTime, default=datetime.utcnow)
+    in_progress = db.Column(db.Boolean, default=True)
+
 
     def __repr__(self):
         return f'<Transaction {self.id}>'
@@ -222,6 +224,7 @@ class Transaction(db.Model):
             "items": TransactionItem.query.get(self.transaction_item_id).serialize(),
             "total_price": self.total_price,
             "transaction_created": self.transaction_created.strftime("%d/%m/%Y"),
+            "in_progress": self.in_progress,
         }
         
 class PaymentMethod(db.Model):

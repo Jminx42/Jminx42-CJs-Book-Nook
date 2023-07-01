@@ -23,6 +23,7 @@ requests = "*"
 bcrypt = "*"
 apscheduler = "*"
 flask-bcrypt = "*"
+stripe = "*"
 
 [requires]
 python_version = "3.10"
