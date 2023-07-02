@@ -3,29 +3,71 @@ import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
 
 import "../../styles/index.css"
-
-
 import "../../styles/home.css";
-// Why does the prop need to be called "item"?? It doesn't! You just need to use whatever prop you define when you call the component
+// The transaction.items is erasing the previous object when a new transaction is created!
 export const TransactionCard = ({ item }) => {
     const { store, actions } = useContext(Context);
+    const [isCollapsed, setIsCollapsed] = useState(item.id !== 1);
 
     useEffect(() => {
-        actions.getTransaction()
+        actions.getTransaction();
     }, []);
 
+    const handleCollapse = () => {
+        setIsCollapsed(!isCollapsed);
+    };
+
     return (
-
         <div className="card">
-            <div className="card-body" >
-                Purchase history showing
-                {/* <h5 className="">Ticket {item.ticket_id}</h5>
-                <p className="card-text text-start">Date Created: {item.id}</p>
-                <p className="card-text text-start">Subject: {item.subject}</p>
-                <p className="card-text text-start">Message: {item.message}</p> */}
-
+            <div className="card-header bg-white" onClick={handleCollapse}>
+                <h5 className="mb-0">
+                    <button
+                        className="btn link-like"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target={`#collapse-${item.id}`}
+                        aria-expanded={isCollapsed ? "true" : "false"}
+                        aria-controls={`collapse-${item.id}`}
+                    >
+                        Order Nº {item.id}
+                    </button>
+                </h5>
+            </div>
+            <div
+                id={`collapse-${item.id}`}
+                className={`collapse ${isCollapsed ? "" : "show"}`}
+                aria-labelledby={`heading-${item.id}`}
+                data-bs-parent="#accordion"
+            >
+                <div className="card-body">
+                    <p className="card-text text-start mb-1">
+                        Date Created: {item.transaction_created}
+                    </p>
+                    <p className="card-text text-start">
+                        Total Order Price: {parseFloat(item.total_price.toFixed(2))}€
+                    </p>
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                <th>Book</th>
+                                <th>Author</th>
+                                <th>Format</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {item.items.map((transactionItem) => (
+                                <tr key={transactionItem.id}>
+                                    <td>{actions.capitalizeWords(transactionItem.book_id.title)}</td>
+                                    <td>{transactionItem.book_id.author}</td>
+                                    <td>{transactionItem.book_format_id.book_format}</td>
+                                    <td>{transactionItem.book_format_id.book_price} €</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );
-}
-
+};
