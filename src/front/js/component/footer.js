@@ -5,12 +5,22 @@ import "../../styles/index.css"
 
 
 export const Footer = () => (
-	<footer className="footer mt-auto py-3 border">
-		<div className="container">
-			<img src={CJBookNookLogo} height={80} alt="CJBookNookLogo" />
-			<Link to="/support" className="link-like">
-				<p className="mt-2">Support</p>
-			</Link>
+	<footer className="footer">
+		<hr></hr>
+		<div className="d-flex justify-content-center p-3">
+			<div className="container text-center">
+				<div className="row">
+					<div className="col-3">
+						<img src={CJBookNookLogo} height={80} alt="CJBookNookLogo" />
+					</div>
+
+				</div>
+				<div className="row">
+					Meeting reading needs since 2023
+				</div>
+			</div>
+
+
 
 		</div>
 	</footer>

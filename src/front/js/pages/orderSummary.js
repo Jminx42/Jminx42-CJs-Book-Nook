@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Navbar } from "../component/navbar";
 import { EmptyPaymentMethod } from "../component/emptyPaymentMethod";
 import { PaymentMethod } from "../component/paymentMethod";
 import { CheckoutCard } from "../component/checkoutCard";
 import "../../styles/index.css"
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 
 export const OrderSummary = () => {
     const { store, actions } = useContext(Context);
@@ -16,7 +18,30 @@ export const OrderSummary = () => {
     const [showForm, setShowForm] = useState(false);
     const [alert, setAlert] = useState("");
     const [error, setError] = useState("");
-    const [checked, setChecked] = useState(false)
+    const [checked, setChecked] = useState(false);
+    const navigate = useNavigate();
+
+    const [clientSecret, setClientSecret] = useState("");
+
+    const stripePromise = loadStripe("pk_test_51NOm30LDriABBO71EslVAUR52crSoSLYDfGJgAF61S1HyL5sxQ63PGMxS2xffxW2x9ugJm1sPSuNfhNibLoODb6M00SiS5BrMT");
+    useEffect(() => {
+        // Create PaymentIntent as soon as the page loads
+        fetch("/create-payment-intent", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ items: [{ id: "xl-tshirt" }] }),
+        })
+            .then((res) => res.json())
+            .then((data) => setClientSecret(data.clientSecret));
+    }, []);
+
+    const appearance = {
+        theme: 'stripe',
+    };
+    const options = {
+        clientSecret,
+        appearance,
+    };
 
     const postTransaction = async () => {
 
@@ -185,6 +210,11 @@ export const OrderSummary = () => {
                             </Link>
                         </div>
                         <div className="col-sm-3 col-md-3 col-lg-3 text-center d-flex justify-content-end pe-0">
+
+                            <button className="btn custom-button text-center" onClick={() => navigate("https://buy.stripe.com/test_6oE00r6Fm5If0Qo4gg")}>
+                                <i className="fa-solid">Proceed &nbsp;</i><i className="fa-solid fa-arrow-right"></i>
+                            </button>
+
                             <Link to="/confirmDetails">
                                 <button className="btn custom-button text-center" onClick={postTransaction}><i className="fa-solid">Proceed &nbsp;</i><i className="fa-solid fa-arrow-right"></i></button>
                             </Link>

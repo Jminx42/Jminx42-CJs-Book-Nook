@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
+import { ProfileBtn } from "./profileBtn";
 import "../../styles/index.css"
 import CJBookNookLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/cjbooknookwhitesmall.png";
 
@@ -29,15 +30,30 @@ export const Navbar = () => {
 
 				<div className="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
 					<ul className="navbar-nav">
-						<li className="nav-item  me-2">
+						<li className="nav-item me-2">
+							<div className="input-group ">
+								<input
+									type="search"
+									id="search"
+									className="form-control"
+									aria-describedby="button-addon2"
+									value={store.search}
+									onChange={(e) => actions.handleSearch(e.target.value)}
+									placeholder="Search" />
+								<button type="button" className="btn custom-button" id="button-addon2" onClick={() => navigate('/')}>
+									<i className="fas fa-search"></i>
+								</button >
+							</div>
+						</li>
+						<li className="nav-item  ">
 							{!sessionStorage.getItem("token") ? (
 								<div className="d-flex">
 
-									<Link to="/register">
+									{/* <Link to="/register">
 										<button className="btn btn-secondary me-2 custom-button">Register</button>
-									</Link>
+									</Link> */}
 									<Link to="/login">
-										<button className="btn btn-secondary custom-button">Login</button>
+										<button className="btn btn-secondary custom-button"> Login <i className="fa-solid fa-right-to-bracket"></i></button>
 									</Link>
 								</div>
 							) : (
@@ -53,42 +69,16 @@ export const Navbar = () => {
 
 										</button>
 									</Link>
-									<Link to="/profile">
-										<button className="btn btn-secondary me-2 custom-button"><i className="fa-solid fa-user"></i></button>
-									</Link>
 
 									<Link to="/support">
-										<button className="btn btn-secondary me-2 custom-button"><i className="fa-solid fa-envelope"></i></button>
+										<button className="btn me-2 custom-button"><i className="fa-solid fa-envelope"></i></button>
 									</Link>
 
-									<button className="btn btn-secondary  custom-button"
-										onClick={async () => {
-											await actions.logout()
-											navigate("/")
-										}}>
-										Logout
-									</button>
-
-
-
+									<ProfileBtn />
 								</div>
 							)}
 						</li>
-						<li className="nav-item">
-							<div className="input-group ">
-								<input
-									type="search"
-									id="search"
-									className="form-control"
-									aria-describedby="button-addon2"
-									value={store.search}
-									onChange={(e) => actions.handleSearch(e.target.value)}
-									placeholder="Search" />
-								<button type="button" className="btn custom-button" id="button-addon2">
-									<i className="fas fa-search"></i>
-								</button >
-							</div>
-						</li>
+
 					</ul>
 				</div>
 

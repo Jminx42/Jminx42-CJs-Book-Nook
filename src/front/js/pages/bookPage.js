@@ -198,97 +198,96 @@ export const BookPage = () => {
 			}
 
 			<div className="card container mt-3">
+				<div className="" >
 
-				<div className="p-4 text-center bg-body-tertiary rounded-3">
-					<img src={store.book.book_cover == null || store.book.book_cover == "" ? store.book.book_cover_b : store.book.book_cover} className=" w-25 float-start" alt="..." />
-					<div>
-						<h1 className=" display-3">{store.book.title}</h1>
-						<p className="display-6">By {store.book.author}</p>
-						<div className="row text-start">
-							<div className="border ms-3 p-3">
-								<div className="row">
-									<div className="col-2">Publisher:</div>
-									<div className="col-10">{!store.book.publisher ? "Not available" : store.book.publisher}</div>
-								</div>
-								<div className="row">
-									<div className="col-2">Published Date:</div>
-									<div className="col-10">{store.book.year}</div>
-								</div>
-								<div className="row">
-									<div className="col-2">Genre:</div>
-									<div className="col-10">{store.book.genre}</div>
-									{/* <div ">{store.book.genre && store.book.genre.join("& ")}</div> */}
-
-								</div>
-								<div className="row">
-									<div className="col-2">Pages:</div>
-									<div className="col-10">{store.book.pages == 0 ? "Not available" : store.book.pages}</div>
-								</div>
-
-								<div className="row">
-									<div className="col-2">ISBN:</div>
-									<div className="col-10">{params.theisbn}</div>
-								</div>
-								<div className="row">
-									<div className="col-2">Rating: </div>
-									<div className="col-10">{store.book.average_rating ? store.book.average_rating + " (out of " + store.book.ratings_count + " votes)" : "Not available"} </div>
-								</div>
-								<div className="row">
-									<div className="col-2">Book Format:</div>
-									<div className="col-8">
-
-										<select className="form-select" aria-label="Default select example" defaultValue="" onChange={(e) => setFormat(e.target.value)}>
-											<option value="" disabled>Select your format</option>
-											{store.bookFormats.map((format) => (
-												<option key={format.id} value={format.id}>{format.book_format} - {format.book_price}€ </option>
-											))}
-										</select>
+					<div className="p-4 text-center bg-body-tertiary rounded-3">
+						<img src={store.book.book_cover == null || store.book.book_cover == "" ? store.book.book_cover_b : store.book.book_cover} className=" w-25 float-start" alt="..." />
+						<div>
+							<h1 className=" display-3">{store.book.title}</h1>
+							<p className="display-6">By {store.book.author}</p>
+							<div className="row text-start">
+								<div className="border ms-3 p-3">
+									<div className="row">
+										<div className="col-2">Publisher:</div>
+										<div className="col-10">{!store.book.publisher ? "Not available" : store.book.publisher}</div>
 									</div>
-									<div className="col-2 g-0">
-										{
-											sessionStorage.getItem("token") ?
-												<button type="button" disabled={!format} className="btn me-2 custom-button" onClick={() => actions.postCheckout(format)}>
-													<i className="fas fa-shopping-cart"></i>
-												</button>
-												:
-												<div>
-													<p>Want to add to your cart?&nbsp;
-														<Link to="/login">
-															<sup><button
-																type="button"
-																className="btn btn-link p-0"
-															>Login
-															</button></sup></Link>
-														&nbsp;first!</p>
-
-												</div>
-										}
+									<div className="row">
+										<div className="col-2">Published Date:</div>
+										<div className="col-10">{store.book.year}</div>
+									</div>
+									<div className="row">
+										<div className="col-2">Genre:</div>
+										<div className="col-10">{store.book.genre}</div>
+										{/* <div ">{store.book.genre && store.book.genre.join("& ")}</div> */}
 
 									</div>
-								</div>
+									<div className="row">
+										<div className="col-2">Pages:</div>
+										<div className="col-10">{store.book.pages == 0 ? "Not available" : store.book.pages}</div>
+									</div>
 
-								<div className="row">
-									<div className="col-2">Description:</div>
-									<div className="col-10">{store.book.description}</div>
+									<div className="row">
+										<div className="col-2">ISBN:</div>
+										<div className="col-10">{params.theisbn}</div>
+									</div>
+									<div className="row">
+										<div className="col-2">Rating: </div>
+										<div className="col-10">{store.book.average_rating ? store.book.average_rating + " (out of " + store.book.ratings_count + " votes)" : "Not available"} </div>
+									</div>
+									<div className="row">
+										<div className="col-2">Book Format:</div>
+										<div className="col-8">
+
+											<select className="form-select" aria-label="Default select example" defaultValue="" onChange={(e) => setFormat(e.target.value)}>
+												<option value="" disabled>Select your format</option>
+												{store.bookFormats.map((format) => (
+													<option key={format.id} value={format.id}>{format.book_format} - {format.book_price}€ </option>
+												))}
+											</select>
+										</div>
+										<div className="col-2 g-0">
+											{
+												sessionStorage.getItem("token") ?
+													<button type="button" disabled={!format} className="btn me-2 custom-button" onClick={() => actions.postCheckout(format)}>
+														<i className="fas fa-shopping-cart"></i>
+													</button>
+													:
+													<div>
+														<p>Want to add to your cart?&nbsp;
+															<Link to="/login">
+																<sup><button
+																	type="button"
+																	className="btn btn-link p-0"
+																>Login
+																</button></sup></Link>
+															&nbsp;first!</p>
+
+													</div>
+											}
+
+										</div>
+									</div>
+
+									<div className="row">
+										<div className="col-2">Description:</div>
+										<div className="col-10">{store.book.description}</div>
+									</div>
+								</div>
+								<div className="row ms-5">
+									{
+										isGooglePreview ?
+											<Link to={`/googlePreview/${params.theisbn}`} className="link-like">
+												<p className="mt-3 fs-5 ">Click here to preview the book</p>
+											</Link>
+											:
+											null
+									}
+
 								</div>
 							</div>
-							<div className="row ms-5">
-								{
-									isGooglePreview ?
-										<Link to={`/googlePreview/${params.theisbn}`} className="link-like">
-											<p className="mt-3 fs-5 ">Click here to preview the book</p>
-										</Link>
-										:
-										null
-								}
-
-							</div>
-						</div>
+						</div >
 					</div >
-				</div >
-
-
-
+				</div>
 			</div>
 			<div className="container">
 				{store.nytReview && store.nytReview !== {} ?
