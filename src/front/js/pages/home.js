@@ -444,7 +444,9 @@ export const Home = () => {
 										.map((book) => <HomeCard key={book.id} item={book} />)}
 								</div>
 							</div>
+							<Footer />
 						</div>
+
 					)
 						:
 						<div>
@@ -459,7 +461,7 @@ export const Home = () => {
 				</div >
 			</div >
 
-			<Footer />
+
 		</div >
 	);
 };

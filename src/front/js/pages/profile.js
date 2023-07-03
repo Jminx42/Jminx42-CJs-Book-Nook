@@ -60,6 +60,8 @@ export const Profile = () => {
 		return () => {
 			window.removeEventListener('resize', handleResize);
 		};
+
+		setActiveTab(params)
 	}, []);
 
 	const isMobile = windowWidth <= 768;
@@ -102,79 +104,101 @@ export const Profile = () => {
 			<div className="d-flex">
 				{!isMobile ?
 					(<div className="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary" style={{ width: '15rem' }}>
-						<a href="#" className="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+						<button
+							className={`d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none nav-link btn btn-sm w-100 ${activeTab === 'personal' ? 'active' : ''
+								}`}
+							onClick={() => setActiveTab('personal')}
+						>
 							<span className="fs-4">Profile</span>
-						</a>
+						</button>
 						<hr />
-						<ul className="nav nav-pills flex-column mb-auto">
+						<ul className="nav nav-pills flex-column mb-auto ">
 							<li className="nav-item">
-								<a href="#" className={`nav-link ${activeTab === 'personal' ? 'active' : ''}`} onClick={() => setActiveTab('personal')}>
+								<button
+									className={`nav-link btn w-100 text-start${activeTab === 'personal' ? 'active' : ''}`}
+									onClick={() => setActiveTab('personal')}
+								>
 									<i className="fa-solid fa-user"></i> Personal Information
-								</a>
+								</button>
 							</li>
-							<li>
-								<a href="#" className={`nav-link ${activeTab === 'wishlist' ? 'active' : ''}`} onClick={() => setActiveTab('wishlist')}>
+							<li className="nav-item">
+								<button
+									className={`nav-link btn w-100 text-start${activeTab === 'wishlist' ? 'active' : ''}`}
+									onClick={() => setActiveTab('wishlist')}
+								>
 									<i className="fa-solid fa-heart"></i> Wishlist
-								</a>
+								</button>
 							</li>
-							<li>
-								<a href="#" className={`nav-link ${activeTab === 'reviews' ? 'active' : ''}`} onClick={() => setActiveTab('reviews')}>
+							<li className="nav-item">
+								<button
+									className={`nav-link btn w-100 text-start${activeTab === 'reviews' ? 'active' : ''}`}
+									onClick={() => setActiveTab('reviews')}
+								>
 									<i className="fa-regular fa-keyboard"></i> My Reviews
-								</a>
+								</button>
 							</li>
-							<li>
-								<a href="#" className={`nav-link ${activeTab === 'payment' ? 'active' : ''}`} onClick={() => setActiveTab('payment')}>
+							<li className="nav-item">
+								<button
+									className={`nav-link btn w-100 text-start${activeTab === 'payment' ? 'active' : ''}`}
+									onClick={() => setActiveTab('payment')}
+								>
 									<i className="fa-regular fa-credit-card"></i> Payment Methods
-								</a>
+								</button>
 							</li>
-							<li>
-								<a href="#" className={`nav-link ${activeTab === 'purchase' ? 'active' : ''}`} onClick={() => setActiveTab('purchase')}>
+							<li className="nav-item">
+								<button
+									className={`nav-link btn w-100 text-start${activeTab === 'purchase' ? 'active' : ''}`}
+									onClick={() => setActiveTab('purchase')}
+								>
 									<i className="fa-regular fa-calendar-days"></i> Purchase History
-								</a>
+								</button>
 							</li>
-							<li>
-								<a href="#" className={`nav-link ${activeTab === 'support' ? 'active' : ''}`} onClick={() => setActiveTab('support')}>
+							<li className="nav-item">
+								<button
+									className={`nav-link btn w-100 text-start${activeTab === 'support' ? 'active' : ''}`}
+									onClick={() => setActiveTab('support')}
+								>
 									<i className="fa-solid fa-envelope"></i> Support
-								</a>
+								</button>
 							</li>
 						</ul>
 						<hr />
 					</div>) :
 					(
-						<div className="d-flex flex-column flex-shrink-0 bg-body-tertiary " style={{ width: "3rem" }}>
+						<div className="d-flex flex-column flex-shrink-0 bg-body-tertiary" style={{ width: "3rem" }}>
 							{/* <a href="/" className="d-block p-3 link-body-emphasis text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Icon-only">
-								Profile
-							</a> */}
+        Profile
+    </a> */}
 							<ul className="nav nav-pills nav-flush flex-column mb-auto text-center">
 								<li className="nav-item">
-									<a href="#" className={`py-3 border-bottom rounded-0 nav-link ${activeTab === 'personal' ? 'active' : ''}`} onClick={() => setActiveTab('personal')} aria-current="page" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Personal" data-bs-original-title="Personal">
+									<button className={`py-3 border-bottom rounded-0 nav-link btn ${activeTab === 'personal' ? 'active' : ''}`} onClick={() => setActiveTab('personal')} aria-current="page" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Personal" data-bs-original-title="Personal">
 										<i className="fa-solid fa-user"></i>
-									</a>
+									</button>
 								</li>
 								<li>
-									<a href="#" className={`py-3 border-bottom rounded-0 nav-link ${activeTab === 'wishlist' ? 'active' : ''}`} onClick={() => setActiveTab('wishlist')} data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Reviews" data-bs-original-title="Reviews">
+									<button className={`py-3 border-bottom rounded-0 nav-link btn ${activeTab === 'wishlist' ? 'active' : ''}`} onClick={() => setActiveTab('wishlist')} data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Reviews" data-bs-original-title="Reviews">
 										<i className="fa-solid fa-heart"></i>
-									</a>
+									</button>
 								</li>
 								<li>
-									<a href="#" className={`py-3 border-bottom rounded-0 nav-link ${activeTab === 'reviews' ? 'active' : ''}`} onClick={() => setActiveTab('reviews')} data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Reviews" data-bs-original-title="Reviews">
+									<button className={`py-3 border-bottom rounded-0 nav-link btn ${activeTab === 'reviews' ? 'active' : ''}`} onClick={() => setActiveTab('reviews')} data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Reviews" data-bs-original-title="Reviews">
 										<i className="fa-regular fa-keyboard"></i>
-									</a>
+									</button>
 								</li>
 								<li>
-									<a href="#" className={`nav-link py-3 border-bottom rounded-0 ${activeTab === 'payment' ? 'active' : ''}`} onClick={() => setActiveTab('payment')} data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Payment" data-bs-original-title="Payment">
+									<button className={`nav-link py-3 border-bottom rounded-0 btn ${activeTab === 'payment' ? 'active' : ''}`} onClick={() => setActiveTab('payment')} data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Payment" data-bs-original-title="Payment">
 										<i className="fa-regular fa-credit-card"></i>
-									</a>
+									</button>
 								</li>
 								<li>
-									<a href="#" className={`nav-link py-3 border-bottom rounded-0 ${activeTab === 'purchase' ? 'active' : ''}`} onClick={() => setActiveTab('purchase')} data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Purchase History" data-bs-original-title="Purchase History">
+									<button className={`nav-link py-3 border-bottom rounded-0 btn ${activeTab === 'purchase' ? 'active' : ''}`} onClick={() => setActiveTab('purchase')} data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Purchase History" data-bs-original-title="Purchase History">
 										<i className="fa-regular fa-calendar-days"></i>
-									</a>
+									</button>
 								</li>
 								<li>
-									<a href="#" className={`nav-link py-3 border-bottom rounded-0 ${activeTab === 'support' ? 'active' : ''}`} onClick={() => setActiveTab('support')} data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Support" data-bs-original-title="Support">
+									<button className={`nav-link py-3 border-bottom rounded-0 btn ${activeTab === 'support' ? 'active' : ''}`} onClick={() => setActiveTab('support')} data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Support" data-bs-original-title="Support">
 										<i className="fa-solid fa-envelope"></i>
-									</a>
+									</button>
 								</li>
 							</ul>
 						</div>

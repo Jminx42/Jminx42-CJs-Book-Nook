@@ -10,11 +10,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 			loading: true,
 			errorMsg: '',
 			bookFormats: [],
-			alert: ''
+			alert: '',
+			activeTab: 'personal',
 
 
 		},
 		actions: {
+			setActiveTab: (tab) => {
+				setStore({ activeTab: tab })
+			},
+
 			capitalizeWords: (str) => {
 				return str
 					.split(' ')

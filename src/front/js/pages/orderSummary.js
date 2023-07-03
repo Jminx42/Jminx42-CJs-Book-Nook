@@ -7,6 +7,8 @@ import { EmptyPaymentMethod } from "../component/emptyPaymentMethod";
 import { PaymentMethod } from "../component/paymentMethod";
 import { CheckoutCard } from "../component/checkoutCard";
 import "../../styles/index.css"
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 
 export const OrderSummary = () => {
     const { store, actions } = useContext(Context);
@@ -18,6 +20,28 @@ export const OrderSummary = () => {
     const [error, setError] = useState("");
     const [checked, setChecked] = useState(false);
     const navigate = useNavigate();
+
+    const [clientSecret, setClientSecret] = useState("");
+
+    const stripePromise = loadStripe("pk_test_51NOm30LDriABBO71EslVAUR52crSoSLYDfGJgAF61S1HyL5sxQ63PGMxS2xffxW2x9ugJm1sPSuNfhNibLoODb6M00SiS5BrMT");
+    useEffect(() => {
+        // Create PaymentIntent as soon as the page loads
+        fetch("/create-payment-intent", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ items: [{ id: "xl-tshirt" }] }),
+        })
+            .then((res) => res.json())
+            .then((data) => setClientSecret(data.clientSecret));
+    }, []);
+
+    const appearance = {
+        theme: 'stripe',
+    };
+    const options = {
+        clientSecret,
+        appearance,
+    };
 
     const postTransaction = async () => {
 
