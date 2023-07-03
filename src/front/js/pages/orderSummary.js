@@ -9,6 +9,8 @@ import { CheckoutCard } from "../component/checkoutCard";
 import "../../styles/index.css"
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import { Stripe } from "../component/stripe";
+import "../../styles/stripe.css"
 
 export const OrderSummary = () => {
     const { store, actions } = useContext(Context);
@@ -20,10 +22,10 @@ export const OrderSummary = () => {
     const [error, setError] = useState("");
     const [checked, setChecked] = useState(false);
     const navigate = useNavigate();
-
+    const promise = loadStripe("pk_test_51NOm30LDriABBO71EslVAUR52crSoSLYDfGJgAF61S1HyL5sxQ63PGMxS2xffxW2x9ugJm1sPSuNfhNibLoODb6M00SiS5BrMT");
     const [clientSecret, setClientSecret] = useState("");
 
-    const stripePromise = loadStripe("pk_test_51NOm30LDriABBO71EslVAUR52crSoSLYDfGJgAF61S1HyL5sxQ63PGMxS2xffxW2x9ugJm1sPSuNfhNibLoODb6M00SiS5BrMT");
+
     useEffect(() => {
         // Create PaymentIntent as soon as the page loads
         fetch("/create-payment-intent", {
@@ -177,7 +179,7 @@ export const OrderSummary = () => {
                         ) : (
                             <div>Add a book to purchase!</div>
                         )}
-                    <div className="row d-flex">
+                    <div className="row d-flex mb-3">
                         <div className="d-flex align-items-baseline m-1">
                             <h5 className="me-2">Shipping Address:</h5>
                             <p className="">{store.user.address}</p>
@@ -187,36 +189,16 @@ export const OrderSummary = () => {
                             <p className="">{store.user.billing_address}</p>
                         </div>
                     </div>
-                    <div className="row d-flex">
-                        <div className="d-flex align-items-baseline m-1">
-                            <h5 className="me-2">Payment Method:</h5>
-                            {store.user.payment_method && store.user.payment_method.map((payment_method) => {
-                                return <PaymentMethod key={payment_method.id} item={payment_method} />
-                            })}
-                        </div>
-                    </div>
+                    <Elements stripe={promise}>
+                        <Stripe />
+                    </Elements>
+                    <div className="row d-flex justify-content-end pe-0 mt-3">
 
-                    <form action="/create-checkout-session" method="POST">
-                        <button type="submit">
-                            Checkout
-                        </button>
-                    </form>
-
-
-                    <div className="row d-flex justify-content-end pe-0">
-                        <div className="col-sm-3 col-md-3 col-lg-3 text-center d-flex justify-content-start ps-0">
-                            <Link to="/confirmDetails">
-                                <button className="btn custom-button text-center"><i className="fa-solid fa-arrow-left">&nbsp; Go back</i></button>
-                            </Link>
-                        </div>
                         <div className="col-sm-3 col-md-3 col-lg-3 text-center d-flex justify-content-end pe-0">
 
-                            <button className="btn custom-button text-center" onClick={() => navigate("https://buy.stripe.com/test_6oE00r6Fm5If0Qo4gg")}>
-                                <i className="fa-solid">Proceed &nbsp;</i><i className="fa-solid fa-arrow-right"></i>
-                            </button>
 
                             <Link to="/confirmDetails">
-                                <button className="btn custom-button text-center" onClick={postTransaction}><i className="fa-solid">Proceed &nbsp;</i><i className="fa-solid fa-arrow-right"></i></button>
+                                <button className="btn custom-button text-center"><i className="fa-solid fa-arrow-left">&nbsp; Go back</i></button>
                             </Link>
                         </div>
 

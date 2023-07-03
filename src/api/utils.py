@@ -44,13 +44,13 @@ def generate_sitemap(app):
         <ul style="text-align: left;">"""+links_html+"</ul></div>"
 def generate_formats():
     print ("aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-    list_formats = [{"book_format": "eBook", "book_price": 10.99},
-             {"book_format": "Paperback", "book_price": 15.99},
-             {"book_format": "Hardcover", "book_price": 20.99}, 
-             {"book_format": "Audiobook", "book_price": 24.99} ]
+    list_formats = [{"book_format": "eBook", "book_price": 10.99, "prod_id": "prod_OB8YtTvLFrQXOM", "price_id": "price_1NOmHXLDriABBO71yY77GziP"},
+             {"book_format": "Paperback", "book_price": 15.99, "prod_id": "prod_OB8XGIbDkENUtI", "price_id": "price_1NOmGMLDriABBO7121aJRdJK"},
+             {"book_format": "Hardcover", "book_price": 20.99, "prod_id": "prod_OB8ZXAWr4WuJhn", "price_id": "price_1NOmITLDriABBO71zYhNNV1c"}, 
+             {"book_format": "Audiobook", "book_price": 24.99, "prod_id": "prod_OB8Z1XGFNTeIc0", "price_id": "price_1NOmIDLDriABBO71AonrDGR9"} ]
     
     format_to_add = [BookFormat(book_format = format["book_format"],
-                                book_price = format["book_price"]) for format in list_formats]
+                                book_price = format["book_price"], prod_id = format["prod_id"], price_id = format["price_id"]) for format in list_formats]
     
     return format_to_add
     

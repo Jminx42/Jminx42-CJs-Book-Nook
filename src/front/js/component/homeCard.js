@@ -37,14 +37,14 @@ export const HomeCard = ({ item }) => {
 
 
     return (
-        <div className="card border-0 d-flex flex-column m-2 p-0 w-100" >
+        <div className="card d-flex flex-column m-2 p-0 border-0" style={{ width: "12rem" }}>
 
             <div className="card-body-custom">
                 {item.book_cover == null || item.book_cover == "" ? (
 
-                    <div className="image-container w-100">
+                    <div className="">
                         <Link to={`/book/${item.isbn}`}>
-                            <img src={item.book_cover_b} className="card-img-top w-100 h-100 contain" alt="Book Cover" />
+                            <img src={item.book_cover_b} className="card-img-top contain" alt="Book Cover" style={{ height: "300px" }} />
                         </Link>
                         <button
                             type="button"
@@ -60,9 +60,9 @@ export const HomeCard = ({ item }) => {
                         </button>
                     </div>
                 ) : (
-                    <div className="image-container" style={{ height: "320px", overflow: "hidden", position: "relative" }}>
+                    <div className="">
                         <Link to={`/book/${item.isbn}`}>
-                            <img src={item.book_cover} className="card-img-top w-100 h-100" alt="Book Cover" />
+                            <img src={item.book_cover} className="card-img-top contain" alt="Book Cover" style={{ height: "300px" }} />
                         </Link>
                         <button
                             type="button"

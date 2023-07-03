@@ -24,20 +24,30 @@ from api.utils import APIException, generate_sitemap
 
 
 api = Blueprint('api', __name__)   
-
+@jwt_required()
 def calculate_order_amount(items):
     # Replace this constant with a calculation of the order's amount
     # Calculate the order total on the server to prevent
     # people from directly manipulating the amount on the client
-    return 1400
+    user_id = get_jwt_identity()
+    
+    total_price = 0
+    items = TransactionItem.query.filter_by(user_id=user_id, in_progress=True).all()
+    for x in items:
+        total_price += x.total_price_per_book  
+
+    total_price = round(total_price, 2)  
+    
+    return int(total_price * 100)
+
 
 @api.route('/create-payment-intent', methods=['POST'])
 def create_payment():
     try:
-        data = json.loads(request.data)
+        body = request.json
         # Create a PaymentIntent with the order amount and currency
         intent = stripe.PaymentIntent.create(
-            amount=calculate_order_amount(data['items']),
+            amount=calculate_order_amount(body['items']),
             currency='eur',
             automatic_payment_methods={
                 'enabled': True,
@@ -47,6 +57,7 @@ def create_payment():
             'clientSecret': intent['client_secret']
         })
     except Exception as e:
+        print(e)
         return jsonify(error=str(e)), 403
 
 
