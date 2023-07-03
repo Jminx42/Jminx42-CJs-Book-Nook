@@ -19,6 +19,38 @@ export const OrderSummary = () => {
     const [checked, setChecked] = useState(false);
     const navigate = useNavigate();
 
+    const postTransaction = async () => {
+
+        // console.log("###########################")
+        // console.log(book_format_id)
+        const opts = {
+            method: 'POST',
+            headers: {
+                Authorization: "Bearer " + sessionStorage.getItem("token"),
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ "payment_method_id": store.user.payment_method[0].id, "items": store.user.items })
+        };
+        // console.log(getStore().book.id)
+
+
+        try {
+            const resp = await fetch(process.env.BACKEND_URL + 'api/createtransaction', opts);
+            if (resp.status !== 200) {
+                const data = await resp.json();
+                const errorMessage = data.error || "Something went wrong";
+                setError(errorMessage);
+                return false;
+            } else {
+                await actions.validate_user();
+                setAlert("Your cart was updated successfully");
+                return true;
+            }
+        } catch (error) {
+            console.error(`Error during fetch: ${process.env.BACKEND_URL}api/createtransaction`, error);
+        }
+    };
+
     const handleSave = async () => {
         setEditAddress(false);
         setEditBilling(false);
@@ -48,6 +80,14 @@ export const OrderSummary = () => {
     useEffect(() => {
         actions.validate_user();
     }, []);
+
+    const total = () => {
+        let totalCheckout = 0;
+        for (let x = 0; x < store.user.items.length; x++) {
+            totalCheckout += store.user.items[x].book_format_id.book_price * store.user.items[x].unit
+        }
+        return totalCheckout
+    }
 
     return (
         <div>
@@ -88,17 +128,6 @@ export const OrderSummary = () => {
                 <div className="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow={25} aria-valuemin={0} aria-valuemax={100} style={{ height: "50px" }}>
                     <div className="progress-bar background-custom progress-bar-striped progress-bar-animated" style={{ width: '75%' }}><h4>Confirm Your Order</h4></div>
                 </div>
-                <div className="row mb-1 mt-4">
-                    <div className="col-sm-6 col-md-6 col-lg-6">
-                        <h5 className="text-center background-custom p-2 text-white"> Book </h5>
-                    </div>
-                    <div className="col-sm-3 col-md-3 col-lg-3">
-                        <h5 className="text-center background-custom p-2 text-white"> Units </h5>
-                    </div>
-                    <div className="col-sm-3 col-md-3 col-lg-3 ">
-                        <h5 className="text-center background-custom p-2 text-white"> Price </h5>
-                    </div>
-                </div>
                 <div className="row d-flex justify-content-center">
                     {store.user.items && store.user.items.length > 0 ?
 
@@ -109,7 +138,7 @@ export const OrderSummary = () => {
                             })}
                             <div className="row d-flex justify-content-end pe-0">
                                 <div className="col-sm-3 col-md-3 col-lg-3 text-center d-flex justify-content-end pe-0">
-                                    <h5 className="text-center px-4 py-2 m-0"> Total: calculate from total_price€ </h5>
+                                    <h5 className="text-center px-4 py-2 m-0"> Total: {parseFloat(total().toFixed(2))}€ </h5>
                                     <Link to="/confirmDetails">
                                         <button className="btn custom-button text-center"><i className="fa-solid fa-arrow-right"></i></button>
                                     </Link>
@@ -143,6 +172,12 @@ export const OrderSummary = () => {
                         </div>
                     </div>
 
+                    <form action="/create-checkout-session" method="POST">
+                        <button type="submit">
+                            Checkout
+                        </button>
+                    </form>
+
 
                     <div className="row d-flex justify-content-end pe-0">
                         <div className="col-sm-3 col-md-3 col-lg-3 text-center d-flex justify-content-start ps-0">
@@ -156,6 +191,9 @@ export const OrderSummary = () => {
                                 <i className="fa-solid">Proceed &nbsp;</i><i className="fa-solid fa-arrow-right"></i>
                             </button>
 
+                            <Link to="/confirmDetails">
+                                <button className="btn custom-button text-center" onClick={postTransaction}><i className="fa-solid">Proceed &nbsp;</i><i className="fa-solid fa-arrow-right"></i></button>
+                            </Link>
                         </div>
 
                     </div>
