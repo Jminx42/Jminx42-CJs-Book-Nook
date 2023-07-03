@@ -16,7 +16,7 @@ class User(db.Model):
     payment_method = db.relationship("PaymentMethod", backref="user")
     wishlist = db.relationship("Wishlist", backref="user")
     review = db.relationship("Review", backref="user")
-    transactions = db.relationship("Transaction", backref="user")
+    transaction = db.relationship("Transaction", backref="user")
     items = db.relationship("TransactionItem", backref="user")
     support = db.relationship("Support", backref="user")
     profile_picture = db.Column(db.String(250), unique=True, nullable=True)
@@ -38,7 +38,8 @@ class User(db.Model):
             "review": [y.serialize() for y in self.review],
             "wishlist": [x.serialize() for x in self.wishlist],
             "items": [item.serialize() for item in self.items if item.in_progress ],
-            "support": [i.serialize_for_support() for i in self.support]
+            "support": [i.serialize_for_support() for i in self.support],
+            "transaction": [j.serialize_for_transaction() for j in self.transaction],
         }
     
 class UserCategory(db.Model):
@@ -221,10 +222,20 @@ class Transaction(db.Model):
             "id": self.id,
             "user_id": User.query.get(self.user_id).serialize(),
             "payment_method_id": self.payment_method_id,
-            "items": TransactionItem.query.get(self.transaction_item_id).serialize(),
+            "items": [item.serialize() for item in self.items],
             "total_price": self.total_price,
             "transaction_created": self.transaction_created.strftime("%d/%m/%Y"),
             "in_progress": self.in_progress,
+        }
+    def serialize_for_transaction(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "payment_method_id": self.payment_method_id,
+            "items": [item.serialize() for item in self.items],
+            "total_price": self.total_price,
+            "transaction_created": self.transaction_created.strftime("%d/%m/%Y"),
+            "in_progress": self.in_progress,      
         }
         
 class PaymentMethod(db.Model):

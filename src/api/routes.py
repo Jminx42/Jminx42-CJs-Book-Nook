@@ -1,7 +1,7 @@
 """
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
-from flask import Flask, request, jsonify, Blueprint
+from flask import Flask, request, jsonify, Blueprint, redirect
 
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 import datetime
@@ -13,6 +13,10 @@ from flask_bcrypt import check_password_hash
 
 from datetime import datetime, timedelta
 import pytz
+import os
+import stripe
+from stripe.error import StripeError
+stripe.api_key = 'sk_test_51NOm30LDriABBO719nhvoZuy8msaKkmkekKWuLucfqiLlWMxYAdiuPKvGjUi8XIqrtsJ8UW5NUcMFboDWROSV1fS00mXbmKzvJ'
 
 
 from api.models import db, User, Book, Review, Wishlist, Transaction, Support, PaymentMethod, TransactionItem, BookFormat
@@ -306,28 +310,69 @@ def create_transaction():
     user = User.query.get(user_id)
     try:
         body = request.json
-              
+
         total_price = 0
-        #We need to loop to get all the items in the cart
         items = TransactionItem.query.filter_by(user_id=user_id, in_progress=True).all()
         for x in items:
             total_price += x.total_price_per_book
-        
-        
+
+        # Create a Stripe checkout session
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[
+                {
+                    # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+                    'price': 'price_1NOmITLDriABBO71zYhNNV1c',
+                    'quantity': 1,
+                },
+            ],
+            mode='payment',
+            success_url=os.getenv('BACKEND_URL') + '?success=true',
+            cancel_url=os.getenv('BACKEND_URL') + '?canceled=true',
+        )
+
         new_transaction = Transaction(
-            payment_method = body["payment_method_id"],
-            user = user,
-            total_price = total_price,
-            items = items,
-            in_progress = True
-            )
+            payment_method_id=body["payment_method_id"],
+            user=user,
+            total_price=total_price,
+            in_progress=True,
+        )
+         # Assign the items to the new transaction
+        new_transaction.items.extend(items)
+        
         db.session.add(new_transaction)
         db.session.commit()
-        return jsonify({"transaction": new_transaction.serialize()}), 200
 
+        return jsonify({"transaction": new_transaction.serialize(), "checkout_session": checkout_session}), 200
+
+    except StripeError as e:
+        # Handle Stripe errors
+        return jsonify({"error": str(e)}), 500
     except Exception as e:
+        # Handle other errors
         print(e)
         return jsonify({"error": str(e)}), 500
+
+    
+@api.route('/create-checkout-session', methods=['POST'])
+def create_checkout_session():
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            line_items=[
+                {
+                    # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+                    'price': 'price_1NOmITLDriABBO71zYhNNV1c',
+                    'quantity': 1,
+                },
+            ],
+            mode='payment',
+            success_url=os.getenv('BACKEND_URL') + '?success=true',
+            cancel_url=os.getenv('BACKEND_URL') + '?canceled=true',
+        )
+    except Exception as e:
+        return str(e)
+
+    return redirect(checkout_session.url, code=303)
 
 @api.route("/checkout", methods=["POST"])
 @jwt_required()

@@ -19,6 +19,7 @@ export const Profile = () => {
 	const [showForm, setShowForm] = useState(false)
 	const [alert, setAlert] = useState("");
 	const [error, setError] = useState("");
+	const [activeTab, setActiveTab] = useState('personal')
 
 
 	// useEffect(() => {
@@ -46,9 +47,26 @@ export const Profile = () => {
 		}
 	};
 
+	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
 	useEffect(() => {
-		getUserReviews();
+		getUserReviews()
+		const handleResize = () => {
+			setWindowWidth(window.innerWidth);
+		};
+
+		window.addEventListener('resize', handleResize);
+
+		return () => {
+			window.removeEventListener('resize', handleResize);
+		};
 	}, []);
+
+	const isMobile = windowWidth <= 768;
+
+	// useEffect(() => {
+	// 	getUserReviews();
+	// }, []);
 
 	const getUserReviews = async () => {
 		try {
@@ -73,255 +91,321 @@ export const Profile = () => {
 		}
 	};
 
+
+
+
+
+
 	return (
 		<div>
 			<Navbar />
-			{/* Creating the different tabs: */}
-			{
-				alert && alert !== ""
-					?
-					<div className="container">
-						<div className="alert alert-success alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
-							<i className="bi bi-check-circle-fill me-2"></i>
-							<div>
-								{alert}
-							</div>
-							<button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			<div className="d-flex">
+				{!isMobile ?
+					(<div className="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary" style={{ width: '15rem' }}>
+						<a href="#" className="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+							<span className="fs-4">Profile</span>
+						</a>
+						<hr />
+						<ul className="nav nav-pills flex-column mb-auto">
+							<li className="nav-item">
+								<a href="#" className={`nav-link ${activeTab === 'personal' ? 'active' : ''}`} onClick={() => setActiveTab('personal')}>
+									<i className="fa-solid fa-user"></i> Personal Information
+								</a>
+							</li>
+							<li>
+								<a href="#" className={`nav-link ${activeTab === 'wishlist' ? 'active' : ''}`} onClick={() => setActiveTab('wishlist')}>
+									<i className="fa-solid fa-heart"></i> Wishlist
+								</a>
+							</li>
+							<li>
+								<a href="#" className={`nav-link ${activeTab === 'reviews' ? 'active' : ''}`} onClick={() => setActiveTab('reviews')}>
+									<i className="fa-regular fa-keyboard"></i> My Reviews
+								</a>
+							</li>
+							<li>
+								<a href="#" className={`nav-link ${activeTab === 'payment' ? 'active' : ''}`} onClick={() => setActiveTab('payment')}>
+									<i className="fa-regular fa-credit-card"></i> Payment Methods
+								</a>
+							</li>
+							<li>
+								<a href="#" className={`nav-link ${activeTab === 'purchase' ? 'active' : ''}`} onClick={() => setActiveTab('purchase')}>
+									<i className="fa-regular fa-calendar-days"></i> Purchase History
+								</a>
+							</li>
+							<li>
+								<a href="#" className={`nav-link ${activeTab === 'support' ? 'active' : ''}`} onClick={() => setActiveTab('support')}>
+									<i className="fa-solid fa-envelope"></i> Support
+								</a>
+							</li>
+						</ul>
+						<hr />
+					</div>) :
+					(
+						<div className="d-flex flex-column flex-shrink-0 bg-body-tertiary " style={{ width: "3rem" }}>
+							{/* <a href="/" className="d-block p-3 link-body-emphasis text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Icon-only">
+								Profile
+							</a> */}
+							<ul className="nav nav-pills nav-flush flex-column mb-auto text-center">
+								<li className="nav-item">
+									<a href="#" className={`py-3 border-bottom rounded-0 nav-link ${activeTab === 'personal' ? 'active' : ''}`} onClick={() => setActiveTab('personal')} aria-current="page" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Personal" data-bs-original-title="Personal">
+										<i className="fa-solid fa-user"></i>
+									</a>
+								</li>
+								<li>
+									<a href="#" className={`py-3 border-bottom rounded-0 nav-link ${activeTab === 'wishlist' ? 'active' : ''}`} onClick={() => setActiveTab('wishlist')} data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Reviews" data-bs-original-title="Reviews">
+										<i className="fa-solid fa-heart"></i>
+									</a>
+								</li>
+								<li>
+									<a href="#" className={`py-3 border-bottom rounded-0 nav-link ${activeTab === 'reviews' ? 'active' : ''}`} onClick={() => setActiveTab('reviews')} data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Reviews" data-bs-original-title="Reviews">
+										<i className="fa-regular fa-keyboard"></i>
+									</a>
+								</li>
+								<li>
+									<a href="#" className={`nav-link py-3 border-bottom rounded-0 ${activeTab === 'payment' ? 'active' : ''}`} onClick={() => setActiveTab('payment')} data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Payment" data-bs-original-title="Payment">
+										<i className="fa-regular fa-credit-card"></i>
+									</a>
+								</li>
+								<li>
+									<a href="#" className={`nav-link py-3 border-bottom rounded-0 ${activeTab === 'purchase' ? 'active' : ''}`} onClick={() => setActiveTab('purchase')} data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Purchase History" data-bs-original-title="Purchase History">
+										<i className="fa-regular fa-calendar-days"></i>
+									</a>
+								</li>
+								<li>
+									<a href="#" className={`nav-link py-3 border-bottom rounded-0 ${activeTab === 'support' ? 'active' : ''}`} onClick={() => setActiveTab('support')} data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Support" data-bs-original-title="Support">
+										<i className="fa-solid fa-envelope"></i>
+									</a>
+								</li>
+							</ul>
 						</div>
-					</div>
-					:
-					null
-
-			}
-			{
-				error && error !== ""
-					?
-					<div className="container">
-						<div className="alert alert-danger alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
-							<i className="bi bi-exclamation-triangle-fill"></i>
-							<div>
-								{error}
-							</div>
-							<button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-						</div>
-					</div>
-					:
-					null
-
-			}
-			<div className="container mt-3">
-				<ul className="nav nav-tabs" id="myTab" role="tablist">
-					<li className="nav-item nav-custom" role="presentation">
-						<button className="nav-link active nav-custom" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal-tab-pane" type="button" role="tab" aria-controls="personal-tab-pane" aria-selected="true">Personal Information</button>
-					</li>
-					<li className="nav-item nav-custom" role="presentation">
-						<button className="nav-link nav-custom" id="wishlist-tab" data-bs-toggle="tab" data-bs-target="#wishlist-tab-pane" type="button" role="tab" aria-controls="wishlist-tab-pane" aria-selected="false">Wishlist</button>
-					</li>
-					<li className="nav-item nav-custom" role="presentation">
-						<button className="nav-link nav-custom" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews-tab-pane" type="button" role="tab" aria-controls="reviews-tab-pane" aria-selected="false">My Reviews</button>
-					</li>
-					<li className="nav-item nav-custom" role="presentation">
-						<button className="nav-link nav-custom" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment-tab-pane" type="button" role="tab" aria-controls="payment-tab-pane" aria-selected="false">Payment</button>
-					</li>
-					<li className="nav-item nav-custom" role="presentation">
-						<button className="nav-link nav-custom" id="purchase-tab" data-bs-toggle="tab" data-bs-target="#purchase-tab-pane" type="button" role="tab" aria-controls="purchase-tab-pane" aria-selected="false">Purchase History</button>
-					</li>
-					<li className="nav-item nav-custom" role="presentation">
-						<button className="nav-link nav-custom" id="support-tab" data-bs-toggle="tab" data-bs-target="#support-tab-pane" type="button" role="tab" aria-controls="support-tab-pane" aria-selected="false">Support</button>
-					</li>
-				</ul>
-			</div>
-			{/* Adding content to each tab: */}
-			<div className="tab-content" id="myTabContent">
-				<div className="tab-pane fade show active" id="personal-tab-pane" role="tabpanel" aria-labelledby="personal-tab" tabIndex="0">
-					<div className="container mt-3">
-						<div className="row">
-							<div className="col-6">
-								{!editClicked ? (
-									!user.profile_picture
-										?
-										<img
-											src="https://placehold.co/600x400.png"
-											className="card-img-top"
-											alt="Profile Picture" />
-										:
-										<img
-											src={user.profile_picture}
-											className="card-img-top"
-											id="profile-picture"
-											alt="Profile Picture"
-										/>
-								) : (
+					)}
+				{/* Creating the different tabs: */}
+				<div className="flex-grow-1 m-0">
+					{
+						alert && alert !== ""
+							?
+							<div className="container">
+								<div className="alert alert-success alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+									<i className="bi bi-check-circle-fill me-2"></i>
 									<div>
-										<InputProfilePic />
+										{alert}
 									</div>
-								)}
+									<button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+								</div>
 							</div>
-							<div className="col-6">
-								<label className="">Email: </label>
-								<p> {user.email}</p>
+							:
+							null
 
-								<label className="text-start">Name: </label>
-								{!editClicked ? (
-									<p> {user.full_name}</p>
-								) : (
-									<input
-										className="form-control"
-										id="full_name"
-										aria-describedby="full_name"
-										value={user.full_name}
-										onChange={(e) => setUser({ ...user, full_name: e.target.value })}
-									/>
-								)}
-
-
-								<label className="text-start">Password: </label>
-								{!editClicked ? (
-									<p>{user.password}</p>
-								) : (
-									<input
-										className="form-control"
-										id="password"
-										aria-describedby="password"
-										value={user.password || ""}
-										onChange={(e) => setUser({ ...user, password: e.target.value })}
-									/>
-								)}
-
-								<label className="text-start">Shipping Address: </label>
-								{!editClicked ? (
-
-									<p>{user.address}</p>
-								) : (
-									<input
-										className="form-control"
-										id="address"
-										aria-describedby="address"
-										value={user.address || ""}
-										onChange={(e) => setUser({ ...user, address: e.target.value })}
-									/>
-								)}
-
-								<label className="text-start">Billing Address: </label>
-								{!editClicked ? (
-
-									<p>{user.billing_address}</p>
-								) : (
-									<input
-										className="form-control"
-										id="billing_address"
-										aria-describedby="billing_address"
-										value={user.billing_address || ""}
-										onChange={(e) => setUser({ ...user, billing_address: e.target.value })}
-									/>
-								)}
-
-
-
-							</div>
-							<div className="d-flex justify-content-end">
-								{!editClicked ? (
-
-									<button className="btn btn-secondary custom-button" onClick={() => setEditClicked(true)}>
-										<i className="fa-solid fa-pen-to-square"></i>
-									</button>
-
-								) : (
-									<div className="d-flex">
-										<button className="btn btn-secondary me-2 custom-button" onClick={handleSave}>
-											Save
-										</button>
-										<button className="btn btn-secondary " onClick={() => setEditClicked(false)}>
-											Close
-										</button>
+					}
+					{
+						error && error !== ""
+							?
+							<div className="container">
+								<div className="alert alert-danger alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+									<i className="bi bi-exclamation-triangle-fill"></i>
+									<div>
+										{error}
 									</div>
+									<button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+								</div>
+							</div>
+							:
+							null
 
-								)}
+					}
+
+					{/* Adding content to each tab: */}
+					<div className={`tab-content ${isMobile ? 'mt-0' : 'profile-container'}`} id="myTabContent">
+						<div className={`tab-pane fade ${activeTab === 'personal' ? 'show active' : ''}`} id="personal-tab-pane" role="tabpanel" aria-labelledby="personal-tab" tabIndex="0">
+							<div className="container mt-3">
+								<div className="row">
+									<div className="col-6">
+										{!editClicked ? (
+											!user.profile_picture
+												?
+												<img
+													src="https://placehold.co/600x400.png"
+													className="card-img-top"
+													alt="Profile Picture" />
+												:
+												<img
+													src={user.profile_picture}
+													className="card-img-top"
+													id="profile-picture"
+													alt="Profile Picture"
+												/>
+										) : (
+											<div>
+												<InputProfilePic />
+											</div>
+										)}
+									</div>
+									<div className="col-6">
+										<label className="">Email: </label>
+										<p> {user.email}</p>
+
+										<label className="text-start">Name: </label>
+										{!editClicked ? (
+											<p> {user.full_name}</p>
+										) : (
+											<input
+												className="form-control"
+												id="full_name"
+												aria-describedby="full_name"
+												value={user.full_name}
+												onChange={(e) => setUser({ ...user, full_name: e.target.value })}
+											/>
+										)}
+
+
+										<label className="text-start">Password: </label>
+										{!editClicked ? (
+											<p>{user.password}</p>
+										) : (
+											<input
+												className="form-control"
+												id="password"
+												aria-describedby="password"
+												value={user.password || ""}
+												onChange={(e) => setUser({ ...user, password: e.target.value })}
+											/>
+										)}
+
+										<label className="text-start">Shipping Address: </label>
+										{!editClicked ? (
+
+											<p>{user.address}</p>
+										) : (
+											<input
+												className="form-control"
+												id="address"
+												aria-describedby="address"
+												value={user.address || ""}
+												onChange={(e) => setUser({ ...user, address: e.target.value })}
+											/>
+										)}
+
+										<label className="text-start">Billing Address: </label>
+										{!editClicked ? (
+
+											<p>{user.billing_address}</p>
+										) : (
+											<input
+												className="form-control"
+												id="billing_address"
+												aria-describedby="billing_address"
+												value={user.billing_address || ""}
+												onChange={(e) => setUser({ ...user, billing_address: e.target.value })}
+											/>
+										)}
+
+
+
+									</div>
+									<div className="d-flex justify-content-end">
+										{!editClicked ? (
+
+											<button className="btn btn-secondary custom-button" onClick={() => setEditClicked(true)}>
+												<i className="fa-solid fa-pen-to-square"></i>
+											</button>
+
+										) : (
+											<div className="d-flex">
+												<button className="btn btn-secondary me-2 custom-button" onClick={handleSave}>
+													Save
+												</button>
+												<button className="btn btn-secondary " onClick={() => setEditClicked(false)}>
+													Close
+												</button>
+											</div>
+
+										)}
+									</div>
+								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-				<div className="tab-pane fade" id="wishlist-tab-pane" role="tabpanel" aria-labelledby="wishlist-tab" tabIndex="0">
-					<div className="container mt-4">
-						<div className="row d-flex">
-							{/* {store.user.wishlist && store.user.wishlist.length !== 0 ? store.user.wishlist.filter((book) => book.title.toLowerCase().includes(store.search)).map((book) => {
+						<div className={`tab-pane fade ${activeTab === 'wishlist' ? 'show active' : ''}`} id="wishlist-tab-pane" role="tabpanel" aria-labelledby="wishlist-tab" tabIndex="0">
+							<div className="container mt-4">
+								<div className="row d-flex">
+									{/* {store.user.wishlist && store.user.wishlist.length !== 0 ? store.user.wishlist.filter((book) => book.title.toLowerCase().includes(store.search)).map((book) => {
 								return <Card key={book.isbn} item={book} />
 							}) : null} */}
-							{store.user.wishlist && store.user.wishlist.length !== 0 ? store.user.wishlist.map((book) => {
-								return <Card key={book.id} item={book.book_id} />
-							}) :
-								<div>
-									Add books to your wishlist!
-								</div>}
-						</div>
-					</div>
-
-				</div>
-				<div className="tab-pane fade" id="reviews-tab-pane" role="tabpanel" aria-labelledby="reviews-tab" tabIndex="0">
-					<div className="container mt-4">
-						<div className="row d-flex g-3">
-							{store.user.review.length === 0 ? (
-								<div>
-									Add a review to your latest read now!
+									{store.user.wishlist && store.user.wishlist.length !== 0 ? store.user.wishlist.map((book) => {
+										return <Card key={book.id} item={book.book_id} />
+									}) :
+										<div>
+											Add books to your wishlist!
+										</div>}
 								</div>
-							) : (
-								store.user.review.map((review) => {
-									return <Review key={review.id} item={review} />
-								})
-							)}
+							</div>
+
 						</div>
-					</div>
+						<div className={`tab-pane fade ${activeTab === 'reviews' ? 'show active' : ''}`} id="reviews-tab-pane" role="tabpanel" aria-labelledby="reviews-tab" tabIndex="0">
+							<div className="container mt-4">
+								<div className="row d-flex g-3">
+									{store.user.review.length === 0 ? (
+										<div>
+											Add a review to your latest read now!
+										</div>
+									) : (
+										store.user.review.map((review) => {
+											return <Review key={review.id} item={review} />
+										})
+									)}
+								</div>
+							</div>
 
-				</div>
-				<div className="tab-pane fade" id="payment-tab-pane" role="tabpanel" aria-labelledby="payment-tab" tabIndex="0">
-					<div className="container mt-4">
+						</div>
+						<div className={`tab-pane fade ${activeTab === 'payment' ? 'show active' : ''}`} id="payment-tab-pane" role="tabpanel" aria-labelledby="payment-tab" tabIndex="0">
+							<div className="container mt-4">
 
 
-						<button className="btn custom-button" onClick={() =>
-							setShowForm(true)}>Add New</button>
-						{showForm ? <EmptyPaymentMethod closeForm={() => setShowForm(false)} /> : null}
-						{store.user.payment_method && store.user.payment_method.length === 1 ?
-							<h4 className="mt-2 mb-2">Saved Payment Method</h4>
-							: store.user.payment_method && store.user.payment_method.length > 1 ?
-								<h4 className="mt-2 mb-2">Saved Payment Methods</h4> : null}
+								<button className="btn custom-button" onClick={() =>
+									setShowForm(true)}>Add New</button>
+								{showForm ? <EmptyPaymentMethod closeForm={() => setShowForm(false)} /> : null}
+								{store.user.payment_method && store.user.payment_method.length === 1 ?
+									<h4 className="mt-2 mb-2">Saved Payment Method</h4>
+									: store.user.payment_method && store.user.payment_method.length > 1 ?
+										<h4 className="mt-2 mb-2">Saved Payment Methods</h4> : null}
 
-						<div className="row d-flex mx-1 gap-2">
-							{store.user.payment_method && store.user.payment_method.map((payment_method) => {
-								return <PaymentMethod key={payment_method.id} item={payment_method} />
-							})}
+								<div className="row d-flex mx-1 gap-2">
+									{store.user.payment_method && store.user.payment_method.map((payment_method) => {
+										return <PaymentMethod key={payment_method.id} item={payment_method} />
+									})}
+								</div>
+
+							</div>
+						</div>
+						<div className={`tab-pane fade ${activeTab === 'purchase' ? 'show active' : ''}`} id="purchase-tab-pane" role="tabpanel" aria-labelledby="purchase-tab" tabIndex="0">
+							<div className="container mt-4">
+
+								<div className="row d-flex mx-1 gap-2">
+									{store.user.transaction && store.user.transaction.map((transaction) => {
+										return <TransactionCard key={transaction.id} item={transaction} />
+									})}
+								</div>
+
+							</div>
+						</div>
+						<div className={`tab-pane fade ${activeTab === 'support' ? 'show active' : ''}`} id="support-tab-pane" role="tabpanel" aria-labelledby="support-tab" tabIndex="0">
+							<div className="container mt-4">
+								{store.user.support && store.user.support.length !== 0 ? store.user.support.map((ticket) => {
+									return <SupportCard key={ticket.ticket_id} item={ticket} />
+								}) : <div>
+									Want to contact us? Go to our <Link to="/support">
+										<a className="link-like">
+											support
+										</a>
+									</Link> page.
+
+								</div>}
+							</div>
 						</div>
 
 					</div>
 				</div>
-				<div className="tab-pane fade" id="purchase-tab-pane" role="tabpanel" aria-labelledby="purchase-tab" tabIndex="0">
-					<div className="container mt-4">
-
-						<div className="row d-flex mx-1 gap-2">
-							{store.user.transaction && store.user.transaction.map((transaction) => {
-								return <TransactionCard key={transaction.id} item={transaction} />
-							})}
-						</div>
-
-					</div>
-				</div>
-				<div className="tab-pane fade" id="support-tab-pane" role="tabpanel" aria-labelledby="support-tab" tabIndex="0">
-					<div className="container mt-4">
-						{store.user.support && store.user.support.length !== 0 ? store.user.support.map((ticket) => {
-							return <SupportCard key={ticket.ticket_id} item={ticket} />
-						}) : <div>
-							Want to contact us? Go to our <Link to="/support">
-								<span className="link-like">
-									support
-								</span>
-							</Link> page.
-
-						</div>}
-					</div>
-				</div>
-
-
 			</div>
-
 		</div>
+
 	);
 };

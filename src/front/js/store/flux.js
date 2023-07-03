@@ -15,6 +15,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 		},
 		actions: {
+			capitalizeWords: (str) => {
+				return str
+					.split(' ')
+					.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+					.join(' ');
+			},
+
 			createAlertMsg: (msg) => {
 				setStore({ alert: msg })
 			},
@@ -42,7 +49,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				if (resp.status == 200) {
 					setStore({ user: data.user })
 				} else {
-					setStore({ user: { wishlist: [], review: [], transaction: [], items: [], support: [], paymentMethod: [], transaction: [] } })
+					setStore({ user: { wishlist: [], review: [], transaction: [], items: [], support: [], paymentMethod: [] } })
 					sessionStorage.removeItem("token")
 				}
 			},
@@ -50,7 +57,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			logout: () => {
 				sessionStorage.removeItem("token");
 				console.log("Logging out");
-				setStore({ user: { wishlist: [], review: [], transaction: [], items: [], support: [], paymentMethod: [], transaction: [] } });
+				setStore({ user: { wishlist: [], review: [], transaction: [], items: [], support: [], paymentMethod: [] } });
 			},
 
 			login: async (email, password) => {
