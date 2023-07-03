@@ -355,13 +355,16 @@ def create_transaction():
             success_url=os.getenv('BACKEND_URL') + '?success=true',
             cancel_url=os.getenv('BACKEND_URL') + '?canceled=true',
         )
-
+        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        print(checkout_session)
+        
         new_transaction = Transaction(
             payment_method_id=body["payment_method_id"],
             user=user,
             total_price=total_price,
             in_progress=True,
         )
+        print(new_transaction)
          # Assign the items to the new transaction
         new_transaction.items.extend(items)
         
