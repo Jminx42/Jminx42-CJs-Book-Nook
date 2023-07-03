@@ -33,11 +33,11 @@ export const Navbar = () => {
 							{!sessionStorage.getItem("token") ? (
 								<div className="d-flex">
 
-									<Link to="/register">
+									{/* <Link to="/register">
 										<button className="btn btn-secondary me-2 custom-button">Register</button>
-									</Link>
+									</Link> */}
 									<Link to="/login">
-										<button className="btn btn-secondary custom-button">Login</button>
+										<button className="btn btn-secondary custom-button"><i class="fa-solid fa-right-to-bracket"></i></button>
 									</Link>
 								</div>
 							) : (
@@ -84,7 +84,7 @@ export const Navbar = () => {
 									value={store.search}
 									onChange={(e) => actions.handleSearch(e.target.value)}
 									placeholder="Search" />
-								<button type="button" className="btn custom-button" id="button-addon2">
+								<button type="button" className="btn custom-button" id="button-addon2" onClick={() => navigate('/')}>
 									<i className="fas fa-search"></i>
 								</button >
 							</div>

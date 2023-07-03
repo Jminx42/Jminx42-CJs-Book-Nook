@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Navbar } from "../component/navbar";
 import { EmptyPaymentMethod } from "../component/emptyPaymentMethod";
@@ -16,7 +16,8 @@ export const OrderSummary = () => {
     const [showForm, setShowForm] = useState(false);
     const [alert, setAlert] = useState("");
     const [error, setError] = useState("");
-    const [checked, setChecked] = useState(false)
+    const [checked, setChecked] = useState(false);
+    const navigate = useNavigate();
 
     const handleSave = async () => {
         setEditAddress(false);
@@ -150,9 +151,11 @@ export const OrderSummary = () => {
                             </Link>
                         </div>
                         <div className="col-sm-3 col-md-3 col-lg-3 text-center d-flex justify-content-end pe-0">
-                            <Link to="/confirmDetails">
-                                <button className="btn custom-button text-center"><i className="fa-solid">Proceed &nbsp;</i><i className="fa-solid fa-arrow-right"></i></button>
-                            </Link>
+
+                            <button className="btn custom-button text-center" onClick={() => navigate("https://buy.stripe.com/test_6oE00r6Fm5If0Qo4gg")}>
+                                <i className="fa-solid">Proceed &nbsp;</i><i className="fa-solid fa-arrow-right"></i>
+                            </button>
+
                         </div>
 
                     </div>
