@@ -129,5 +129,60 @@
 }
 
 .landing-background {
-    background: linear-gradient(90deg, rgba(131, 126, 226, 1) 24%, rgba(114, 114, 226, 1) 58%, rgba(0, 212, 255, 1) 100%);
+    background: linear-gradient(90deg, #128179 38%, #68B0AB 85%, #cdeeec 100%);
+    background-size: contain;
+    background-position: center;
+    background-blend-mode: overlay;
+    opacity: 0.8;
+    /* Adjust the opacity value as desired */
+}
+
+.image-background {
+    background: url('https://res.cloudinary.com/dfihuo0ir/image/upload/v1688463148/landing_1_skhq8d.jpg');
+    /* background: url('https://themoodguide.com/wp-content/uploads/2022/07/light-academia-aesthetic-books_the.vintage.library_the-mood-guide.jpg'); */
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: overlay;
+    opacity: 1;
+    /* Adjust the opacity value as desired */
+}
+
+.landing-text {
+    color: white;
+}
+
+
+.landing-button {
+    background-color: white;
+    border-color: white;
+    color: #0c6e68;
+    border-radius: 0;
+
+}
+
+.landing-button:hover {
+    background-color: #68B0AB;
+    border-color: #68B0AB;
+    color: white;
+    border-radius: 0;
+
+}
+
+.feature-title {
+    margin-bottom: 1rem;
+    color: #68B0AB;
+}
+
+.feature-description {
+    margin-bottom: 2rem;
+}
+
+.divider {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0;
+    width: 2px;
+    height: 100%;
+    background-color: #68B0AB;
 }
