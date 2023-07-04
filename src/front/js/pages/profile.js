@@ -139,14 +139,6 @@ export const Profile = () => {
 							</li>
 							<li className="nav-item">
 								<button
-									className={`nav-link btn w-100 text-start${activeTab === 'payment' ? 'active' : ''}`}
-									onClick={() => setActiveTab('payment')}
-								>
-									<i className="fa-regular fa-credit-card"></i> Payment Methods
-								</button>
-							</li>
-							<li className="nav-item">
-								<button
 									className={`nav-link btn w-100 text-start${activeTab === 'purchase' ? 'active' : ''}`}
 									onClick={() => setActiveTab('purchase')}
 								>
@@ -183,11 +175,6 @@ export const Profile = () => {
 								<li>
 									<button className={`py-3 border-bottom rounded-0 nav-link btn ${activeTab === 'reviews' ? 'active' : ''}`} onClick={() => setActiveTab('reviews')} data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Reviews" data-bs-original-title="Reviews">
 										<i className="fa-regular fa-keyboard"></i>
-									</button>
-								</li>
-								<li>
-									<button className={`nav-link py-3 border-bottom rounded-0 btn ${activeTab === 'payment' ? 'active' : ''}`} onClick={() => setActiveTab('payment')} data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Payment" data-bs-original-title="Payment">
-										<i className="fa-regular fa-credit-card"></i>
 									</button>
 								</li>
 								<li>
@@ -380,26 +367,7 @@ export const Profile = () => {
 							</div>
 
 						</div>
-						<div className={`tab-pane fade ${activeTab === 'payment' ? 'show active' : ''}`} id="payment-tab-pane" role="tabpanel" aria-labelledby="payment-tab" tabIndex="0">
-							<div className="container mt-4">
 
-
-								<button className="btn custom-button" onClick={() =>
-									setShowForm(true)}>Add New</button>
-								{showForm ? <EmptyPaymentMethod closeForm={() => setShowForm(false)} /> : null}
-								{store.user.payment_method && store.user.payment_method.length === 1 ?
-									<h4 className="mt-2 mb-2">Saved Payment Method</h4>
-									: store.user.payment_method && store.user.payment_method.length > 1 ?
-										<h4 className="mt-2 mb-2">Saved Payment Methods</h4> : null}
-
-								<div className="row d-flex mx-1 gap-2">
-									{store.user.payment_method && store.user.payment_method.map((payment_method) => {
-										return <PaymentMethod key={payment_method.id} item={payment_method} />
-									})}
-								</div>
-
-							</div>
-						</div>
 						<div className={`tab-pane fade ${activeTab === 'purchase' ? 'show active' : ''}`} id="purchase-tab-pane" role="tabpanel" aria-labelledby="purchase-tab" tabIndex="0">
 							<div className="container mt-4">
 

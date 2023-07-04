@@ -106,6 +106,8 @@ class BookFormat(db.Model):
     book_format = db.Column(db.String(100), nullable=True, unique=False)
     book_price = db.Column(db.Float, unique=False, nullable=False)
     items = db.relationship("TransactionItem", backref="bookformat")
+    prod_id = db.Column(db.String(100), nullable=True, unique=False)
+    price_id = db.Column(db.String(100), nullable=True, unique=False)
 
     def __repr__(self):
         return f'<BookFormat {self.book_format}>'
@@ -114,7 +116,8 @@ class BookFormat(db.Model):
         return {
             "id": self.id,
             "book_format": self.book_format,
-            "book_price": self.book_price
+            "book_price": self.book_price,
+            "prod_id": self.prod_id,
         }
     
 class Review(db.Model):
