@@ -385,9 +385,9 @@ export const Profile = () => {
 									return <SupportCard key={ticket.ticket_id} item={ticket} />
 								}) : <div>
 									Want to contact us? Go to our <Link to="/support">
-										<a className="link-like">
+										<button className="btn link-like">
 											support
-										</a>
+										</button>
 									</Link> page.
 
 								</div>}

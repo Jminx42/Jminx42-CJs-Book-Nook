@@ -94,7 +94,7 @@ export const Landing = () => {
                         <div className="d-flex gap-3 justify-content-center lead fw-normal pt-5 mt-xl-5">
                             <Link to={`/`}>
                                 <button className="btn landing-button px-3 py-2 fs-4 mb-xl-5">
-                                    Start exploring
+                                    Start Exploring
                                 </button>
                             </Link>
                         </div>
@@ -144,7 +144,7 @@ export const Landing = () => {
                 </Slider>
 
             </div>
-            {/* This will only show when you are logged in and you have more than two books in wishlist!! */}
+            {/* This will only show when you are logged in and you have more than two books in wishlist!! It still need work! */}
             <div className="container mt-5 mb-5">
                 <div className="row mt-5 mb-5">
                     <h3 className="feature-title">Recommended for you</h3>

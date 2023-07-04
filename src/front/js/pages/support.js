@@ -3,7 +3,9 @@ import PropTypes from "prop-types";
 import { Link, useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Navbar } from "../component/navbar";
-import { Card } from "../component/card";
+import { Footer } from "../component/footer";
+
+
 
 export const Support = () => {
     const { store, actions } = useContext(Context);
@@ -86,9 +88,66 @@ export const Support = () => {
                     null
 
             }
-            <div className="container mt-4">
+            <div className="container mt-5 mx-auto">
+                <h1 className='fs-1 mt-5 fw-bold legal-title mb-3 text-center'>FAQ</h1>
+                <div class="accordion accordion-flush" id="accordionFlushExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                How do I place an order?
+                            </button>
+                        </h2>
+                        <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body"> To place an order, follow these steps:
+                                <ol>
+                                    <li>Search or browse our book collection.</li>
+                                    <li>Select the book(s) you wish to purchase and add them to your shopping cart.</li>
+                                    <li>Proceed to checkout and provide your billing and shipping information.</li>
+                                    <li>Review your order details and complete the payment.</li>
+                                    <li>Once your order is confirmed, you will receive an email notification.</li>
+                                </ol></div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                                What payment methods do you accept?
+                            </button>
+                        </h2>
+                        <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body">We accept major credit cards (Visa, Mastercard, American Express) and PayPal as
+                                payment methods. All transactions are processed securely.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                                Can I cancel my order?
+                            </button>
+                        </h2>
+                        <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body"> If you need to cancel your order, please contact us as soon as possible. We will do
+                                our best to accommodate your request if the order has not been shipped yet.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+                                Can I leave a review for a book?
+                            </button>
+                        </h2>
+                        <div id="flush-collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body"> Yes, as a logged-in user, you can leave a review for any book in our collection.
+                                Simply navigate to the book's page and scroll down to the review section. Rate the book and add your comments. Once submitted,
+                                your review will be visible to other users.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h1 className='fs-4 mt-5 fw-bold legal-title mb-3 text-center'>Still unsure? Get in Touch!</h1>
+            <div className="container mt-4 mx-auto">
 
-                <form onSubmit={handleSupport}>
+                <form onSubmit={handleSupport} className="mx-auto">
                     <label>Subject</label>
                     <input
                         className="form-control"
@@ -116,7 +175,7 @@ export const Support = () => {
             </div>
 
 
-
+            <Footer />
         </div>
 
     );

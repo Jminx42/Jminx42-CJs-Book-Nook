@@ -13,12 +13,14 @@ import { GooglePreview } from "./pages/googlePreview.js";
 import { Checkout } from "./pages/checkout";
 import { ConfirmDetails } from "./pages/confirmDetails";
 import { OrderSummary } from "./pages/orderSummary";
-
-
+import { LegalNotice } from "./pages/legalNotice";
+import { DataProtection } from "./pages/dataProtection";
 import injectContext from "./store/appContext";
 
 
 import { Footer } from "./component/footer";
+
+
 
 
 //create your first component
@@ -42,6 +44,9 @@ const Layout = () => {
                         <Route element={<Register />} path="/register" />
                         <Route element={<Login />} path="/login" />
                         <Route element={<Support />} path="/support" />
+                        <Route element={<LegalNotice />} path="/legalNotice" />
+                        <Route element={<DataProtection />} path="/dataProtection" />
+
                         <Route element={<GooglePreview />} path="/googlePreview/:theisbn" />
                         <Route element={<Checkout />} path="/checkout" />
                         <Route element={<ConfirmDetails />} path="/confirmDetails" />
