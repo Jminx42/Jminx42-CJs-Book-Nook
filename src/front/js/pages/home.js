@@ -198,6 +198,7 @@ export const Home = () => {
 								</div>
 								<div>Loading books...</div>
 							</div>
+
 						)}
 					</div>
 					<div className="col-lg-9 col-md-8 col-sm-6">
@@ -221,12 +222,15 @@ export const Home = () => {
 									// </div>
 								))}
 
+
 						</div>
+
 					</div>
 				</div>
 			</div>
 			<Footer />
 		</div>
+
 	);
 };
 
