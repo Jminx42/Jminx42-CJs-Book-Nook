@@ -1,6 +1,8 @@
 /* 
     General Styles used on every website (Don't Repeat Yourself)
 */
+
+
 .custom-button {
     background-color: #cdeeec;
     border-color: #cdeeec;
@@ -171,10 +173,12 @@
 .feature-title {
     margin-bottom: 1rem;
     color: #68B0AB;
+    text-align: center;
 }
 
 .feature-description {
     margin-bottom: 2rem;
+    text-align: justify;
 }
 
 .divider {
@@ -185,4 +189,49 @@
     width: 2px;
     height: 100%;
     background-color: #68B0AB;
+}
+
+/* Increase the size of the dots*/
+.slick-dots li button:before {
+    font-size: 30px !important;
+}
+
+/* Increase the active dot size */
+.slick-dots li.slick-active button:before {
+    font-size: 30px;
+}
+
+.img-responsive {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Media Queries!!! Define different styles for different screen sizes */
+@media (max-width: 414px) {
+    .img-responsive {
+        max-height: 100px;
+
+    }
+}
+
+@media (min-width: 769px) and (max-width: 768px) {
+    .img-responsive {
+        max-height: 200px;
+
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .img-responsive {
+        max-height: 300px;
+
+    }
+}
+
+@media (min-width: 1025px) {
+    .img-responsive {
+        max-height: 400px;
+
+    }
 }
