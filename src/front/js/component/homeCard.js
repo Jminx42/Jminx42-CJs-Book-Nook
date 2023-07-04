@@ -42,7 +42,7 @@ export const HomeCard = ({ item }) => {
             <div className="card-body-custom">
                 {item.book_cover == null || item.book_cover == "" ? (
 
-                    <div className="">
+                    <>
                         <Link to={`/book/${item.isbn}`}>
                             <img src={item.book_cover_b} className="card-img-top contain" alt="Book Cover" style={{ height: "300px" }} />
                         </Link>
@@ -58,9 +58,9 @@ export const HomeCard = ({ item }) => {
                                 <i className="far fa-heart"></i>
                             )}
                         </button>
-                    </div>
+                    </>
                 ) : (
-                    <div className="">
+                    <>
                         <Link to={`/book/${item.isbn}`}>
                             <img src={item.book_cover} className="card-img-top contain" alt="Book Cover" style={{ height: "300px" }} />
                         </Link>
@@ -76,7 +76,7 @@ export const HomeCard = ({ item }) => {
                                 <i className="far fa-heart"></i>
                             )}
                         </button>
-                    </div>
+                    </>
                 )}
 
 
