@@ -1,16 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
-import PropTypes from "prop-types";
 import { Link, useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Navbar } from "../component/navbar";
-import { GoogleBooksViewer } from "../component/googleBooksViewer";
-import { GoogleViewer2 } from "../component/googleViewer2";
-import ReviewBook from "../component/reviewBook";
+import { StarRating } from "../component/StarRating";
 
 export const BookPage = () => {
 	const params = useParams();
 	const [review, setReview] = useState({ review: "", rating: 0 });
-	const [preview, setPreview] = useState(false);
 	const { store, actions } = useContext(Context);
 	const [editClicked, setEditClicked] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
@@ -23,6 +19,7 @@ export const BookPage = () => {
 	const [alert, setAlert] = useState("");
 	const [error, setError] = useState("");
 	const [isGooglePreview, setIsGooglePreview] = useState(false);
+	const [rating, setRating] = useState(0);
 
 
 	useEffect(() => {
@@ -45,15 +42,6 @@ export const BookPage = () => {
 			setIsGooglePreview(false);
 		}
 	}, [store.book.preview]);
-
-
-
-	// useEffect(() => {
-	// 	setEditReview({
-	// 		rating: review.rating,
-	// 		review: review.review
-	// 	});
-	// }, [review]);
 
 	useEffect(() => {
 		actions.getBookFormats();
@@ -97,29 +85,19 @@ export const BookPage = () => {
 		}
 	}
 
-	const handleEditReview = () => {
-		if (store.user.review.length !== 0) {
-			store.user.review.forEach((rev) => {
-				if (rev.book_id && rev.book_id.isbn == params.theisbn) {
-					setEditReview({
-						rating: rev.rating,
-						review: rev.review
-					});
-					setEditClicked(true);
-				}
-			});
-		}
-	};
-
-	// const handleOptionChange = (event) => {
-	// 	setSelectedOption(event.target.value);
-	// 	// Update the cart state with the selected option
-	// 	// You can implement your logic to add the option to the cart here
+	// const handleEditReview = () => {
+	// 	if (store.user.review.length !== 0) {
+	// 		store.user.review.forEach((rev) => {
+	// 			if (rev.book_id && rev.book_id.isbn == params.theisbn) {
+	// 				setEditReview({
+	// 					rating: rev.rating,
+	// 					review: rev.review
+	// 				});
+	// 				setEditClicked(true);
+	// 			}
+	// 		});
+	// 	}
 	// };
-
-	// const handleAddToCart = () => {
-
-	// }
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -127,7 +105,6 @@ export const BookPage = () => {
 	};
 
 	if (isLoading || !showBookDetails) {
-		// Display loading spinner and message
 		return (
 			<div>
 				<Navbar />
@@ -198,161 +175,180 @@ export const BookPage = () => {
 			}
 
 			<div className="card container mt-3">
-				<div className="" >
 
-					<div className="p-4 text-center bg-body-tertiary rounded-3">
-						<img src={store.book.book_cover == null || store.book.book_cover == "" ? store.book.book_cover_b : store.book.book_cover} className=" w-25 float-start" alt="..." />
-						<div>
-							<h1 className=" display-3">{store.book.title}</h1>
-							<p className="display-6">By {store.book.author}</p>
-							<div className="row text-start">
-								<div className="border ms-3 p-3">
-									<div className="row">
-										<div className="col-2">Publisher:</div>
-										<div className="col-10">{!store.book.publisher ? "Not available" : store.book.publisher}</div>
-									</div>
-									<div className="row">
-										<div className="col-2">Published Date:</div>
-										<div className="col-10">{store.book.year}</div>
-									</div>
-									<div className="row">
-										<div className="col-2">Genre:</div>
-										<div className="col-10">{store.book.genre}</div>
-										{/* <div ">{store.book.genre && store.book.genre.join("& ")}</div> */}
 
-									</div>
-									<div className="row">
-										<div className="col-2">Pages:</div>
-										<div className="col-10">{store.book.pages == 0 ? "Not available" : store.book.pages}</div>
-									</div>
+				<div className="p-4 text-center bg-body-tertiary rounded-3">
+					<img src={store.book.book_cover == null || store.book.book_cover == "" ? store.book.book_cover_b : store.book.book_cover} className=" w-25 float-start" alt="..." />
+					<div>
+						<h1 className=" display-3">{store.book.title}</h1>
+						<p className="display-6">By {store.book.author}</p>
+						<div className="row text-start">
+							<div className="border ms-3 p-3">
+								<div className="row">
+									<div className="col-2">Publisher:</div>
+									<div className="col-10">{!store.book.publisher ? "Not available" : store.book.publisher}</div>
+								</div>
+								<div className="row">
+									<div className="col-2">Published Date:</div>
+									<div className="col-10">{store.book.year}</div>
+								</div>
+								<div className="row">
+									<div className="col-2">Genre:</div>
+									<div className="col-10">{store.book.genre}</div>
 
-									<div className="row">
-										<div className="col-2">ISBN:</div>
-										<div className="col-10">{params.theisbn}</div>
+								</div>
+								<div className="row">
+									<div className="col-2">Pages:</div>
+									<div className="col-10">{store.book.pages == 0 ? "Not available" : store.book.pages}</div>
+								</div>
+
+								<div className="row">
+									<div className="col-2">ISBN:</div>
+									<div className="col-10">{params.theisbn}</div>
+								</div>
+								<div className="row">
+									<div className="col-2">Rating: </div>
+									<div className="col-10">{store.book.average_rating ? store.book.average_rating + " (out of " + store.book.ratings_count + " votes)" : "Not available"} </div>
+								</div>
+								<div className="row">
+									<div className="col-2">Book Format:</div>
+									<div className="col-8">
+
+										<select className="form-select" aria-label="Default select example" defaultValue="" onChange={(e) => setFormat(e.target.value)}>
+											<option value="" disabled>Select your format</option>
+											{store.bookFormats.map((format) => (
+												<option key={format.id} value={format.id}>{format.book_format} - {format.book_price}€ </option>
+											))}
+										</select>
 									</div>
-									<div className="row">
-										<div className="col-2">Rating: </div>
-										<div className="col-10">{store.book.average_rating ? store.book.average_rating + " (out of " + store.book.ratings_count + " votes)" : "Not available"} </div>
-									</div>
-									<div className="row">
-										<div className="col-2">Book Format:</div>
-										<div className="col-8">
+									<div className="col-2 g-0">
+										{
+											sessionStorage.getItem("token") ?
+												<button type="button" disabled={!format} className="btn me-2 custom-button" onClick={() => actions.postCheckout(format)}>
+													<i className="fas fa-shopping-cart"></i>
+												</button>
+												:
+												<div>
+													<p>Want to add to your cart?&nbsp;
+														<Link to="/login">
+															<sup><button
+																type="button"
+																className="btn link-like p-0"
+															>Login
+															</button></sup></Link>
+														&nbsp;first!</p>
 
-											<select className="form-select" aria-label="Default select example" defaultValue="" onChange={(e) => setFormat(e.target.value)}>
-												<option value="" disabled>Select your format</option>
-												{store.bookFormats.map((format) => (
-													<option key={format.id} value={format.id}>{format.book_format} - {format.book_price}€ </option>
-												))}
-											</select>
-										</div>
-										<div className="col-2 g-0">
-											{
-												sessionStorage.getItem("token") ?
-													<button type="button" disabled={!format} className="btn me-2 custom-button" onClick={() => actions.postCheckout(format)}>
-														<i className="fas fa-shopping-cart"></i>
-													</button>
-													:
-													<div>
-														<p>Want to add to your cart?&nbsp;
-															<Link to="/login">
-																<sup><button
-																	type="button"
-																	className="btn btn-link p-0"
-																>Login
-																</button></sup></Link>
-															&nbsp;first!</p>
+												</div>
+										}
 
-													</div>
-											}
-
-										</div>
-									</div>
-
-									<div className="row">
-										<div className="col-2">Description:</div>
-										<div className="col-10">{store.book.description}</div>
 									</div>
 								</div>
-								<div className="row ms-5">
-									{
-										isGooglePreview ?
-											<Link to={`/googlePreview/${params.theisbn}`} className="link-like">
-												<p className="mt-3 fs-5 ">Click here to preview the book</p>
-											</Link>
-											:
-											null
-									}
 
+								<div className="row">
+									<div className="col-2">Description:</div>
+									<div className="col-10">{store.book.description}</div>
 								</div>
 							</div>
-						</div >
+							<div className="row ms-5">
+								{
+									isGooglePreview ?
+										<Link to={`/googlePreview/${params.theisbn}`} className="link-like">
+											<p className="mt-3 fs-5 ">Click here to preview the book</p>
+										</Link>
+										:
+										null
+								}
+
+							</div>
+						</div>
 					</div >
-				</div>
+				</div >
+
 			</div>
 			<div className="container">
-				{store.nytReview && store.nytReview !== {} ?
-					<div className="row mb-3 mt-3">
-						<h4>New York Times' Reviews</h4>
-						<p>By {store.nytReview.byline.split(' ').map(name => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()).join(' ')}</p>
-						<p>Reviewed in {store.nytReview.publication_dt}</p>
-						<p>Excerpt: {store.nytReview.summary}</p>
-						<p>Review Link: <a href={store.nytReview.url} target="_blank" rel="noopener noreferrer">Click here</a></p>
-					</div> : null}
 
-				<h4>Reviews</h4>
-				{store.book.reviews.map((review) => {
-					return <ReviewBook key={review.id} item={review} />
-				})}
-				{store.book.reviews.find((item) => item.user_id === store.user.id)
-					?
-					null
-					:
-					<div className="row mb-3 mt-3">
+				{store.nytReview && Object.keys(store.nytReview).length > 0 ? (
+					<div className="row my-3">
+						<hr></hr>
+						<h4 className="background-custom p-3 rounded">New York Times' Reviews</h4>
+						<div className="card-body border">
+							<h5 className="card-title">
+								{store.nytReview.byline
+									.split(' ')
+									.map((name) => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase())
+									.join(' ')}
+							</h5>
+							<h6 className="card-subtitle mb-2 text-muted">Reviewed in {store.nytReview.publication_dt}</h6>
+							<p className="card-text">Excerpt: {store.nytReview.summary}</p>
+							<p className="card-text">
+								Review Link: <a href={store.nytReview.url} target="_blank" rel="noopener noreferrer" className="link-like">Click here</a>
+							</p>
+						</div>
+					</div>
+				) : null}
+				<div className="row my-3">
+					<hr></hr>
+					<h4 className="background-custom p-3 rounded">Reviews & Ratings</h4>
+					{store.book.reviews.map((review) => (
+						<div className="card mb-3" key={review.id}>
+							<div className="card-body">
+								<h5 className="card-title">By {review.full_name}</h5>
+								<h6 className="card-subtitle mb-2 text-muted">Posted {review.
+									created_at}</h6>
+								<StarRating rating={review.rating} editable={false} />
+								<p className="card-text">{review.review}</p>
+							</div>
+						</div>
+					))}
+					<hr></hr>
+				</div>
+				{!store.book.reviews.find((item) => item.user_id === store.user.id) && (
+					<div className="row mb-3 mt-3 border p-2">
 						<h4>Submit your review</h4>
-						{sessionStorage.getItem("token") ?
+						<p className="fst-italic">Submit either a rating, a review or both!</p>
+						{sessionStorage.getItem('token') ? (
 							<div>
 								<form onSubmit={handleSubmit}>
-									<label>Rating</label>
-									<input
-										className="form-control"
-										id="rating"
-										aria-describedby="rating"
-										value={review.rating || ""}
-										onChange={(e) => setReview({ ...review, rating: parseInt(e.target.value) })}
-									/>
-									<label>Review</label>
-									<textarea
-										className="form-control"
-										id="review"
-										aria-describedby="review"
-										rows="5"
-										value={review.review || ""}
-										onChange={(e) => setReview({ ...review, review: e.target.value })}
-									/>
-									<button className="btn custom-button text-white mt-3 mb-4" onClick={() => {
-										setReview({ ...review, book_id: store.book.id })
-
-									}
-									} type="submit">
+									<div className="form-group">
+										<label htmlFor="rating">Rating</label>
+										<StarRating
+											rating={rating}
+											editable={true}
+											onRatingChange={setRating}
+										/>
+									</div>
+									<div className="form-group m-1">
+										<label htmlFor="review">Review</label>
+										<textarea
+											className="form-control"
+											id="review"
+											rows="5"
+											value={review.review || ''}
+											onChange={(e) => setReview({ ...review, review: e.target.value })}
+										/>
+									</div>
+									<button className="btn custom-button mt-2" type="submit">
 										Submit
 									</button>
-
 								</form>
 							</div>
-							:
+						) : (
 							<div>
-								<p>Want to submit your review?&nbsp;
+								<p>
+									Want to submit your review?&nbsp;
 									<Link to="/login">
-										<sup><button
-											type="button"
-											className="btn btn-link p-0"
-										>Login
-										</button></sup></Link>
-									&nbsp;first!</p>
+										<sup>
+											<button type="button" className="btn link-like p-0">
+												Login
+											</button>
+										</sup>
+									</Link>
+									&nbsp;first!
+								</p>
 							</div>
-						}
+						)}
 					</div>
-				}
+				)}
 			</div>
 		</div >
 	);

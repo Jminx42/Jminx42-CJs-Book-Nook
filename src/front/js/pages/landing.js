@@ -9,7 +9,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-
+import { Navbar } from "../component/navbar";
 import { Footer } from "../component/footer";
 import { LandingCard } from "../component/landingCard";
 
@@ -86,7 +86,8 @@ export const Landing = () => {
     return (
 
         <div>
-            <div className="position-relative overflow-hidden p-3 p-md-5 p-lg-5 text-center image-background d-flex">
+            <Navbar />
+            <div className="position-relative overflow-hidden p-3 p-md-5 p-lg-5 text-center image-background d-flex mt-3">
                 <div className="position-relative overflow-hidden p-3 p-md-5 p-lg-5 m-md-3 text-center landing-background d-flex">
                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 my-5 p-2">
                         <h1 className="display-3 fw-bold landing-text ">Designed for Book Lovers</h1>
