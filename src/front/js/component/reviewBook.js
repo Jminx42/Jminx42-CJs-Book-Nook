@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import "../../styles/index.css";
 import "../../styles/home.css";
 
-export const Review = ({ item }) => {
+export const ReviewBook = ({ item }) => {
     const { store, actions } = useContext(Context);
     const [editClicked, setEditClicked] = useState(false);
     const [editReview, setEditReview] = useState({
@@ -14,13 +14,12 @@ export const Review = ({ item }) => {
     });
 
     useEffect(() => {
-        actions.clearError();
-        actions.clearAlert();
+
+        setTimeout(() => {
+            actions.clearError();
+            actions.clearAlert();
+        }, 3000);
     }, []);
-
-
-
-
     return (
         <div className="container">
             {
@@ -56,24 +55,19 @@ export const Review = ({ item }) => {
 
             }
             <div className="row">
-                <div className="col-sm-4 col-md-3 col-lg-3">
-                    <Link to={`/book/${item.book_id.isbn}`}>
-                        <img src={item.book_id.book_cover} className="card-img-top" alt="..." />
-                    </Link>
-                </div>
                 <div className="col-sm-6 col-md-9 col-lg-9">
-                    <h4 className="text-start">{item.book_id.title}</h4>
-                    <h5 className="text-start">by {item.book_id.author}</h5>
                     <div className="d-flex justify-content-between align-items-center mb-2">
+                        <p className="text-start mb-0">Reviewed by {item.full_name}</p>
                         <p className="text-start mb-0">Posted on {item.created_at}</p>
-                        {!editClicked ?
-                            <button className="btn custom-button" onClick={() => setEditClicked(true)}>Edit</button>
-                            :
-                            <button className="btn custom-button" onClick={() => {
+                        {item.user_id != store.user.id ? null : !editClicked ?
+                            <button className="btn custom-button" onClick={() => setEditClicked(true)}>Edit</button> :
+                            <button className="btn custom-button" onClick={async () => {
+                                await actions.editReview(item.book_id, editReview.review, editReview.rating)
                                 setEditClicked(false)
-                                actions.editReview(item.book_id, editReview.review, editReview.rating)
-
-                            }}>Save</button>}
+                            }}>Save</button>
+                        }
+                        {
+                        }
                     </div>
 
                     <div className="d-flex align-items-center"> {/* Wrap label and input in a flex container */}
@@ -110,4 +104,4 @@ export const Review = ({ item }) => {
     );
 };
 
-export default Review;
+export default ReviewBook;

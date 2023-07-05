@@ -21,8 +21,8 @@ export const InputProfilePic = () => {
 
         fetch(`${process.env.BACKEND_URL}api/user/image`, options)
             .then(resp => resp.json())
-            .then(data => { actions.validate_user(); console.log("Success!!!!", data) })
-            .catch(error => console.error("ERRORRRRRR!!!", error));
+            .then(data => { actions.validate_user(); console.log("Success!!!! Profile picture uploaded.", data) })
+            .catch(error => console.error("ERRORRRRRR!!! Something went wrong with trying to upload profile picture.", error));
     };
 
 
@@ -49,7 +49,7 @@ export const InputProfilePic = () => {
 
                 <div className="mt-2 d-flex justify-content-end">
                     <div className="me-2">
-                        <button className="btn btn-primary">Upload image</button>
+                        <button className="btn custom-button">Upload image</button>
                     </div>
                 </div>
 

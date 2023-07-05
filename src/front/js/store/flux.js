@@ -2,22 +2,42 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 
-			user: { wishlist: [], review: [], transaction: [], support: [] },
+			user: { wishlist: [], review: [], items: [], support: [], paymentMethod: [], transaction: [] },
 			books: [],
 			book: { reviews: [] },
-			// externalBooks: [],
 			search: "",
-			// oneGoogleBook: {},
 			nytReview: {},
-			checkout: [],
-			price: null,
-			bookPrice: null,
 			loading: true,
 			errorMsg: '',
+			bookFormats: [],
+			alert: '',
+			activeTab: 'personal',
 
 
 		},
 		actions: {
+			setActiveTab: (tab) => {
+				setStore({ activeTab: tab })
+			},
+
+			capitalizeWords: (str) => {
+				return str
+					.split(' ')
+					.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+					.join(' ');
+			},
+
+			createAlertMsg: (msg) => {
+				setStore({ alert: msg })
+			},
+
+			clearError: () => {
+				setStore({ errorMsg: '' })
+			},
+
+			clearAlert: () => {
+				setStore({ alert: '' })
+			},
 
 			handleSearch: (word) => {
 				setStore({ search: word })
@@ -34,17 +54,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 				if (resp.status == 200) {
 					setStore({ user: data.user })
 				} else {
-					setStore({ user: { wishlist: [], review: [], transaction: [] } })
+					setStore({ user: { wishlist: [], review: [], transaction: [], items: [], support: [], paymentMethod: [] } })
 					sessionStorage.removeItem("token")
 				}
 			},
 
 			logout: () => {
 				sessionStorage.removeItem("token");
-				sessionStorage.removeItem("wishlist");
-				sessionStorage.removeItem("checkout");
 				console.log("Logging out");
-				setStore({ user: { wishlist: [], review: [], transaction: [] } });
+				setStore({ user: { wishlist: [], review: [], transaction: [], items: [], support: [], paymentMethod: [] } });
 			},
 
 			login: async (email, password) => {
@@ -85,7 +103,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const resp = await fetch(process.env.BACKEND_URL + 'api/book')
 				const data = await resp.json()
 				if (resp.status !== 200) {
-					alert(data.error)
+					setStore({ errorMsg: data.error })
 				} else {
 					setStore({ books: data.books })
 					// console.log(getStore().books)
@@ -100,7 +118,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const response = await fetch(process.env.BACKEND_URL + 'api/book/' + isbn);
 				const data = await response.json();
 				setStore({ book: data.book })
-				console.log(getStore().book)
+				// console.log(getStore().book)
 
 			},
 
@@ -108,7 +126,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const resp = await fetch('https://www.googleapis.com/books/v1/volumes?q=' + search_text + '&key=AIzaSyAhG7q0MvYbiWzXeuSBlhqNATkUVSKhFq0')
 				const data = await resp.json()
 				if (resp.status !== 200) {
-					alert(data.error)
+					setStore({ errorMsg: data.error })
 				} else {
 					setStore({ externalBooks: data })
 				}
@@ -117,39 +135,38 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			getNYTReview: async (isbn13) => {
 				const resp = await fetch('https://api.nytimes.com/svc/books/v3/reviews.json?isbn=' + isbn13 + '&api-key=emRJGQrXQ32EXbl6ThvjL8JdJcoicGWf')
-
-
 				const data = await resp.json()
 
 				if (resp.status !== 200) {
-					alert(data.error)
+					setStore({ errorMsg: data.error })
 				} else {
 					setStore({ nytReview: data.results[0] });
 				}
 			},
 
 			editReview: async (book_id, review, rating) => {
-				const response = await fetch(process.env.BACKEND_URL + 'api/review', {
+
+				const response = await fetch(process.env.BACKEND_URL + 'api/edit-review', {
 					method: "PUT",
 					headers: {
 						Authorization: "Bearer " + sessionStorage.getItem("token"),
 						"Content-Type": "application/json"
 					},
 
-					body: JSON.stringify({ "book_id": book_id.id, "review": review, "rating": rating })
+					body: JSON.stringify({ "book_id": book_id, "review": review, "rating": rating })
 				});
 
 				if (response.ok) {
 					const data = await response.json();
 					const reviewData = data.review;
-					await actions.validate_user();
-					alert("Review updated successfully");
+					await getActions().validate_user();
+					getActions().createAlertMsg("Review was successfully updated.")
 					console.log(reviewData); // Access the returned review data as needed
-					await getActions().getOneBook(getStore().book.isbn)
+
 
 				} else {
 					const data = await response.json();
-					alert(data.error);
+					setStore({ errorMsg: data.error })
 				}
 			},
 
@@ -169,11 +186,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 					if (resp.status !== 200) {
 						const data = await resp.json();
 						const errorMessage = data.error || "Something went wrong";
-						alert(errorMessage); // Display error message using toast
+						setStore({ errorMsg: errorMessage });
 						return false;
 					} else {
 						await getActions().validate_user();
-						alert("Your wishlist was updated successfully"); // Display success message using toast
+						getActions().createAlertMsg("Your wishlist was updated successfully");
 						return true;
 					}
 				} catch (error) {
@@ -181,72 +198,132 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			postCheckout: async (book_id, unit, book_format_id) => {
-
+			postCheckout: async (book_format_id) => {
+				const defaultUnit = 1;
+				// console.log("###########################")
+				// console.log(book_format_id)
 				const opts = {
 					method: 'POST',
 					headers: {
 						Authorization: "Bearer " + sessionStorage.getItem("token"),
 						"Content-Type": "application/json"
 					},
-					body: JSON.stringify({ "book_id": book_id, "unit": unit, "book_format_id": book_format_id })
+					body: JSON.stringify({ "book_id": getStore().book.id, "unit": defaultUnit, "book_format_id": parseInt(book_format_id) })
 				};
+				// console.log(getStore().book.id)
+
 
 				try {
-					const resp = await fetch(process.env.BACKEND_URL + 'api/transaction', opts);
+					const resp = await fetch(process.env.BACKEND_URL + 'api/checkout', opts);
 					if (resp.status !== 200) {
 						const data = await resp.json();
 						const errorMessage = data.error || "Something went wrong";
-						alert(errorMessage); // Display error message using toast
+						setStore({ errorMsg: errorMessage });
 						return false;
 					} else {
 						await getActions().validate_user();
-						alert("Your cart was updated successfully"); // Display success message using toast
+						getActions().createAlertMsg("Your cart was updated successfully");
 						return true;
 					}
 				} catch (error) {
-					console.error(`Error during fetch: ${process.env.BACKEND_URL}api/transaction`, error);
+					console.error(`Error during fetch: ${process.env.BACKEND_URL}api/checkout`, error);
+				}
+			},
+			// we might not need this one
+			removeFromCart: async (payment_method_id) => {
+				const opts = {
+					method: 'DELETE',
+					headers: {
+						Authorization: "Bearer " + sessionStorage.getItem("token"),
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({ "payment_method_id": payment_method_id })
+				};
+
+				try {
+					const resp = await fetch(process.env.BACKEND_URL + 'api/user/payment-method', opts);
+					if (resp.status !== 200) {
+						const data = await resp.json();
+						const errorMessage = data.error || "Something went wrong";
+						setStore({ errorMsg: errorMessage });
+						return false;
+					} else {
+						await actions.validate_user();
+						getActions().createAlertMsg("Your card was deleted successfully");
+						return true;
+					}
+				} catch (error) {
+					console.error(`Error during fetch: ${process.env.BACKEND_URL}api/user/payment-method`, error);
 				}
 			},
 
-			setPrice: (weeks_on_list) => {
-				let price = null;
-				if (weeks_on_list <= 10) {
-					price = 18.99;
-				} else if (weeks_on_list > 11 && weeks_on_list <= 30) {
-					price = 16.99;
-				} else if (weeks_on_list > 31 && weeks_on_list <= 60) {
-					price = 14.99;
+			postPaymentMethod: async (card_type, card_number, card_name, cvc, expiry_date) => {
+				const first_four_numbers = card_number.slice(0, 4);
+				const opts = {
+					method: 'POST',
+					headers: {
+						Authorization: "Bearer " + sessionStorage.getItem("token"),
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+						card_type: card_type,
+						card_number: card_number,
+						card_name: card_name,
+						cvc: cvc,
+						expiry_date: expiry_date,
+						first_four_numbers: first_four_numbers
+					})
+				};
+
+				try {
+					const resp = await fetch(process.env.BACKEND_URL + 'api/user/payment-method', opts);
+					if (resp.status !== 200) {
+						const data = await resp.json();
+						const errorMessage = data.error || "Something went wrong";
+						setStore({ errorMsg: errorMessage });
+						return false;
+					} else {
+						const data = await resp.json();
+						await getActions().validate_user();
+						const paymentMethod = { first_four_numbers: first_four_numbers };
+						setStore((prevState) => ({
+							...prevState,
+							user: {
+								...prevState.user,
+								paymentMethod: paymentMethod
+							}
+						}));
+						sessionStorage.setItem("card_number", data.payment_method);
+						getActions().createAlertMsg("Your card was added successfully");
+						return true;
+					}
+				} catch (error) {
+					console.error(`Error during fetch: ${process.env.BACKEND_URL}api/user/payment-method`, error);
+				}
+			},
+
+			getBookFormats: async () => {
+				const response = await fetch(process.env.BACKEND_URL + 'api/bookformat');
+				const data = await response.json();
+				setStore({ bookFormats: data.book_formats })
+				// console.log(getStore().bookFormats)
+			},
+
+			getTransaction: async () => {
+				const response = await fetch(process.env.BACKEND_URL + 'api/transaction');
+				if (response.status !== 200) {
+					const data = await response.json();
+					const errorMessage = data.error || "Something went wrong";
+					console.log(data)
+					setStore({ errorMsg: errorMessage });
+					return false;
 				} else {
-					price = 12.99;
-				}
-				setStore({ price });
-			},
+					await getActions().validate_user();
 
-			setBookPrice: (publishedDate) => {
-
-				if (!publishedDate) {
-					console.error('Invalid published date');
-					return;
 				}
 
-				const year = new Date(publishedDate).getFullYear();
-				console.log(year);
-				let bookPrice = 0;
 
-				if (year >= 2023) {
-					bookPrice = 18.99;
-				} else if (year >= 2020) {
-					bookPrice = 16.99;
-				} else if (year >= 2015) {
-					bookPrice = 14.99;
-				} else {
-					bookPrice = 12.99;
-				}
-
-				setStore({ bookPrice });
-			},
-
+			}
 		}
 	};
 };

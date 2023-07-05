@@ -1,18 +1,65 @@
 """
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
-from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Book, Review, Wishlist, Transaction, Support, PaymentMethod 
-from api.utils import generate_sitemap, APIException
-from flask_jwt_extended import create_access_token
-from flask_jwt_extended import get_jwt_identity
-from flask_jwt_extended import jwt_required
-import cloudinary
-import cloudinary.uploader
+from flask import Flask, request, jsonify, Blueprint, redirect, json
+
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 import datetime
 import bcrypt
+import cloudinary
+import cloudinary.uploader
+from flask_bcrypt import generate_password_hash
+from flask_bcrypt import check_password_hash
 
-api = Blueprint('api', __name__)    
+from datetime import datetime, timedelta
+import pytz
+import os
+import stripe
+from stripe.error import StripeError
+stripe.api_key = 'sk_test_51NOm30LDriABBO719nhvoZuy8msaKkmkekKWuLucfqiLlWMxYAdiuPKvGjUi8XIqrtsJ8UW5NUcMFboDWROSV1fS00mXbmKzvJ'
+
+
+from api.models import db, User, Book, Review, Wishlist, Transaction, Support, PaymentMethod, TransactionItem, BookFormat
+from api.utils import APIException, generate_sitemap
+
+
+api = Blueprint('api', __name__)   
+@jwt_required()
+def calculate_order_amount(items):
+    # Replace this constant with a calculation of the order's amount
+    # Calculate the order total on the server to prevent
+    # people from directly manipulating the amount on the client
+    user_id = get_jwt_identity()
+    
+    total_price = 0
+    items = TransactionItem.query.filter_by(user_id=user_id, in_progress=True).all()
+    for x in items:
+        total_price += x.total_price_per_book  
+
+    total_price = round(total_price, 2)  
+    
+    return int(total_price * 100)
+
+
+@api.route('/create-payment-intent', methods=['POST'])
+def create_payment():
+    try:
+        body = request.json
+        # Create a PaymentIntent with the order amount and currency
+        intent = stripe.PaymentIntent.create(
+            amount=calculate_order_amount(body['items']),
+            currency='eur',
+            automatic_payment_methods={
+                'enabled': True,
+            },
+        )
+        return jsonify({
+            'clientSecret': intent['client_secret']
+        })
+    except Exception as e:
+        print(e)
+        return jsonify(error=str(e)), 403
+
 
 @api.route("/create/user", methods=["POST"])
 def create_user():
@@ -21,31 +68,29 @@ def create_user():
     password = body.get("password", None) 
     full_name = body.get("full_name", None)
 
-    if not all(key in body for key in ["email", "password", "full_name"]):
-        return jsonify({"error": "The server cannot process the request due to invalid syntax or parameters."}), 400
-    
+    if not all([email, password, full_name]):
+        return jsonify({"error": "Missing credentials"}), 400
+
     if "@" not in email: 
         return jsonify({"error": "Please enter a valid email, e.g., user@gmail.com"}), 400
 
     if len(password) < 5:
         return jsonify({"error": "Your password must have more than 5 characters"}), 400
 
-    if not email or not password or not full_name:
-        return jsonify({"error": "Missing credentials"}), 400
-
     already_exist = User.query.filter_by(email=email).first()
     if already_exist:
         return jsonify({"error": "Email already exists in the database"}), 409
 
-    password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    hashed_password = generate_password_hash(password, rounds=None)
+
     new_user = User(
         email=email,
-        password_hash=password_hash,
+        password_hash=hashed_password,
         full_name=full_name,
     )
     db.session.add(new_user)
     db.session.commit()
-    
+
     return jsonify({
         "user": {
             "id": new_user.id,
@@ -53,47 +98,52 @@ def create_user():
             "full_name": new_user.full_name
         }
     }), 200
-    
 
 @api.route("/user/login", methods=["POST"])
 def login():
     email = request.json.get("email", None)
     password = request.json.get("password", None)
-    
+
     user = User.query.filter_by(email=email).first() #gives the whole user, including the id
-    if not user and not bcrypt.checkpw(password.encode('utf-8'), user.password_hash):
-        return jsonify ({"error": "Invalid credentials"}), 300        
-    
-    access_token = create_access_token(identity=user.id, expires_delta = datetime.timedelta(minutes=90))
-    return jsonify({"access_token": access_token}), 200
+
+    if user:
+        is_valid = check_password_hash(user.password_hash, password)
+
+        if is_valid:
+            print('User succesfully logged in')
+            access_token = create_access_token(identity=user.id, expires_delta=timedelta(minutes=90))
+            return jsonify({"access_token": access_token}), 200
+        else:
+            return jsonify({"error": "Your username or password is incorrect."}), 400
+        
+    return jsonify({"error": "Your username or password is incorrect."}), 400
 
 @api.route("/user/validate", methods=["GET"])
 @jwt_required()
 def validate_user():
     user_id = get_jwt_identity()
-    print(user_id)
     user = User.query.get(user_id)
     if not user:
-        return jsonify ({"error": "invalid credentials"}), 300
-    return jsonify({"user": user.serialize()})
+        return jsonify({"error": "Invalid credentials"}), 401
+    return jsonify({"user": user.serialize()}), 200
     
 
-@api.route("/user/all", methods=['GET'])
-def get_all_users():
-    users = User.query.all()
-    serialized_users = [user.serialize() for user in users]
+# @api.route("/user/all", methods=['GET'])
+# def get_all_users():
+#     users = User.query.all()
+#     serialized_users = [user.serialize() for user in users]
 
-    return jsonify(serialized_users), 200  
+#     return jsonify(serialized_users), 200  
 
 @api.route("/user", methods=['GET'])
 @jwt_required()
-def get_one_user_by_id():
+def get_user_by_id():
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
     if not user:
-        return jsonify({"error": "No user found with this id"}), 400
+        return jsonify({"error": "No user found with this id"}), 404
 
-    return jsonify({"user": user.serialize()}), 200 
+    return jsonify({"user": user.serialize()}), 200
 
 @api.route("/user/update", methods=["PUT"])
 @jwt_required()
@@ -102,20 +152,26 @@ def update_user():
     user = User.query.get(user_id)
 
     if not user:
-        return jsonify({"error": "No user found with this id"}), 400
+        return jsonify({"error": "No user found with this id"}), 404
 
     body = request.json
 
     if "password" in body:
-        password = body["password"].strip()
+        password = body.get("password", "").strip()
 
-        if len(password) < 5 or password.isspace():
-            return jsonify({"error": "Your password should be at least 5 characters long and not contain only whitespaces"}), 400
+        if len(password) < 5 or not password:
+            return jsonify({"error": "Your password should be at least 5 characters long and not be empty"}), 400
 
         user.password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
     if "full_name" in body:
         user.full_name = body["full_name"]
+        
+    if "address" in body:
+        user.address = body["address"]
+
+    if "billing_address" in body:
+        user.billing_address = body["billing_address"]
 
     db.session.commit()
 
@@ -123,27 +179,30 @@ def update_user():
 
 @api.route('/user/image', methods=['POST'])
 @jwt_required()
-def handle_upload():
+def handle_upload_image():
     user_id = get_jwt_identity()
-    # validate that the front-end request was built correctly
-    if 'profile_image' in request.files:
-        # upload file to uploadcare
-        result = cloudinary.uploader.upload(request.files['profile_image'])
 
-        # fetch for the user
-        user1 = User.query.get(user_id)
-        print("AAAAAAAAAAAAAAA")
-        print(user1)
-        # update the user with the given cloudinary image URL
-        user1.profile_picture = result['secure_url']
-        print(user1.profile_picture)
-        
-       
-        db.session.commit()
+    if 'profile_image' not in request.files:
+        raise APIException('Missing profile_image in the request form data', 400)
 
-        return jsonify(user1.serialize()), 200
-    else:
-        raise APIException('Missing profile_image on the FormData')
+    uploaded_file = request.files['profile_image']
+    if uploaded_file.filename == '':
+        raise APIException('No selected file', 400)
+
+    # Upload file to Cloudinary
+    result = cloudinary.uploader.upload(uploaded_file)
+
+    # Fetch the user
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "No user found with this id"}), 404
+
+    # Update the user with the Cloudinary image URL
+    user.profile_picture = result['secure_url']
+    db.session.commit()
+
+    return jsonify(user.serialize()), 200
+
 
 @api.route("/book", methods=['GET'])
 def get_all_books():
@@ -162,33 +221,34 @@ def get_one_book_by_id(isbn):
 
     return jsonify({"book": book.serialize()}), 200 
 
-@api.route("/review", methods=['GET'])
-def get_all_reviews():
-    reviews = Review.query.all()
-    serialized_reviews = [review.serialize() for review in reviews]
+# @api.route("/review", methods=['GET'])
+# def get_all_reviews():
+#     reviews = Review.query.all()
+#     serialized_reviews = [review.serialize() for review in reviews]
 
-    return jsonify(serialized_reviews), 200  
+#     return jsonify({"reviews": serialized_reviews}), 200
 
 @api.route("/user_reviews", methods=['GET'])
 @jwt_required()
 def get_user_reviews():
     user_id = get_jwt_identity()
-    reviews = Review.query.filter_by(user_id = user_id).all()
+    reviews = Review.query.filter_by(user_id=user_id).all()
     serialized_reviews = [review.serialize() for review in reviews]
 
-    return jsonify({"reviews": serialized_reviews}), 200  
+    return jsonify({"reviews": serialized_reviews}), 200
+ 
 
-@api.route("/review/<int:review_id>", methods=['GET'])
-def get_one_review_by_id(review_id):
-    review = Review.query.get(review_id)
-    if not review:
-        return jsonify({"error": "No review found with this id"}), 400
+# @api.route("/review/<int:review_id>", methods=['GET'])
+# def get_one_review_by_id(review_id):
+#     review = Review.query.get(review_id)
+#     if not review:
+#         return jsonify({"error": "No review found with this id"}), 400
 
-    return jsonify(review.serialize()), 200 
+#     return jsonify(review.serialize()), 200 
 
-@api.route("/review", methods=["PUT"]) #Why don't we need the /<int:book_id>
+@api.route("/edit-review", methods=["PUT"]) #Why don't we need the /<int:book_id>
 @jwt_required()
-def update_review():
+def update_review_endpoint():
     user_id = get_jwt_identity()
     body = request.json
     review = Review.query.filter_by(book_id=body["book_id"]).first()
@@ -197,11 +257,10 @@ def update_review():
 
     review.review = body["review"]
     review.rating = body["rating"]
-    review.book_id = body["book_id"]
-    review.user_id = user_id
+    
 
     db.session.commit()
-    return jsonify("review updated"), 200
+    return jsonify({"review": "Review was updated successfully"}), 200
 
 @api.route("/review", methods=["POST"])
 @jwt_required()
@@ -280,91 +339,268 @@ def create_wishlist():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
-@api.route("/transaction", methods=['GET'])
-# @jwt_required()
-def get_one_transaction_by_id(user_id):
-    transaction = Transaction.query.get(user_id)
-  
-    if not transaction:
-        return jsonify({"error": "No transaction found for this user id"}), 400
-
-    return jsonify(transaction.serialize()), 200 
-
-@api.route("/transaction", methods=["POST"])
+@api.route("/createtransaction", methods=["POST"])
 @jwt_required()
 def create_transaction():
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
     try:
         body = request.json
-        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-       
-        if "book_id" not in body or not user:
-            return jsonify({"error": "Missing required fields"}), 400
+
+        total_price = 0
+        items = TransactionItem.query.filter_by(user_id=user_id, in_progress=True).all()
+        for x in items:
+            total_price += x.total_price_per_book
+
+        # Create a Stripe checkout session
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[
+                {
+                    # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+                    'price': 'price_1NOmITLDriABBO71zYhNNV1c',
+                    'quantity': 1,
+                },
+            ],
+            mode='payment',
+            success_url=os.getenv('BACKEND_URL') + '?success=true',
+            cancel_url=os.getenv('BACKEND_URL') + '?canceled=true',
+        )
+        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        print(checkout_session)
         
         new_transaction = Transaction(
-            book_id=body["book_id"],
-            user_id=user_id,
-            book_format_id=body["book_format_id"],
-            unit = body["unit"]
+            payment_method_id=body["payment_method_id"],
+            user=user,
+            total_price=total_price,
+            in_progress=True,
         )
+        print(new_transaction)
+         # Assign the items to the new transaction
+        new_transaction.items.extend(items)
+        
         db.session.add(new_transaction)
         db.session.commit()
 
+        return jsonify({"transaction": new_transaction.serialize(), "checkout_session": checkout_session}), 200
+
+    except StripeError as e:
+        # Handle Stripe errors
+        return jsonify({"error": str(e)}), 500
+    except Exception as e:
+        # Handle other errors
+        print(e)
+        return jsonify({"error": str(e)}), 500
+
+    
+@api.route('/create-checkout-session', methods=['POST'])
+def create_checkout_session():
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            line_items=[
+                {
+                    # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+                    'price': 'price_1NOmITLDriABBO71zYhNNV1c',
+                    'quantity': 1,
+                },
+            ],
+            mode='payment',
+            success_url=os.getenv('BACKEND_URL') + '?success=true',
+            cancel_url=os.getenv('BACKEND_URL') + '?canceled=true',
+        )
+    except Exception as e:
+        return str(e)
+
+    return redirect(checkout_session.url, code=303)
+
+@api.route("/checkout", methods=["POST"])
+@jwt_required()
+def add_item_to_cart():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    try:
+        body = request.json
+        print(body)
+        if "book_id" not in body or not user:
+            return jsonify({"error": "Missing required fields"}), 400
+
+        item = TransactionItem.query.filter_by(book_id=body["book_id"], user_id=user_id, book_format_id=body["book_format_id"]).first()
+        price = BookFormat.query.get(body["book_format_id"]).book_price
+
+        if not item:
+            new_item = TransactionItem(
+                book_id=body["book_id"],
+                user_id=user_id,
+                book_format_id=body["book_format_id"],
+                unit=body["unit"],
+                total_price_per_book=body["unit"] * price,
+            )
+            db.session.add(new_item)
+            db.session.commit()
+        else:
+            item.unit =item.unit+1
+            item.total_price_per_book = item.unit*price
+            db.session.commit()
+            return jsonify({"item": "book was added to cart"}), 200
+
+        return jsonify({"transaction": new_item.serialize()}), 200
+
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)}), 500
+
+
+@api.route("/addunit", methods=["PUT"])
+@jwt_required()
+def add_unit():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    try:
+        body = request.json
+        
+        if "transaction_id" not in body or not user:
+            return jsonify({"error": "Missing required fields"}), 400
+        
+        item = TransactionItem.query.get(body["transaction_id"])
+        price = BookFormat.query.get(item.book_format_id).book_price
+        if item:
+            item.unit =item.unit+1
+            item.total_price_per_book = item.unit*price
+            db.session.commit()
+            return jsonify({"item": "book was added to cart"}), 200
        
-        return jsonify({"transaction": new_transaction.serialize()}), 200
+        return jsonify({"transaction": item.serialize()}), 200
            
     except Exception as e:
+        print(e)
         return jsonify({"error": str(e)}), 500
     
-    # body = request.json
-    # new_transaction = Transaction(
-    #     book_id=body["book_id"],
-    #     user_id=body["user_id"],
-    #     payment_methods=body["payment_methods"]
-    # )
-    # db.session.add(new_transaction)
-    # db.session.commit()
+@api.route("/removeunit", methods=["PUT"])
+@jwt_required()
+def remove_unit():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    try:
+        body = request.json 
+        if "transaction_id" not in body or not user:
+            return jsonify({"error": "Missing required fields"}), 400
+        
+        item = TransactionItem.query.get(body["transaction_id"])
+        price = BookFormat.query.get(item.book_format_id).book_price
+        if item and item.unit > 1:
+            item.unit =item.unit-1
+            item.total_price_per_book = item.unit*price
+            db.session.commit()
+            return jsonify({"item": "book was removed from cart"}), 200
+        elif item.unit == 1:
+            db.session.delete(item)
+            db.session.commit()
+            return jsonify({"item": "Book deleted from cart"}), 200
 
-    # return jsonify({"transaction": "created"}), 200
+        return jsonify({"transaction": item.serialize()}), 200
+           
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)}), 500
+    
+@api.route("/removeitem", methods=["DELETE"])
+@jwt_required()
+def delete_item():
+    user_id = get_jwt_identity()
+    body = request.json 
+    item = TransactionItem.query.get(body["transaction_id"])
+    if not item:
+        return jsonify({"error": "No item found with this id"}), 400
 
-@api.route("/payment-method", methods=['GET'])
-def get_all_payment_methods():
-    payment_methods = PaymentMethod.query.all()
-    serialized_payment_methods = [payment_methods.serialize() for payment_methods in payment_methods]
+    db.session.delete(item)
+    db.session.commit()
+    return jsonify("item deleted"), 200
 
-    return jsonify(serialized_payment_methods), 200  
+@api.route("/bookformat", methods=['GET'])
+def get_book_format():
+    book_formats = BookFormat.query.all()
+    serialized_book_formats = [book_format.serialize() for book_format in book_formats]
+  
+    if not book_formats:
+        return jsonify({"error": "There was an error fetching the data you requested"}), 400
 
-@api.route("/user/payment-method/<int:user_id>", methods=['GET'])
-def get_one_payment_method_by_id(user_id):
-    payment_method = PaymentMethod.query.get(user_id)
+    return jsonify({"book_formats": serialized_book_formats}), 200 
 
-
-    if not payment_method:
-        return jsonify({"error": "No payment method found for this user id"}), 400
-
-    return jsonify(payment_method.serialize()), 200 
 
 @api.route("/user/payment-method", methods=["POST"])
+@jwt_required()
 def create_payment_method():
-    body = request.json
+    user_id = get_jwt_identity()
+    data = request.json
+
+
+    required_fields = ["card_type", "card_number", "card_name", "cvc", "expiry_date"]
+    for field in required_fields:
+        if field not in data:
+            return jsonify({"error": f"Missing required field: {field}"}), 400
+
+
+    card_number = data["card_number"]
+    first_four_numbers = card_number[:4]
+    cvc = data["cvc"]
+
+  
+    card_number_hash = bcrypt.hashpw(card_number.encode("utf-8"), bcrypt.gensalt())
+    cvc_hash = bcrypt.hashpw(cvc.encode("utf-8"), bcrypt.gensalt())
+
+
     new_payment_method = PaymentMethod(
-        user_id=body["user_id"],
-        payment_methods=body["payment_methods"],
-        card_number=body["card_number"],
-        card_name=body["card_name"],
-        cvc=body["cvc"],
-        expiry_date=body["expiry_date"]
+        user_id=user_id,
+        card_type=data["card_type"],
+        card_number_hash=card_number_hash,
+        card_name=data["card_name"],
+        cvc_hash=cvc_hash,
+        expiry_date=data["expiry_date"],
+        first_four_numbers=first_four_numbers,
     )
-    db.session.add(new_payment_method)
-    db.session.commit()
 
-    return jsonify({"payment method": "created"}), 200
+    try:
+        db.session.add(new_payment_method)
+        db.session.commit()
+        return jsonify({"payment_method": first_four_numbers}), 200
+    except Exception as e:
+         return jsonify({"error": str(e)}), 500
+    
+@api.route("/user/payment-method/update", methods=["PUT"])
+@jwt_required()
+def update_payment_method():
+    user_id = get_jwt_identity()
+    data = request.get_json()
 
-@api.route("/user/payment-method/<int:user_id>", methods=["DELETE"])
-def delete_payment_method(user_id):
-    payment_method = PaymentMethod.query.get(user_id)
+    payment_method = PaymentMethod.query.filter_by( user_id=user_id).first()
+
+    if not payment_method:
+        return jsonify({"error": "Payment method not found or unauthorized"}), 404
+
+    if "card_type" in data:
+        payment_method.card_type = data["card_type"]
+    if "card_number" in data:
+
+        payment_method.card_number_hash = bcrypt.hashpw(data["card_number"].encode("utf-8"), bcrypt.gensalt())
+    if "card_name" in data:
+        payment_method.card_name = data["card_name"]
+    if "cvc" in data:
+        payment_method.cvc_hash = bcrypt.hashpw(data["cvc"].encode("utf-8"), bcrypt.gensalt())
+
+    if "expiry_date" in data:
+        payment_method.expiry_date = data["expiry_date"]
+
+    try:
+        db.session.commit()
+        return jsonify({"message": "Payment method updated successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@api.route("/user/payment-method/remove", methods=["DELETE"])
+@jwt_required()
+def delete_payment_method():
+    user_id = get_jwt_identity()
+    payment_method = PaymentMethod.query.filter_by( user_id=user_id).first()
     if not payment_method:
         return jsonify({"error": "No payment method found for this user id"}), 400
 
@@ -396,10 +632,12 @@ def create_support():
     if not body:
         return jsonify({"error": "missing requirements"}), 400
     else:
+        support_created = datetime.now(pytz.utc)
         new_support = Support(
             user_id=user_id,
             subject=body["subject"],
             message=body["message"],
+            support_created=support_created
             
         )
         db.session.add(new_support)

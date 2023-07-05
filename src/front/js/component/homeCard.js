@@ -10,74 +10,96 @@ import CartCard from "./cartCard";
 
 export const HomeCard = ({ item }) => {
     const { store, actions } = useContext(Context);
-    const price = item.weeks_on_list ? store.price : "Free";
     const navigate = useNavigate();
     const [showCartModal, setShowCartModal] = useState(false);
 
-    // useEffect(() => {
-    //     actions.setPrice(item.weeks_on_list);
-
-    // }, [item.weeks_on_list]);
     const handleAddToWishlist = () => {
         if (sessionStorage.getItem("token") && store.user) {
             actions.postWishlist(item.id);
         } else {
+            actions.createAlertMsg("Please log in to add to your wishlist.");
             navigate("/login");
-            alert("Please log in to add to your wishlist.");
+
+        }
+    };
+
+    //yes this function is repeated... need to think a bit longer about how to handle it better
+    const handleAddToCart = () => {
+        if (sessionStorage.getItem("token") && store.user) {
+            setShowCartModal(true);
+        } else {
+            actions.createAlertMsg("Please log in to add to your cart.");
+            navigate("/login");
+
         }
     };
 
 
 
     return (
-        <div className="card d-flex flex-column m-2 p-0" style={{ width: "18rem" }}>
-            <Link to={`/book/${item.isbn}`} className="card-body-custom flex-grow-1">
-                {item.book_cover == null || item.book_cover == ""
-                    ?
-                    <div className="image-container" style={{ height: "320px", overflow: "hidden" }}>
-                        <img src={item.book_cover_b} className="card-img-top w-100 h-100" alt="Book Cover" />
-                    </div>
-                    :
-                    <div className="image-container" style={{ height: "320px", overflow: "hidden" }}>
-                        <img src={item.book_cover} className="card-img-top w-100 h-100" alt="Book Cover" />
-                    </div>
-                }
+        <div className="card d-flex flex-column m-2 p-0 border-0" style={{ width: "12rem" }}>
+
+            <div className="card-body-custom">
+                {item.book_cover == null || item.book_cover == "" ? (
+
+                    <>
+                        <Link to={`/book/${item.isbn}`}>
+                            <img src={item.book_cover_b} className="card-img-top contain" alt="Book Cover" style={{ height: "300px" }} />
+                        </Link>
+                        <button
+                            type="button"
+                            className="btn position-absolute top-0 start-0 bg-blue border-0 text-white dark-button rounded-circle mt-2 ms-2"
+                            onClick={handleAddToWishlist}
+                            style={{ zIndex: 1 }}
+                        >
+                            {store.user.wishlist.some((wishlistItem) => wishlistItem.book_id.id === item.id) ? (
+                                <i className="fas fa-heart"></i>
+                            ) : (
+                                <i className="far fa-heart"></i>
+                            )}
+                        </button>
+                    </>
+                ) : (
+                    <>
+                        <Link to={`/book/${item.isbn}`}>
+                            <img src={item.book_cover} className="card-img-top contain" alt="Book Cover" style={{ height: "300px" }} />
+                        </Link>
+                        <button
+                            type="button"
+                            className="btn position-absolute top-0 start-0 bg-blue border-0 text-white dark-button rounded-circle mt-2 ms-2"
+                            onClick={handleAddToWishlist}
+                            style={{ zIndex: 1 }}
+                        >
+                            {store.user.wishlist.some((wishlistItem) => wishlistItem.book_id.id === item.id) ? (
+                                <i className="fas fa-heart"></i>
+                            ) : (
+                                <i className="far fa-heart"></i>
+                            )}
+                        </button>
+                    </>
+                )}
 
 
                 <div className="card-body">
+                    <Link to={`/book/${item.isbn}`} className="link-like">
+                        <div className="row d-flex flex-grow-1">
+                            <h5 className="card-title">{actions.capitalizeWords(item.title)}</h5>
+                        </div>
+                        <div className="row align-items-end">
 
-                    <div className="row  d-flex flex-grow-1">
-                        <h5 className="card-title">{item.title}</h5>
-                    </div>
-                    <div className="row align-items-end">
-
-                        <p className="card-text">{item.author}</p>
-                    </div>
-
-
+                            <p className="card-text">{item.author}</p>
+                        </div>
+                    </Link>
                 </div>
-            </Link>
-            <div className="card-footer d-flex justify-content-end">
+            </div>
 
-                <button
-                    type="button"
-                    className="btn me-2 text-white custom-button"
-                    onClick={handleAddToWishlist}
-                >
-                    {store.user.wishlist.some((wishlistItem) => wishlistItem.book_id.id === item.id) ? (
-                        <i className="fas fa-heart"></i>
-                    ) : (
-                        <i className="far fa-heart"></i>
-                    )}
-                </button>
-
-
+            <div className="card-footer bg-white border-0 d-flex justify-content-center">
 
                 <button type="button"
-                    className="btn text-white custom-button"
-                    onClick={() => setShowCartModal(true)}
+                    className="btn text-white dark-button"
+                    onClick={handleAddToCart}
                 >
-                    <i className="bi bi-cart"></i>
+                    Quick Add <i className="bi bi-cart"></i>
                 </button>
                 {
                     showCartModal &&

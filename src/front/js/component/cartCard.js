@@ -5,13 +5,20 @@ const CartCard = ({ item, setShowModal }) => {
     const { store, actions } = useContext(Context);
     const [isLoading, setIsLoading] = useState(true);
     const [showBookDetails, setShowBookDetails] = useState(false);
+    const [format, setFormat] = useState()
 
     useEffect(() => {
         actions.getOneBook(item.isbn);
+        actions.getBookFormats()
         setTimeout(() => {
             setIsLoading(false);
             setShowBookDetails(true);
-        }, 2000);
+        }, 3000);
+    }, []);
+
+    useEffect(() => {
+        actions.clearError();
+        actions.clearAlert();
     }, []);
 
     if (isLoading || !showBookDetails) {
@@ -38,9 +45,7 @@ const CartCard = ({ item, setShowModal }) => {
                             >
                                 Close
                             </button>
-                            <button type="button" className="btn btn-primary">
-                                Save changes
-                            </button>
+
                         </div>
                     </div>
                 </div>
@@ -52,6 +57,38 @@ const CartCard = ({ item, setShowModal }) => {
     }
     return (
         <div className="modal fade show" tabIndex="-1" style={{ display: "block" }} aria-hidden="true">
+            {
+                store.alert && store.alert !== ""
+                    ?
+                    <div className="container">
+                        <div className="alert alert-success alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+                            <i className="bi bi-check-circle-fill me-2"></i>
+                            <div>
+                                {store.alert}
+                            </div>
+                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    :
+                    null
+
+            }
+            {
+                store.errorMsg && store.errorMsg !== ""
+                    ?
+                    <div className="container">
+                        <div className="alert alert-danger alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+                            <i className="bi bi-exclamation-triangle-fill"></i>
+                            <div>
+                                {store.errorMsg}
+                            </div>
+                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    :
+                    null
+
+            }
             <div className="modal-dialog modal-dialog-centered modal-xl">
                 <div className="modal-content">
                     <div className="modal-body">
@@ -89,9 +126,16 @@ const CartCard = ({ item, setShowModal }) => {
                                                 <div className="col-3">Rating: </div>
                                                 <div className="col-9">{store.book.average_rating ? store.book.average_rating + " (out of " + store.book.ratings_count + " votes)" : "Not available"} </div>
                                             </div>
-                                            <div className="col-3">Price:</div>
-                                            <div className="col-9">
-
+                                            <div className="row">
+                                                <div className="col-3">Book Format:</div>
+                                                <div className="col-7">
+                                                    <select className="form-select" aria-label="Default select example" defaultValue="" onChange={(e) => setFormat(e.target.value)}>
+                                                        <option value="" disabled>Select your format</option>
+                                                        {store.bookFormats.map((format) => (
+                                                            <option key={format.id} value={format.id}>{format.book_format} - {format.book_price}€ </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                         <div className="row">
@@ -112,8 +156,13 @@ const CartCard = ({ item, setShowModal }) => {
                         >
                             Close
                         </button>
-                        <button type="button" className="btn btn-primary">
-                            Save changes
+                        <button type="button" disabled={!format} className="btn custom-button"
+                            onClick={() => {
+                                actions.postCheckout(format)
+                                setShowModal(false)
+                                actions.createAlertMsg("Your cart was updated successfully");
+                            }}>
+                            Add to Cart
                         </button>
                     </div>
                 </div>

@@ -7,14 +7,16 @@ db = SQLAlchemy()
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password_hash = db.Column(db.String(200), nullable=False)
+    # password = db.Column(db.Text, nullable=False)
+    password_hash = db.Column(db.LargeBinary, nullable=False)
     full_name = db.Column(db.String(120), nullable=True)
     address = db.Column(db.Text, nullable=True)
+    billing_address = db.Column(db.Text, nullable=True)
     user_category = db.Column(db.Integer, db.ForeignKey('user_category.id'), nullable=True)
     payment_method = db.relationship("PaymentMethod", backref="user")
     wishlist = db.relationship("Wishlist", backref="user")
     review = db.relationship("Review", backref="user")
-    transactions = db.relationship("Transaction", backref="user")
+    transaction = db.relationship("Transaction", backref="user")
     items = db.relationship("TransactionItem", backref="user")
     support = db.relationship("Support", backref="user")
     profile_picture = db.Column(db.String(250), unique=True, nullable=True)
@@ -29,13 +31,15 @@ class User(db.Model):
             "full_name": self.full_name,
             "profile_picture": self.profile_picture,
             "password": "",
-
             "address": self.address,
+            "billing_address": self.billing_address,
             "payment_method": [x.serialize() for x in self.payment_method],
             # payment method.... way to serialize without revealing user private info?
             "review": [y.serialize() for y in self.review],
             "wishlist": [x.serialize() for x in self.wishlist],
             "items": [item.serialize() for item in self.items if item.in_progress ],
+            "support": [i.serialize_for_support() for i in self.support],
+            "transaction": [j.serialize_for_transaction() for j in self.transaction],
         }
     
 class UserCategory(db.Model):
@@ -102,6 +106,8 @@ class BookFormat(db.Model):
     book_format = db.Column(db.String(100), nullable=True, unique=False)
     book_price = db.Column(db.Float, unique=False, nullable=False)
     items = db.relationship("TransactionItem", backref="bookformat")
+    prod_id = db.Column(db.String(100), nullable=True, unique=False)
+    price_id = db.Column(db.String(100), nullable=True, unique=False)
 
     def __repr__(self):
         return f'<BookFormat {self.book_format}>'
@@ -110,7 +116,8 @@ class BookFormat(db.Model):
         return {
             "id": self.id,
             "book_format": self.book_format,
-            "book_price": self.book_price
+            "book_price": self.book_price,
+            "prod_id": self.prod_id,
         }
     
 class Review(db.Model):
@@ -140,7 +147,9 @@ class Review(db.Model):
             "review": self.review,
             "rating": self.rating,
             "book_id": self.book_id,
+            "user_id": self.user_id,
             "full_name": User.query.get(self.user_id).full_name,
+            "created_at": self.created_at.strftime("%b %d, %Y"),
         }
     
 class ExternalReview(db.Model):
@@ -181,6 +190,7 @@ class TransactionItem(db.Model):
     transaction_id = db.Column(db.Integer, db.ForeignKey('transaction.id'), nullable=True)
     book_format_id = db.Column(db.Integer, db.ForeignKey('book_format.id'), nullable=False)
     unit = db.Column(db.Integer, unique= False, nullable=False)
+    total_price_per_book = db.Column(db.Float, unique= False, nullable=True)
 
     def __repr__(self):
         return f'<TransactionItem {self.id}>'
@@ -194,13 +204,18 @@ class TransactionItem(db.Model):
             "transaction_id": self.transaction_id,
             "book_format_id": BookFormat.query.get(self.book_format_id).serialize(),       
             "unit": self.unit,
+            "total_price_per_book": self.total_price_per_book
         }
 
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    payment_methods = db.relationship("PaymentMethod", backref="transaction")
+    payment_method_id = db.Column(db.Integer, db.ForeignKey('payment_method.id'), nullable=False)
     items = db.relationship("TransactionItem", backref="transaction")
+    total_price = db.Column(db.Float, unique= False, nullable=True)
+    transaction_created = db.Column(db.DateTime, default=datetime.utcnow)
+    in_progress = db.Column(db.Boolean, default=True)
+
 
     def __repr__(self):
         return f'<Transaction {self.id}>'
@@ -209,20 +224,34 @@ class Transaction(db.Model):
         return {
             "id": self.id,
             "user_id": User.query.get(self.user_id).serialize(),
-            "payment_methods": self.payment_methods,
-            "items": TransactionItem.query.get(self.transaction_item_id).serialize(),
+            "payment_method_id": self.payment_method_id,
+            "items": [item.serialize() for item in self.items],
+            "total_price": self.total_price,
+            "transaction_created": self.transaction_created.strftime("%d/%m/%Y"),
+            "in_progress": self.in_progress,
+        }
+    def serialize_for_transaction(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "payment_method_id": self.payment_method_id,
+            "items": [item.serialize() for item in self.items],
+            "total_price": self.total_price,
+            "transaction_created": self.transaction_created.strftime("%d/%m/%Y"),
+            "in_progress": self.in_progress,      
         }
         
 class PaymentMethod(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     card_type = db.Column(db.String(100), nullable=True, unique=False)
-    card_number = db.Column(db.Text, unique=True, nullable=False)
+    card_number_hash = db.Column(db.Text, unique=True, nullable=False)
+    first_four_numbers = db.Column(db.Integer, unique=False, nullable=True)
     card_name = db.Column(db.Text, unique=False, nullable=False)
-    cvc = db.Column(db.Text, unique=False, nullable=False)
-    expiry_date = db.Column(db.Date, unique=False, nullable=False)
-    transaction_id = db.Column(db.Integer, db.ForeignKey('transaction.id'), nullable=True)
-
+    cvc_hash = db.Column(db.Text, unique=False, nullable=False)
+    expiry_date = db.Column(db.DateTime, default=datetime.utcnow)
+    transactions = db.relationship("Transaction", backref="payment_method")
+    
     def __repr__(self):
         return f'<PaymentMethods {self.card_name}>'
     
@@ -231,18 +260,19 @@ class PaymentMethod(db.Model):
             "id": self.id,
             "user_id": self.user_id,
             "card_type": self.card_type,
+            "first_four_numbers": self.first_four_numbers,
             "card_name": self.card_name,
-            "card_number": self.card_number,
-            "cvc": self.cvc,
-            "expiry_date": self.expiry_date
-            # Serializing the payment methods is probably a security breach, so you can exclude it
+            "card_number_hash": "",
+            "cvc_hash": "",
+            "expiry_date": self.expiry_date.strftime("%d/%m/%Y")    
         }
     
 class Support(db.Model):
     ticket_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     subject = db.Column(db.Text, nullable=False)
-    message = db.Column(db.Text, nullable=False)    
+    message = db.Column(db.Text, nullable=False)  
+    support_created = db.Column(db.DateTime, default=datetime.utcnow)  
 
     def __repr__(self):
         return f'<Support {self.ticket_id}>'
@@ -253,6 +283,7 @@ class Support(db.Model):
             "user_id": User.query.get(self.user_id).serialize(),
             "subject": self.subject,
             "message": self.message,
+            "support_created": self.support_created.strftime("%b %d, %Y"),
            
         }
     def serialize_for_support(self):
@@ -260,6 +291,7 @@ class Support(db.Model):
             "ticket_id": self.ticket_id,
             "user_id": self.user_id,
             "subject": self.subject,
-            "message": self.message,      
+            "message": self.message,
+            "support_created": self.support_created.strftime("%b %d, %Y"),      
         }
 
