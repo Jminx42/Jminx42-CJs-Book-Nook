@@ -6,7 +6,7 @@ import { Footer } from "../component/footer";
 
 import { HomeCard } from "../component/homeCard";
 
-export const Home = () => {
+export const Explore = () => {
 	const { store, actions } = useContext(Context);
 	const [genre, setGenre] = useState([]);
 	const [publisher, setPublisher] = useState([]);

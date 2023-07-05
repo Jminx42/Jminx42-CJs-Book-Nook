@@ -23,7 +23,7 @@ export const Landing = () => {
         slidesToShow: 5,
         slidesToScroll: 2,
         draggable: true,
-        autoplay: true,
+        autoplay: false,
         speed: 2500,
         autoplaySpeed: 2500,
         pauseOnHover: true,
@@ -94,13 +94,13 @@ export const Landing = () => {
     return (
         <div>
             <Navbar />
-            <div className="position-relative overflow-hidden p-3 p-md-5 p-lg-5 text-center image-background d-flex mt-3">
+            <div className="position-relative overflow-hidden p-3 p-md-5 p-lg-5 text-center image-background d-flex">
                 <div className="position-relative overflow-hidden p-3 p-md-5 p-lg-5 m-md-3 text-center landing-background d-flex">
                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 my-5 p-2">
                         <h1 className="display-3 fw-bold landing-text">Designed for Book Lovers</h1>
                         <h3 className="fs-4 px-2 landing-text mt-3 mb-3">Discover Your Next 5-Star Read</h3>
                         <div className="d-flex gap-3 justify-content-center lead fw-normal pt-5 mt-xl-5">
-                            <Link to={`/`}>
+                            <Link to={`/explore`}>
                                 <button className="btn landing-button px-3 py-2 fs-4 mb-xl-5">
                                     Start Exploring
                                 </button>
@@ -136,7 +136,7 @@ export const Landing = () => {
             </div>
 
             <div className="container mt-5 mb-5">
-                <div className="row mt-5 mb-5">
+                <div className="row mt-5 mb-1">
                     <h3 className="feature-title">Editor's Pick!</h3>
                 </div>
 
@@ -150,8 +150,8 @@ export const Landing = () => {
             </div>
 
             <div className="container mt-5 mb-5">
-                <div className="row mt-5 mb-5">
-                    <h3 className="feature-title mb-0">Recommended for you</h3>
+                <div className="row mt-5 mb-3">
+                    <h3 className="feature-title mt-4 mb-0">Recommended for you</h3>
                 </div>
 
 
@@ -161,12 +161,16 @@ export const Landing = () => {
                             <LandingCard key={book.id} item={book} />
                         ))}</Slider>
                 ) : (
-                    <p>Login and add books to your wishlist first!</p>
+                    <p className="fs-5 text-center mb-5"><Link to={`/login`}>
+                        <button className="btn fs-5 m-0 pe-1 pt-0 link-like">
+                            Login
+                        </button>
+                    </Link> and add books to your wishlist first!</p >
                 )}
 
-            </div>
+            </div >
 
             <Footer />
-        </div>
+        </div >
     );
 };

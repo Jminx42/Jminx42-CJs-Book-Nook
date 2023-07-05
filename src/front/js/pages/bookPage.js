@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Navbar } from "../component/navbar";
 import { StarRating } from "../component/StarRating";
+import { Footer } from "../component/footer";
 
 export const BookPage = () => {
 	const params = useParams();
@@ -174,10 +175,10 @@ export const BookPage = () => {
 
 			}
 
-			<div className="card container mt-3">
+			<div className="card container mt-3 border-0">
 
 
-				<div className="p-4 text-center bg-body-tertiary rounded-3">
+				<div className="p-4 text-center bg-body-tertiary rounded-3 ">
 					<img src={store.book.book_cover == null || store.book.book_cover == "" ? store.book.book_cover_b : store.book.book_cover} className=" w-25 float-start" alt="..." />
 					<div>
 						<h1 className=" display-3">{store.book.title}</h1>
@@ -290,7 +291,7 @@ export const BookPage = () => {
 					<hr></hr>
 					<h4 className="background-custom p-3 rounded">Reviews & Ratings</h4>
 					{store.book.reviews.map((review) => (
-						<div className="card mb-3" key={review.id}>
+						<div className="card mb-5" key={review.id}>
 							<div className="card-body">
 								<h5 className="card-title">By {review.full_name}</h5>
 								<h6 className="card-subtitle mb-2 text-muted">Posted {review.
@@ -300,10 +301,10 @@ export const BookPage = () => {
 							</div>
 						</div>
 					))}
-					<hr></hr>
+
 				</div>
 				{!store.book.reviews.find((item) => item.user_id === store.user.id) && (
-					<div className="row mb-3 mt-3 border p-2">
+					<div className="row mb-5 mt-3 border p-2">
 						<h4>Submit your review</h4>
 						<p className="fst-italic">Submit either a rating, a review or both!</p>
 						{sessionStorage.getItem('token') ? (
@@ -350,6 +351,7 @@ export const BookPage = () => {
 					</div>
 				)}
 			</div>
+			<Footer />
 		</div >
 	);
 };

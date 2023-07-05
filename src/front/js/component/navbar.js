@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { ProfileBtn } from "../component/profileBtn";
 import "../../styles/index.css"
-import CJBookNookLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/cjbooknookwhitesmall.png";
+import CJBookNookNoLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/CJBookNookNoLogoWhite.png";
 
 export const Navbar = () => {
 	const { store, actions } = useContext(Context);
@@ -19,10 +19,10 @@ export const Navbar = () => {
 
 	// We need to add a hamburger icon for mobile view!
 	return (
-		<nav className="navbar navbar-expand-lg background-custom px-5">
+		<nav className="navbar navbar-expand-lg background-custom px-5 py-0">
 			<div className="container-fluid">
 				<Link to="/" className="navbar-brand">
-					<img src={CJBookNookLogo} height={80} alt="CJBookNookLogo" />
+					<img src={CJBookNookNoLogo} height={60} alt="CJBookNookLogo" />
 				</Link>
 				<button className="navbar-toggler border p-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
 					<i className="bi bi-list"></i>
@@ -48,10 +48,6 @@ export const Navbar = () => {
 						<li className="nav-item  ">
 							{!sessionStorage.getItem("token") ? (
 								<div className="d-flex">
-
-									{/* <Link to="/register">
-										<button className="btn btn-secondary me-2 custom-button">Register</button>
-									</Link> */}
 									<Link to="/login">
 										<button className="btn btn-secondary custom-button"> Login <i className="fa-solid fa-right-to-bracket"></i></button>
 									</Link>
