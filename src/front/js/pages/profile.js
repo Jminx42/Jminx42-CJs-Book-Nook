@@ -11,6 +11,7 @@ import { Context } from "../store/appContext";
 import { InputProfilePic } from "../component/inputProfilePic";
 import { SupportCard } from "../component/supportCard";
 
+
 export const Profile = () => {
 	const { store, actions } = useContext(Context);
 	const [user, setUser] = useState(store.user);
@@ -92,11 +93,6 @@ export const Profile = () => {
 			console.error("Error fetching reviews:", error);
 		}
 	};
-
-
-
-
-
 
 	return (
 		<div>
