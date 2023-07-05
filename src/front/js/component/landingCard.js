@@ -10,6 +10,30 @@ import "../../styles/home.css";
 export const LandingCard = ({ item }) => {
     const { store, actions } = useContext(Context);
 
+    const showStar = (item) => {
+        if (item.average_rating >= 3.5) {
+            return (
+                <>
+                    <i className="fa-solid fa-star"></i>
+                    <i className="fa-solid fa-star"></i>
+                    <i className="fa-solid fa-star"></i>
+                    <i className="fa-solid fa-star"></i>
+                </>
+            );
+        }
+        if (item.average_rating >= 4.5) {
+            return (
+                <>
+                    <i className="fa-solid fa-star"></i>
+                    <i className="fa-solid fa-star"></i>
+                    <i className="fa-solid fa-star"></i>
+                    <i className="fa-solid fa-star"></i>
+                    <i className="fa-solid fa-star"></i>
+                </>
+            );
+        }
+    };
+
 
 
     return (
@@ -26,7 +50,7 @@ export const LandingCard = ({ item }) => {
                     </div>
                     <div className="row align-items-end">
                         <p className="card-text text-center">{item.author}</p>
-                        <p className="card-text text-center"><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i></p>
+                        <p className="card-text text-center">{showStar(item)}</p>
                     </div>
                 </Link>
             </div>
