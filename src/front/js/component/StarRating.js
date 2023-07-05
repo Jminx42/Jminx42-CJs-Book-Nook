@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 export const StarRating = ({ rating, editable, onRatingChange }) => {
     const [hoveredRating, setHoveredRating] = useState(0);
+    const [currentRating, setCurrentRating] = useState(rating);
 
     const handleMouseEnter = (hoveredRating) => {
         if (editable) {
@@ -17,13 +18,14 @@ export const StarRating = ({ rating, editable, onRatingChange }) => {
 
     const handleClick = (selectedRating) => {
         if (editable) {
+            setCurrentRating(selectedRating);
             onRatingChange(selectedRating);
         }
     };
 
     const renderStar = (starPosition) => {
         const filledStarClass =
-            (hoveredRating >= starPosition || rating >= starPosition
+            (hoveredRating >= starPosition || currentRating >= starPosition
                 ? 'fas'
                 : 'far') + ' fa-star text-warning';
 
@@ -43,7 +45,8 @@ export const StarRating = ({ rating, editable, onRatingChange }) => {
             {[1, 2, 3, 4, 5].map((position) => (
                 <span key={position}>{renderStar(position)}</span>
             ))}
-            <span className="ml-2">{rating}/5</span>
+            <span className="ml-2">{currentRating}/5</span>
         </div>
     );
 };
+
