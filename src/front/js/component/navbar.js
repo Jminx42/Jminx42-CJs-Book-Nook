@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
-import { ProfileBtn } from "./profileBtn";
+import { ProfileBtn } from "../component/profileBtn";
 import "../../styles/index.css"
 import CJBookNookLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/cjbooknookwhitesmall.png";
 
@@ -31,11 +31,11 @@ export const Navbar = () => {
 				<div className="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
 					<ul className="navbar-nav">
 						<li className="nav-item me-2">
-							<div className="input-group ">
+							<div className="input-group d-flex">
 								<input
 									type="search"
 									id="search"
-									className="form-control"
+									className="form-control flex-grow-1"
 									aria-describedby="button-addon2"
 									value={store.search}
 									onChange={(e) => actions.handleSearch(e.target.value)}

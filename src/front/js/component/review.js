@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
+import { StarRating } from "../component/StarRating";
 
 import "../../styles/index.css";
 import "../../styles/home.css";
@@ -23,7 +24,7 @@ export const Review = ({ item }) => {
 
     return (
         <div className="container">
-            {
+            {/* {
                 store.alert && store.alert !== ""
                     ?
                     <div className="container">
@@ -54,18 +55,18 @@ export const Review = ({ item }) => {
                     :
                     null
 
-            }
+            } */}
             <div className="row">
                 <div className="col-sm-4 col-md-3 col-lg-3">
                     <Link to={`/book/${item.book_id.isbn}`}>
                         <img src={item.book_id.book_cover} className="card-img-top" alt="..." />
                     </Link>
                 </div>
-                <div className="col-sm-6 col-md-9 col-lg-9">
-                    <h4 className="text-start">{item.book_id.title}</h4>
-                    <h5 className="text-start">by {item.book_id.author}</h5>
+                <div className="col-sm-6 col-md-9 col-lg-9  border">
+                    <h4 className="card-title">{item.book_id.title}</h4>
+                    <h5 className="card-subtitle mb-2 text-muted">by {item.book_id.author}</h5>
                     <div className="d-flex justify-content-between align-items-center mb-2">
-                        <p className="text-start mb-0">Posted on {item.created_at}</p>
+                        <p className="card-text mb-0">Posted on {item.created_at}</p>
                         {!editClicked ?
                             <button className="btn custom-button" onClick={() => setEditClicked(true)}>Edit</button>
                             :
@@ -79,14 +80,12 @@ export const Review = ({ item }) => {
                     <div className="d-flex align-items-center"> {/* Wrap label and input in a flex container */}
                         <label className="text-start mb-1">Rating:&nbsp; </label>
                         {!editClicked ? (
-                            <p className="mb-1"> {item.rating}</p>
+                            <StarRating rating={item.rating} editable={false} />
                         ) : (
-                            <input
-                                className="form-control p-0 mb-1"
-                                id="rating"
-                                aria-describedby="rating"
-                                defaultValue={editReview.rating}
-                                onChange={(e) => setEditReview({ ...editReview, rating: e.target.value })}
+                            <StarRating
+                                rating={rating}
+                                editable={true}
+                                onRatingChange={setRating}
                             />
                         )}
                     </div>
