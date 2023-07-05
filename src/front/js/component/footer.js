@@ -17,27 +17,22 @@ export const Footer = () => (
 						<i className="fa-brands fa-instagram fs-2 me-4"></i>
 						<i className="fa-brands fa-facebook-f fs-2 me-4"></i>
 						<i className="fa-brands fa-twitter fs-2 me-4"></i>
-						<i className="fa-brands fa-linkedin-in fs-2 me-4"></i>
+						<i className="fa-brands fa-linkedin-in fs-2"></i>
 					</div>
 				</div>
 				<div className="row align-items-end">
-					<div className="col-9 d-flex justify-content-start">
-						<Link to="/register">
-							<button className="btn link-like">
-								Register
-							</button>
-						</Link>
+					<div className="col-12 d-flex justify-content-start">
 						<Link to="/support">
 							<button className="btn link-like">
 								Support
 							</button>
 						</Link>
-						<Link to="/legal">
+						<Link to="/legalNotice">
 							<button className="btn link-like">
 								Legal Notice
 							</button>
 						</Link>
-						<Link to="/data-protection">
+						<Link to="/dataProtection">
 							<button className="btn link-like">
 								Data Protection Notice
 							</button>

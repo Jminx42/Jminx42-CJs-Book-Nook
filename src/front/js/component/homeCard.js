@@ -82,7 +82,7 @@ export const HomeCard = ({ item }) => {
 
                 <div className="card-body">
                     <Link to={`/book/${item.isbn}`} className="link-like">
-                        <div className="row  d-flex flex-grow-1">
+                        <div className="row d-flex flex-grow-1">
                             <h5 className="card-title">{actions.capitalizeWords(item.title)}</h5>
                         </div>
                         <div className="row align-items-end">

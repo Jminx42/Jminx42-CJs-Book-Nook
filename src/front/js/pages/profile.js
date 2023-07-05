@@ -47,28 +47,28 @@ export const Profile = () => {
 		}
 	};
 
-	// const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-	// useEffect(() => {
-	// 	getUserReviews()
-	// 	const handleResize = () => {
-	// 		setWindowWidth(window.innerWidth);
-	// 	};
+	useEffect(() => {
+		getUserReviews()
+		const handleResize = () => {
+			setWindowWidth(window.innerWidth);
+		};
 
-	// 	window.addEventListener('resize', handleResize);
+		window.addEventListener('resize', handleResize);
 
-	// 	return () => {
-	// 		window.removeEventListener('resize', handleResize);
-	// 	};
+		return () => {
+			window.removeEventListener('resize', handleResize);
+		};
 
-	// 	setActiveTab(params)
-	// }, []);
+		setActiveTab(params)
+	}, []);
 
-	// const isMobile = windowWidth <= 768;
+	const isMobile = windowWidth <= 768;
 
-	// useEffect(() => {
-	// 	getUserReviews();
-	// }, []);
+	useEffect(() => {
+		getUserReviews();
+	}, []);
 
 	const getUserReviews = async () => {
 		try {
@@ -385,9 +385,9 @@ export const Profile = () => {
 									return <SupportCard key={ticket.ticket_id} item={ticket} />
 								}) : <div>
 									Want to contact us? Go to our <Link to="/support">
-										<a className="link-like">
+										<button className="btn link-like">
 											support
-										</a>
+										</button>
 									</Link> page.
 
 								</div>}
