@@ -93,7 +93,7 @@ export const HomeCard = ({ item }) => {
                 </div>
             </div>
 
-            <div className="card-footer bg-white border-0 d-flex justify-content-center">
+            <div className="card-footer bg-white border-0 d-flex justify-content-center align-items-end flex-grow-1">
 
                 <button type="button"
                     className="btn text-white dark-button"

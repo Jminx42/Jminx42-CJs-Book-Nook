@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 
 import { Landing } from "./pages/landing";
-import { Home } from "./pages/home";
+import { Explore } from "./pages/explore";
 import { Profile } from "./pages/profile";
 import { BookPage } from "./pages/bookPage";
 import { Register } from "./pages/register";
@@ -15,10 +15,15 @@ import { ConfirmDetails } from "./pages/confirmDetails";
 import { OrderSummary } from "./pages/orderSummary";
 import { LegalNotice } from "./pages/legalNotice";
 import { DataProtection } from "./pages/dataProtection";
+import { PersonalInformation } from "./pages/personalInformation";
+import { Wishlist } from "./pages/wishlist";
+import { ProfileReviews } from "./pages/profileReviews";
+
 import injectContext from "./store/appContext";
 
 
 import { Footer } from "./component/footer";
+
 
 
 
@@ -38,9 +43,12 @@ const Layout = () => {
                 <ScrollToTop>
 
                     <Routes>
-                        <Route element={<Home />} path="/" />
-                        <Route element={<Landing />} path="/landing" />
+                        <Route element={<Explore />} path="/explore" />
+                        <Route element={<Landing />} path="/" />
                         <Route element={<Profile />} path="/profile" />
+                        <Route element={<PersonalInformation />} path="/personalInformation" />
+                        <Route element={<Wishlist />} path="/wishlist" />
+                        <Route element={<ProfileReviews />} path="/profileReviews" />
                         <Route element={<Register />} path="/register" />
                         <Route element={<Login />} path="/login" />
                         <Route element={<Support />} path="/support" />

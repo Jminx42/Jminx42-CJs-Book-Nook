@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import "../../styles/index.css"
 
 export const StarRating = ({ rating, editable, onRatingChange }) => {
     const [hoveredRating, setHoveredRating] = useState(0);
@@ -27,7 +28,7 @@ export const StarRating = ({ rating, editable, onRatingChange }) => {
         const filledStarClass =
             (hoveredRating >= starPosition || currentRating >= starPosition
                 ? 'fas'
-                : 'far') + ' fa-star text-warning';
+                : 'far') + ' fa-star filter-link';
 
         return (
             <i
@@ -45,7 +46,7 @@ export const StarRating = ({ rating, editable, onRatingChange }) => {
             {[1, 2, 3, 4, 5].map((position) => (
                 <span key={position}>{renderStar(position)}</span>
             ))}
-            <span className="ml-2">{currentRating}/5</span>
+
         </div>
     );
 };
