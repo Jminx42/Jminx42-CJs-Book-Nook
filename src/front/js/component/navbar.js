@@ -39,8 +39,9 @@ export const Navbar = () => {
 									aria-describedby="button-addon2"
 									value={store.search}
 									onChange={(e) => actions.handleSearch(e.target.value)}
+									onKeyUp={(e) => { e.key === 'Enter' && navigate('/explore') }}
 									placeholder="Search" />
-								<button type="button" className="btn custom-button" id="button-addon2" onClick={() => navigate('/')}>
+								<button type="button" className="btn custom-button" id="button-addon2" onClick={() => navigate('/explore')}>
 									<i className="fas fa-search"></i>
 								</button >
 							</div>
@@ -65,12 +66,16 @@ export const Navbar = () => {
 
 										</button>
 									</Link>
-
+									<Link to="/support">
+										<button className="btn me-2 custom-button"><i className="fa-solid fa-heart"></i></button>
+									</Link>
 									<Link to="/support">
 										<button className="btn me-2 custom-button"><i className="fa-solid fa-envelope"></i></button>
 									</Link>
 
 									<ProfileBtn />
+
+
 								</div>
 							)}
 						</li>

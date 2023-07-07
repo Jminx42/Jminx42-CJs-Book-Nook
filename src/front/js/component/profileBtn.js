@@ -30,12 +30,12 @@ export const ProfileBtn = () => {
                         </button>
                     </li>
                     <li>
-                        <button className="dropdown-item" onClick={() => actions.setActiveTab('purchase')}>
+                        <button className="dropdown-item" onClick={() => actions.setActiveTab('/personalInformation')}>
                             <i className="fa-regular fa-calendar-days"></i> Purchase History
                         </button>
                     </li>
                     <li>
-                        <button className="dropdown-item" onClick={() => actions.setActiveTab('support')}>
+                        <button className="dropdown-item" onClick={() => actions.setActiveTab('/personalInformation')}>
                             <i className="fa-solid fa-envelope"></i> Support
                         </button>
                     </li>

@@ -451,7 +451,7 @@ export const Explore = () => {
 					)
 						:
 						<div>
-							<div className="spinner-border" role="status">
+							<div className="spinner-border filter-link" role="status">
 								<span className="visually-hidden">Loading...</span>
 							</div>
 							<div>

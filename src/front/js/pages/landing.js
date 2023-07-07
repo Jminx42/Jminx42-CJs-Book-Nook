@@ -155,18 +155,19 @@ export const Landing = () => {
                 </div>
 
 
-                {store.user.wishlist.length > 2 ? (
-                    <Slider {...settings}>
-                        {recommendedBooks.map((book) => (
-                            <LandingCard key={book.id} item={book} />
-                        ))}</Slider>
-                ) : (
-                    <p className="fs-5 text-center mb-5"><Link to={`/login`}>
-                        <button className="btn fs-5 m-0 pe-1 pt-0 link-like">
-                            Login
-                        </button>
-                    </Link> and add books to your wishlist first!</p >
-                )}
+                {!sessionStorage.getItem("token") ?
+                    null
+                    :
+                    store.user.wishlist.length > 1 ? (
+                        <Slider {...settings}>
+                            {recommendedBooks.map((book) => (
+                                <LandingCard key={book.id} item={book} />
+                            ))}</Slider>
+                    ) : (
+                        <p className="fs-5 text-center mb-5">
+                            Add books to your wishlist first!
+                        </p >
+                    )}
 
             </div >
 
