@@ -18,6 +18,9 @@ import { DataProtection } from "./pages/dataProtection";
 import { PersonalInformation } from "./pages/personalInformation";
 import { Wishlist } from "./pages/wishlist";
 import { ProfileReviews } from "./pages/profileReviews";
+import { ProfileSupport } from "./pages/profileSupport";
+import { PurchaseHistory } from "./pages/purchaseHistory";
+import { Success } from "./pages/success";
 
 import injectContext from "./store/appContext";
 
@@ -49,6 +52,8 @@ const Layout = () => {
                         <Route element={<PersonalInformation />} path="/personalInformation" />
                         <Route element={<Wishlist />} path="/wishlist" />
                         <Route element={<ProfileReviews />} path="/profileReviews" />
+                        <Route element={<PurchaseHistory />} path="/purchaseHistory" />
+                        <Route element={<ProfileSupport />} path="/profileSupport" />
                         <Route element={<Register />} path="/register" />
                         <Route element={<Login />} path="/login" />
                         <Route element={<Support />} path="/support" />
@@ -59,6 +64,7 @@ const Layout = () => {
                         <Route element={<Checkout />} path="/checkout" />
                         <Route element={<ConfirmDetails />} path="/confirmDetails" />
                         <Route element={<OrderSummary />} path="/orderSummary" />
+                        <Route element={<Success />} path="/success" />
                         <Route element={<BookPage />} path="/book/:theisbn" />
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
