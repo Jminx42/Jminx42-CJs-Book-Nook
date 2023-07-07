@@ -295,16 +295,30 @@ def create_review():
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@api.route("/removeReview", methods=["DELETE"])
+@jwt_required()
+def delete_review():
+    user_id = get_jwt_identity()
+    body = request.json 
 
-@api.route("/review/<int:review_id>", methods=["DELETE"])
-def delete_review(review_id):
-    review = Review.query.get(review_id)
+    review = Review.query.get(body["review_id"])
     if not review:
-        return jsonify({"error": "No review found with this id"}), 400
+        return jsonify({"error": "No review found with this ID"}), 400
 
     db.session.delete(review)
     db.session.commit()
-    return jsonify("review deleted"), 200
+    return jsonify({"review": "review deleted"}), 200
+
+# @api.route("/review/<int:review_id>", methods=["DELETE"])
+# def delete_review(review_id):
+#     review = Review.query.get(review_id)
+#     if not review:
+#         return jsonify({"error": "No review found with this id"}), 400
+
+#     db.session.delete(review)
+#     db.session.commit()
+#     return jsonify("review deleted"), 200
 
 @api.route("/wishlist", methods=["POST"])
 @jwt_required()

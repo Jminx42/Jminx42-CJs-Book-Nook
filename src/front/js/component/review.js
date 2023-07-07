@@ -13,6 +13,7 @@ export const Review = ({ item }) => {
         rating: item.rating,
         review: item.review
     });
+    const [rating, setRating] = useState(0);
 
     useEffect(() => {
         actions.clearError();
@@ -24,38 +25,7 @@ export const Review = ({ item }) => {
 
     return (
         <div className="container">
-            {/* {
-                store.alert && store.alert !== ""
-                    ?
-                    <div className="container">
-                        <div className="alert alert-success alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
-                            <i className="bi bi-check-circle-fill me-2"></i>
-                            <div>
-                                {store.alert}
-                            </div>
-                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    </div>
-                    :
-                    null
 
-            }
-            {
-                store.errorMsg && store.errorMsg !== ""
-                    ?
-                    <div className="container">
-                        <div className="alert alert-danger alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
-                            <i className="bi bi-exclamation-triangle-fill"></i>
-                            <div>
-                                {store.errorMsg}
-                            </div>
-                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    </div>
-                    :
-                    null
-
-            } */}
             <div className="row">
                 <div className="col-sm-4 col-md-3 col-lg-3">
                     <Link to={`/book/${item.book_id.isbn}`}>
@@ -67,14 +37,25 @@ export const Review = ({ item }) => {
                     <h5 className="card-subtitle mb-2 text-muted">by {item.book_id.author}</h5>
                     <div className="d-flex justify-content-between align-items-center mb-2">
                         <p className="card-text mb-0">Posted on {item.created_at}</p>
-                        {!editClicked ?
-                            <button className="btn custom-button" onClick={() => setEditClicked(true)}>Edit</button>
+                        {item.user_id != store.user.id ? null : !editClicked ?
+                            <>
+                                <button className="btn custom-button" onClick={() => setEditClicked(true)}><i className="fa-solid fa-pen-to-square"></i></button>
+                                <button className="btn custom-button" onClick={() => actions.removeFromReviews(item.id)}><i className="fa-solid fa-trash"></i></button>
+                            </>
+                            :
+                            <button className="btn custom-button" onClick={async () => {
+                                await actions.editReview(item.book_id.id, editReview.review, rating)
+                                setEditClicked(false)
+                            }}>Save</button>
+                        }
+                        {/* {!editClicked ?
+                            <button className="btn custom-button" onClick={() => setEditClicked(true)}><i className="fa-solid fa-pen-to-square"></i></button>
                             :
                             <button className="btn custom-button" onClick={() => {
                                 setEditClicked(false)
-                                actions.editReview(item.book_id, editReview.review, editReview.rating)
+                                actions.editReview(item.book_id, editReview.review, rating)
 
-                            }}>Save</button>}
+                            }}>Save</button>} */}
                     </div>
 
                     <div className="d-flex align-items-center"> {/* Wrap label and input in a flex container */}

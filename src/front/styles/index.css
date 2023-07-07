@@ -163,7 +163,7 @@
     border-color: white;
     color: #0c6e68;
     border-radius: 0;
-    font-family: 'Merriweather', serif;
+    /* font-family: 'Merriweather', serif; */
 
 }
 
@@ -179,7 +179,7 @@
     margin-bottom: 1rem;
     color: #68B0AB;
     text-align: center;
-    font-family: 'Merriweather', serif;
+    /* font-family: 'Merriweather', serif; */
 }
 
 .feature-description {
@@ -209,7 +209,7 @@
 
 .legal-title {
     color: #68B0AB;
-    font-family: 'Merriweather', serif;
+    /* font-family: 'Merriweather', serif; */
 }
 
 .legal-text {

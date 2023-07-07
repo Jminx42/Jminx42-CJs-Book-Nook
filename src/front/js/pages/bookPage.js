@@ -4,6 +4,8 @@ import { Context } from "../store/appContext";
 import { Navbar } from "../component/navbar";
 import { StarRating } from "../component/StarRating";
 import { Footer } from "../component/footer";
+import { ReviewBook } from "../component/reviewBook";
+import "../../styles/home.css";
 
 export const BookPage = () => {
 	const params = useParams();
@@ -13,14 +15,14 @@ export const BookPage = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [showBookDetails, setShowBookDetails] = useState(false);
 	const [format, setFormat] = useState()
-	const [editReview, setEditReview] = useState({
-		rating: review.rating,
-		review: review.review
-	});
 	const [alert, setAlert] = useState("");
 	const [error, setError] = useState("");
 	const [isGooglePreview, setIsGooglePreview] = useState(false);
-	const [rating, setRating] = useState(0);
+	const [rating, setRating] = useState(0)
+	const [editReview, setEditReview] = useState({
+		rating: rating,
+		review: review.review
+	});
 
 
 	useEffect(() => {
@@ -58,7 +60,7 @@ export const BookPage = () => {
 				"Content-Type": "application/json"
 			},
 
-			body: JSON.stringify({ "book_id": book_id, "review": review.review, "rating": review.rating })
+			body: JSON.stringify({ "book_id": book_id, "review": review.review, "rating": rating })
 		});
 
 		if (response.ok) {
@@ -72,37 +74,17 @@ export const BookPage = () => {
 				rating: review.rating,
 				review: review.review
 			});
-			setEditReview({
-				rating: review.rating,
-				review: review.review
-			})
-			setReview({
-				rating: 0,
-				review: ''
-			});
+
+
 		} else {
 			const data = await response.json();
 			setError(data.error);
 		}
 	}
 
-	// const handleEditReview = () => {
-	// 	if (store.user.review.length !== 0) {
-	// 		store.user.review.forEach((rev) => {
-	// 			if (rev.book_id && rev.book_id.isbn == params.theisbn) {
-	// 				setEditReview({
-	// 					rating: rev.rating,
-	// 					review: rev.review
-	// 				});
-	// 				setEditClicked(true);
-	// 			}
-	// 		});
-	// 	}
-	// };
-
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		submitReview(store.book.id, review.review, review.rating)
+		submitReview(store.book.id, review.review, rating)
 	};
 
 	if (isLoading || !showBookDetails) {
@@ -111,7 +93,7 @@ export const BookPage = () => {
 				<Navbar />
 
 				<div className="container text-center mt-5">
-					<div className="spinner-border" role="status">
+					<div className="spinner-border filter-link" role="status">
 						<span className="visually-hidden">Loading...</span>
 					</div>
 					<div>Loading book...</div>
@@ -176,9 +158,8 @@ export const BookPage = () => {
 			}
 
 			<div className="card container mt-3 border-0">
-
-
 				<div className="p-4 text-center bg-body-tertiary rounded-3 ">
+
 					<img src={store.book.book_cover == null || store.book.book_cover == "" ? store.book.book_cover_b : store.book.book_cover} className=" w-25 float-start" alt="..." />
 					<div>
 						<h1 className=" display-3">{store.book.title}</h1>
@@ -186,33 +167,7 @@ export const BookPage = () => {
 						<div className="row text-start">
 							<div className="border ms-3 p-3">
 								<div className="row">
-									<div className="col-2">Publisher:</div>
-									<div className="col-10">{!store.book.publisher ? "Not available" : store.book.publisher}</div>
-								</div>
-								<div className="row">
-									<div className="col-2">Published Date:</div>
-									<div className="col-10">{store.book.year}</div>
-								</div>
-								<div className="row">
-									<div className="col-2">Genre:</div>
-									<div className="col-10">{store.book.genre}</div>
-
-								</div>
-								<div className="row">
-									<div className="col-2">Pages:</div>
-									<div className="col-10">{store.book.pages == 0 ? "Not available" : store.book.pages}</div>
-								</div>
-
-								<div className="row">
-									<div className="col-2">ISBN:</div>
-									<div className="col-10">{params.theisbn}</div>
-								</div>
-								<div className="row">
-									<div className="col-2">Rating: </div>
-									<div className="col-10">{store.book.average_rating ? store.book.average_rating + " (out of " + store.book.ratings_count + " votes)" : "Not available"} </div>
-								</div>
-								<div className="row">
-									<div className="col-2">Book Format:</div>
+									<div className="col-2 fw-bold">Book Format:</div>
 									<div className="col-8">
 
 										<select className="form-select" aria-label="Default select example" defaultValue="" onChange={(e) => setFormat(e.target.value)}>
@@ -244,9 +199,36 @@ export const BookPage = () => {
 
 									</div>
 								</div>
+								<div className="row">
+									<div className="col-2 fw-bold">Publisher:</div>
+									<div className="col-10">{!store.book.publisher ? "Not available" : store.book.publisher}</div>
+								</div>
+								<div className="row">
+									<div className="col-2 fw-bold">Published Date:</div>
+									<div className="col-10">{store.book.year}</div>
+								</div>
+								<div className="row">
+									<div className="col-2 fw-bold">Genre:</div>
+									<div className="col-10">{store.book.genre}</div>
+
+								</div>
+								<div className="row">
+									<div className="col-2 fw-bold">Pages:</div>
+									<div className="col-10">{store.book.pages == 0 ? "Not available" : store.book.pages}</div>
+								</div>
 
 								<div className="row">
-									<div className="col-2">Description:</div>
+									<div className="col-2 fw-bold">ISBN:</div>
+									<div className="col-10">{params.theisbn}</div>
+								</div>
+								<div className="row">
+									<div className="col-2 fw-bold">Rating: </div>
+									<div className="col-10">{store.book.average_rating ? store.book.average_rating + " (out of " + store.book.ratings_count + " votes)" : "Not available"} </div>
+								</div>
+
+
+								<div className="row">
+									<div className="col-2 fw-bold">Description:</div>
 									<div className="col-10">{store.book.description}</div>
 								</div>
 							</div>
@@ -292,13 +274,7 @@ export const BookPage = () => {
 					<h4 className="background-custom p-3 rounded">Reviews & Ratings</h4>
 					{store.book.reviews.map((review) => (
 						<div className="card mb-5" key={review.id}>
-							<div className="card-body">
-								<h5 className="card-title">By {review.full_name}</h5>
-								<h6 className="card-subtitle mb-2 text-muted">Posted {review.
-									created_at}</h6>
-								<StarRating rating={review.rating} editable={false} />
-								<p className="card-text">{review.review}</p>
-							</div>
+							<ReviewBook item={review} />
 						</div>
 					))}
 
