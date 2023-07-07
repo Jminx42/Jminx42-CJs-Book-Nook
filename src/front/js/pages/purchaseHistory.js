@@ -12,7 +12,7 @@ import { InputProfilePic } from "../component/inputProfilePic";
 import { SupportCard } from "../component/supportCard";
 
 
-export const ProfileReviews = () => {
+export const PurchaseHistory = () => {
     const { store, actions } = useContext(Context);
     const [alert, setAlert] = useState("");
     const [error, setError] = useState("");
@@ -50,6 +50,7 @@ export const ProfileReviews = () => {
             if (response.ok) {
                 const data = await response.json();
                 setReviews(data.reviews);
+                console.log(data.reviews)
             } else {
                 const data = await response.json();
                 setError(data.error);
@@ -195,16 +196,14 @@ export const ProfileReviews = () => {
                     }
                     <div className={`tab-content ${isMobile ? 'mt-0' : 'profile-container'}`} >
                         <div className="container mt-4">
-                            <div className="row d-flex g-3">
-                                {store.user.review.length === 0 ? (
-                                    <div>
-                                        Add a review to your latest read now!
-                                    </div>
-                                ) : (
-                                    store.user.review.map((review) => {
-                                        return <Review key={review.id} item={review} />
-                                    })
-                                )}
+                            <div className="container mt-4">
+
+                                <div className="row d-flex mx-1 gap-2">
+                                    {store.user.transaction && store.user.transaction.map((transaction) => {
+                                        return <TransactionCard key={transaction.id} item={transaction} />
+                                    })}
+                                </div>
+
                             </div>
                         </div>
                     </div>

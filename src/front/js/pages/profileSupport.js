@@ -12,7 +12,7 @@ import { InputProfilePic } from "../component/inputProfilePic";
 import { SupportCard } from "../component/supportCard";
 
 
-export const ProfileReviews = () => {
+export const ProfileSupport = () => {
     const { store, actions } = useContext(Context);
     const [alert, setAlert] = useState("");
     const [error, setError] = useState("");
@@ -21,7 +21,7 @@ export const ProfileReviews = () => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     useEffect(() => {
-        getUserReviews()
+
         const handleResize = () => {
             setWindowWidth(window.innerWidth);
         };
@@ -37,27 +37,7 @@ export const ProfileReviews = () => {
 
     const isMobile = windowWidth <= 768;
 
-    const getUserReviews = async () => {
-        try {
-            const response = await fetch(process.env.BACKEND_URL + "api/user_reviews", {
-                method: "GET",
-                headers: {
-                    Authorization: "Bearer " + sessionStorage.getItem("token"),
-                    "Content-Type": "application/json"
-                }
-            });
 
-            if (response.ok) {
-                const data = await response.json();
-                setReviews(data.reviews);
-            } else {
-                const data = await response.json();
-                setError(data.error);
-            }
-        } catch (error) {
-            console.error("Error fetching reviews:", error);
-        }
-    };
     return (
         <div>
             <Navbar />
@@ -195,17 +175,16 @@ export const ProfileReviews = () => {
                     }
                     <div className={`tab-content ${isMobile ? 'mt-0' : 'profile-container'}`} >
                         <div className="container mt-4">
-                            <div className="row d-flex g-3">
-                                {store.user.review.length === 0 ? (
-                                    <div>
-                                        Add a review to your latest read now!
-                                    </div>
-                                ) : (
-                                    store.user.review.map((review) => {
-                                        return <Review key={review.id} item={review} />
-                                    })
-                                )}
-                            </div>
+                            {store.user.support && store.user.support.length !== 0 ? store.user.support.map((ticket) => {
+                                return <SupportCard key={ticket.ticket_id} item={ticket} />
+                            }) : <div>
+                                Want to contact us? Go to our <Link to="/support">
+                                    <button className="btn px-0 pt-0 link-like">
+                                        support
+                                    </button>
+                                </Link> page.
+
+                            </div>}
                         </div>
                     </div>
                 </div>

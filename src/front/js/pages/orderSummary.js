@@ -200,6 +200,9 @@ export const OrderSummary = () => {
                             <Link to="/confirmDetails">
                                 <button className="btn custom-button text-center"><i className="fa-solid fa-arrow-left">&nbsp; Go back</i></button>
                             </Link>
+                            <Link to="/success">
+                                <button className="btn custom-button text-center" onClick={postTransaction}><i className="fa-solid">Pay &nbsp;</i><i className="fa-solid fa-arrow-right"></i></button>
+                            </Link>
                         </div>
 
                     </div>

@@ -134,7 +134,7 @@ export const PersonalInformation = () => {
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link to={`/personalInformation`}>
+                                <Link to={`/purchaseHistory`}>
                                     <button
                                         className="nav-link btn w-100 text-start"
                                     >
@@ -143,7 +143,7 @@ export const PersonalInformation = () => {
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link to={`/personalInformation`}>
+                                <Link to={`/profileSupport`}>
                                     <button
                                         className="nav-link btn w-100 text-start"
                                     >
@@ -179,14 +179,14 @@ export const PersonalInformation = () => {
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link to={`/personalInformation`}>
+                                    <Link to={`/purchaseHistory`}>
                                         <button className="py-3 border-bottom rounded-0 nav-link btn" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Purchase History" data-bs-original-title="Purchase History">
                                             <i className="fa-regular fa-calendar-days"></i>
                                         </button>
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link to={`/personalInformation`}>
+                                    <Link to={`/profileSupport`}>
                                         <button className="py-3 border-bottom rounded-0 nav-link btn" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Support" data-bs-original-title="Support">
                                             <i className="fa-solid fa-envelope"></i>
                                         </button>
