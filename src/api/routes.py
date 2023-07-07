@@ -24,41 +24,7 @@ from api.utils import APIException, generate_sitemap
 
 
 api = Blueprint('api', __name__)   
-@jwt_required()
-def calculate_order_amount(items):
-    # Replace this constant with a calculation of the order's amount
-    # Calculate the order total on the server to prevent
-    # people from directly manipulating the amount on the client
-    user_id = get_jwt_identity()
-    
-    total_price = 0
-    items = TransactionItem.query.filter_by(user_id=user_id, in_progress=True).all()
-    for x in items:
-        total_price += x.total_price_per_book  
 
-    total_price = round(total_price, 2)  
-    
-    return int(total_price * 100)
-
-
-@api.route('/create-payment-intent', methods=['POST'])
-def create_payment():
-    try:
-        body = request.json
-        # Create a PaymentIntent with the order amount and currency
-        intent = stripe.PaymentIntent.create(
-            amount=calculate_order_amount(body['items']),
-            currency='eur',
-            automatic_payment_methods={
-                'enabled': True,
-            },
-        )
-        return jsonify({
-            'clientSecret': intent['client_secret']
-        })
-    except Exception as e:
-        print(e)
-        return jsonify(error=str(e)), 403
 
 
 @api.route("/create/user", methods=["POST"])
@@ -353,6 +319,7 @@ def create_wishlist():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+#this one isn't working!
 @api.route("/createtransaction", methods=["POST"])
 @jwt_required()
 def create_transaction():
@@ -365,23 +332,23 @@ def create_transaction():
         items = TransactionItem.query.filter_by(user_id=user_id, in_progress=True).all()
         for x in items:
             total_price += x.total_price_per_book
-
+        
         # Create a Stripe checkout session
-        checkout_session = stripe.checkout.Session.create(
-            payment_method_types=['card'],
-            line_items=[
-                {
-                    # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-                    'price': 'price_1NOmITLDriABBO71zYhNNV1c',
-                    'quantity': 1,
-                },
-            ],
-            mode='payment',
-            success_url=os.getenv('BACKEND_URL') + '?success=true',
-            cancel_url=os.getenv('BACKEND_URL') + '?canceled=true',
-        )
-        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-        print(checkout_session)
+        # checkout_session = stripe.checkout.Session.create(
+        #     payment_method_types=['card'],
+        #     line_items=[
+        #         {
+        #             Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+        #             'price': items["book_format_id"]["price_id"],
+        #             'quantity': 1,
+        #         },
+        #     ],
+        #     mode='payment',
+        #     success_url=os.getenv('BACKEND_URL') + '?success=true',
+        #     cancel_url=os.getenv('BACKEND_URL') + '?canceled=true',
+        # )
+        # print("aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        # print(checkout_session)
         
         new_transaction = Transaction(
             payment_method_id=body["payment_method_id"],
@@ -396,7 +363,7 @@ def create_transaction():
         db.session.add(new_transaction)
         db.session.commit()
 
-        return jsonify({"transaction": new_transaction.serialize(), "checkout_session": checkout_session}), 200
+        return jsonify({"transaction": new_transaction.serialize(),  'clientSecret': intent['client_secret']}), 200
 
     except StripeError as e:
         # Handle Stripe errors
@@ -406,6 +373,60 @@ def create_transaction():
         print(e)
         return jsonify({"error": str(e)}), 500
 
+@jwt_required()
+def calculate_order_amount(items):
+    # Replace this constant with a calculation of the order's amount
+    # Calculate the order total on the server to prevent
+    # people from directly manipulating the amount on the client
+    user_id = get_jwt_identity()
+    
+    total_price = 0
+    items = TransactionItem.query.filter_by(user_id=user_id, in_progress=True).all()
+    for x in items:
+        total_price += x.total_price_per_book  
+
+    total_price = round(total_price, 2)  
+    
+    return int(total_price * 100)
+
+#This one is working!!!
+@api.route('/create-payment-intent', methods=['POST'])
+@jwt_required()
+def create_payment():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    try:
+        body = request.json
+        # Create a PaymentIntent with the order amount and currency
+        intent = stripe.PaymentIntent.create(
+            amount=calculate_order_amount(body['items']),
+            currency='eur',
+            automatic_payment_methods={
+                'enabled': True,
+            },
+        )
+        
+        items = TransactionItem.query.filter_by(user_id=user_id, in_progress=True).all()
+        
+        new_transaction = Transaction(
+            payment_method_id=body["payment_method_id"],
+            user=user,
+            total_price=calculate_order_amount(body['items']),
+            in_progress=True,
+        )
+
+        print(new_transaction)
+        new_transaction.items.extend(items)
+        
+        db.session.add(new_transaction)
+        db.session.commit()
+
+        return jsonify({
+            'clientSecret': intent['client_secret'], "transaction": new_transaction.serialize()
+        })
+    except Exception as e:
+        print(e)
+        return jsonify(error=str(e)), 403
     
 @api.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():

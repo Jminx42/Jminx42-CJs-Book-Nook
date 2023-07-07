@@ -15,39 +15,43 @@ export const ReviewBook = ({ item }) => {
         rating: item.rating,
         review: item.review
     });
-    const [rating, setRating] = useState(0);
+    const [rating, setRating] = useState(item.rating);
 
     useEffect(() => {
-
         setTimeout(() => {
             actions.clearError();
             actions.clearAlert();
         }, 3000);
-    }, [editReview, rating]);
-
+    }, [store.alert]);
 
     return (
         <div className="card-body">
             <div className="d-flex justify-content-between">
                 <h5 className="card-title">By {item.full_name}</h5>
 
-                {item.user_id != store.user.id ? null : !editClicked ?
+                {item.user_id != store.user.id ? null : !editClicked ? (
                     <>
-                        <button className="btn custom-button" onClick={() => setEditClicked(true)}><i className="fa-solid fa-pen-to-square"></i></button>
-                        <button className="btn custom-button" onClick={() => actions.removeFromReviews(item.id)}><i className="fa-solid fa-trash"></i></button>
-                    </> :
-                    <button className="btn custom-button" onClick={async () => {
-                        await actions.editReview(item.book_id, editReview.review, rating)
-                        setEditClicked(false)
-                        actions.getOneBook(params.theisbn)
-                    }}>Save</button>
-                }
-
+                        <button className="btn custom-button" onClick={() => setEditClicked(true)}>
+                            <i className="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button className="btn custom-button" onClick={() => actions.removeFromReviews(item.id)}>
+                            <i className="fa-solid fa-trash"></i>
+                        </button>
+                    </>
+                ) : (
+                    <button
+                        className="btn custom-button"
+                        onClick={async () => {
+                            await actions.editReview(item.book_id, editReview.review, rating);
+                            setEditClicked(false);
+                            actions.getOneBook(params.theisbn);
+                        }}
+                    >
+                        <i className="fa-solid fa-floppy-disk"></i>
+                    </button>
+                )}
             </div>
-            <h6 className="card-subtitle mb-2 text-muted">Posted on {item.
-                created_at}</h6>
-
-
+            <h6 className="card-subtitle mb-2 text-muted">Posted on {item.created_at}</h6>
 
             {!editClicked ? (
                 <StarRating rating={item.rating} editable={false} />
@@ -57,30 +61,27 @@ export const ReviewBook = ({ item }) => {
                     <StarRating
                         rating={rating}
                         editable={true}
-                        onRatingChange={setRating}
+                        onRatingChange={(newRating) => setRating(newRating)}
                     />
                 </>
             )}
-
 
             {!editClicked ? (
                 <p className="mb-1">{item.review}</p>
             ) : (
                 <>
                     <label className="text-start mb-1">Review:&nbsp;</label>
-                    <input
+                    <textarea
                         className="form-control p-0 mb-1"
                         id="review"
                         aria-describedby="review"
+                        rows="5"
                         defaultValue={editReview.review}
                         onChange={(e) => setEditReview({ ...editReview, review: e.target.value })}
                     />
                 </>
             )}
-
-
         </div>
-
     );
 };
 

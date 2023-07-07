@@ -94,8 +94,8 @@ export const Landing = () => {
     return (
         <div>
             <Navbar />
-            <div className="position-relative overflow-hidden p-3 p-md-5 p-lg-5 text-center image-background d-flex">
-                <div className="position-relative overflow-hidden p-3 p-md-5 p-lg-5 m-md-3 text-center landing-background d-flex">
+            <div className="position-relative overflow-hidden p-3 p-lg-5 text-center image-background d-flex justify-content-center">
+                <div className="position-relative overflow-hidden p-3 p-lg-5 m-md-3 text-center landing-background d-flex div-landing">
                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 my-5 p-2">
                         <h1 className="display-3 fw-bold landing-text">Designed for Book Lovers</h1>
                         <h3 className="fs-4 px-2 landing-text mt-3 mb-3">Discover Your Next 5-Star Read</h3>

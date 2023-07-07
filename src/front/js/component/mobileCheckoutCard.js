@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import "../../styles/index.css";
 import "../../styles/home.css";
 
-export const CheckoutCard = ({ item }) => {
+export const MobileCheckoutCard = ({ item }) => {
     const { store, actions } = useContext(Context);
     const [errorMessage, setErrorMessage] = useState("");
     const [alertMsg, setAlertMsg] = useState("");
@@ -125,28 +125,25 @@ export const CheckoutCard = ({ item }) => {
                         <img src={item.book_id.book_cover} className="card-img-top" alt="..." />
                     </Link>
                 </div>
-                <div className="col-9 col-sm-4 col-md-3 col-lg-3 col-xl-2">
+                <div className="col-8 col-sm-7">
                     <h4 className="text-start">{actions.capitalizeWords(item.book_id.title)}</h4>
                     <p className="text-start mb-0">{item.book_format_id.book_format}</p>
-                </div>
-                <div className="col-6 col-sm-3 col-md-2 col-lg-2 d-flex h-25 justify-content-center align-items-center">
-                    <button className="btn custom-button" onClick={() => handleAddUnit(item.id)}><i className="fa-solid fa-plus"></i></button>
-                    <p className="text-center mb-0 px-3">{item.unit}</p>
-                    <button className="btn custom-button" onClick={() => handleRemoveUnit(item.id)}><i className="fa-solid fa-minus"></i></button>
+                    <div className="d-flex justify-content-between align-items-center">
+                        <div className="d-flex justify-content-between align-items-center">
+                            <button className="btn custom-button" onClick={() => handleAddUnit(item.id)}><i className="fa-solid fa-plus"></i></button>
+                            <p className="text-center mb-0 px-3">{item.unit}</p>
+                            <button className="btn custom-button" onClick={() => handleRemoveUnit(item.id)}><i className="fa-solid fa-minus"></i></button>
+                        </div>
+                        <p className="text-center mb-0 p-2">{item.book_format_id.book_price * item.unit}€</p>
+                        <button className="btn custom-button" onClick={() => handleRemove(item.id)}><i className="fa-solid fa-trash"></i></button>
+                    </div>
 
                 </div>
-                <div className="col-3 col-sm-2 col-md-2 col-lg-1 h-25 align-items-center">
-                    <p className="text-center mb-0 p-2">{item.book_format_id.book_price * item.unit}€</p>
-                </div>
-                <div className="col-1 col-sm-1 col-md-1 col-lg-1 h-25 align-items-center">
-                    <button className="btn custom-button" onClick={() => handleRemove(item.id)}><i className="fa-solid fa-trash"></i></button>
 
-
-                </div>
 
             </div>
         </div>
     );
 };
 
-export default CheckoutCard;
+

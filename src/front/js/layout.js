@@ -21,6 +21,7 @@ import { ProfileReviews } from "./pages/profileReviews";
 import { ProfileSupport } from "./pages/profileSupport";
 import { PurchaseHistory } from "./pages/purchaseHistory";
 import { Success } from "./pages/success";
+import { StripeCheckout } from "./pages/stripeCheckout";
 
 import injectContext from "./store/appContext";
 
@@ -59,7 +60,7 @@ const Layout = () => {
                         <Route element={<Support />} path="/support" />
                         <Route element={<LegalNotice />} path="/legalNotice" />
                         <Route element={<DataProtection />} path="/dataProtection" />
-
+                        <Route element={<StripeCheckout />} path="/stripeCheckout" />
                         <Route element={<GooglePreview />} path="/googlePreview/:theisbn" />
                         <Route element={<Checkout />} path="/checkout" />
                         <Route element={<ConfirmDetails />} path="/confirmDetails" />

@@ -110,16 +110,16 @@ export const ConfirmDetails = () => {
                         {!editAddress ? (
 
                             <button className="btn btn-secondary custom-button" onClick={() => setEditAddress(true)}>
-                                Edit
+                                <i class="fa-solid fa-pen-to-square"></i>
                             </button>
 
                         ) : (
                             <div className="d-flex">
                                 <button className="btn btn-secondary me-2 custom-button" onClick={handleSave}>
-                                    Save
+                                    <i className="fa-solid fa-floppy-disk"></i>
                                 </button>
                                 <button className="btn btn-secondary " onClick={() => setEditAddress(false)}>
-                                    Close
+                                    <i className="fa-solid fa-x"></i>
                                 </button>
                             </div>
 
@@ -149,16 +149,15 @@ export const ConfirmDetails = () => {
                         {!editBilling ? (
 
                             <button className="btn btn-secondary custom-button" onClick={() => setEditBilling(true)}>
-                                Edit
+                                <i className="fa-solid fa-pen-to-square"></i>
                             </button>
 
                         ) : (
                             <div className="d-flex">
                                 <button className="btn btn-secondary me-2 custom-button" onClick={handleSave}>
-                                    Save
                                 </button>
                                 <button className="btn btn-secondary " onClick={() => setEditBilling(false)}>
-                                    Close
+                                    <i className="fa-solid fa-x"></i>
                                 </button>
                             </div>
 

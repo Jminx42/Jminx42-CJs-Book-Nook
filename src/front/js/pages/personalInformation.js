@@ -105,10 +105,10 @@ export const PersonalInformation = () => {
 
                         <hr />
                         <ul className="nav nav-pills flex-column mb-auto ">
-                            <li className="nav-item">
+                            <li className="nav-item profile-li">
                                 <Link to={`/personalInformation`}>
                                     <button
-                                        className="nav-link btn w-100 text-start"
+                                        className="btn link-like w-100 text-start"
 
                                     >
                                         <i className="fa-solid fa-user"></i> Personal Information
@@ -326,10 +326,10 @@ export const PersonalInformation = () => {
                                         ) : (
                                             <div className="d-flex">
                                                 <button className="btn btn-secondary me-2 custom-button" onClick={handleSave}>
-                                                    Save
+                                                    <i className="fa-solid fa-floppy-disk"></i>
                                                 </button>
                                                 <button className="btn btn-secondary " onClick={() => setEditClicked(false)}>
-                                                    Close
+                                                    <i className="fa-solid fa-x"></i>
                                                 </button>
                                             </div>
                                         )}
