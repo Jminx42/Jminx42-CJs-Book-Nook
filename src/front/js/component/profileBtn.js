@@ -15,32 +15,33 @@ export const ProfileBtn = () => {
                 <ul className="dropdown-menu dropdown-menu-end">
                     <li>
 
-                        <button className="dropdown-item" onClick={() => { navigate('/profile') }}>
+                        <button className="dropdown-item" onClick={() => { navigate('/personalInformation') }}>
                             <i className="fa-solid fa-user"></i> Personal Information
                         </button>
                     </li>
                     <li>
-                        <button className="dropdown-item" onClick={() => actions.setActiveTab('wishlist')}>
+                        <button className="dropdown-item" onClick={() => { navigate('/wishlist') }}>
                             <i className="fa-solid fa-heart"></i> Wishlist
                         </button>
                     </li>
                     <li>
-                        <button className="dropdown-item" onClick={() => actions.setActiveTab('reviews')}>
+                        <button className="dropdown-item" onClick={() => { navigate('/profileReviews') }}>
                             <i className="fa-regular fa-keyboard"></i> My Reviews
                         </button>
                     </li>
                     <li>
-                        <button className="dropdown-item" onClick={() => actions.setActiveTab('payment')}>
-                            <i className="fa-regular fa-credit-card"></i> Payment Methods
-                        </button>
-                    </li>
-                    <li>
-                        <button className="dropdown-item" onClick={() => actions.setActiveTab('purchase')}>
+
+                        <button className="dropdown-item" onClick={() => { navigate('/purchaseHistory') }}>
+
                             <i className="fa-regular fa-calendar-days"></i> Purchase History
                         </button>
                     </li>
                     <li>
-                        <button className="dropdown-item" onClick={() => actions.setActiveTab('support')}>
+
+                        
+
+                        <button className="dropdown-item" onClick={() => { navigate('/profileSupport') }}>
+
                             <i className="fa-solid fa-envelope"></i> Support
                         </button>
                     </li>

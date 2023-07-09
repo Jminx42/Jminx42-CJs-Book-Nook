@@ -26,24 +26,6 @@ export const OrderSummary = () => {
     const [clientSecret, setClientSecret] = useState("");
 
 
-    useEffect(() => {
-        // Create PaymentIntent as soon as the page loads
-        fetch("/create-payment-intent", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ items: [{ id: "xl-tshirt" }] }),
-        })
-            .then((res) => res.json())
-            .then((data) => setClientSecret(data.clientSecret));
-    }, []);
-
-    const appearance = {
-        theme: 'stripe',
-    };
-    const options = {
-        clientSecret,
-        appearance,
-    };
 
     const postTransaction = async () => {
 
@@ -192,17 +174,7 @@ export const OrderSummary = () => {
                     <Elements stripe={promise}>
                         <Stripe />
                     </Elements>
-                    <div className="row d-flex justify-content-end pe-0 mt-3">
 
-                        <div className="col-sm-3 col-md-3 col-lg-3 text-center d-flex justify-content-end pe-0">
-
-
-                            <Link to="/confirmDetails">
-                                <button className="btn custom-button text-center"><i className="fa-solid fa-arrow-left">&nbsp; Go back</i></button>
-                            </Link>
-                        </div>
-
-                    </div>
                 </div>
             </div>
         </div >

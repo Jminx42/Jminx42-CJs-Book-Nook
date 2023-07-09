@@ -6,7 +6,7 @@ import { Footer } from "../component/footer";
 
 import { HomeCard } from "../component/homeCard";
 
-export const Home = () => {
+export const Explore = () => {
 	const { store, actions } = useContext(Context);
 	const [genre, setGenre] = useState([]);
 	const [publisher, setPublisher] = useState([]);
@@ -451,7 +451,7 @@ export const Home = () => {
 					)
 						:
 						<div>
-							<div className="spinner-border" role="status">
+							<div className="spinner-border filter-link" role="status">
 								<span className="visually-hidden">Loading...</span>
 							</div>
 							<div>

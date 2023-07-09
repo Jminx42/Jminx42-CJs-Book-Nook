@@ -11,11 +11,33 @@ const getState = ({ getStore, getActions, setStore }) => {
 			errorMsg: '',
 			bookFormats: [],
 			alert: '',
-			activeTab: 'personal',
+
 
 
 		},
 		actions: {
+
+			// clearItems: () => {
+			// 	setStore(prevStore => ({
+			// 		...prevStore,
+			// 		user: {
+			// 			...prevStore.user,
+			// 			items: []  // Clear the items array, it's not working!
+			// 		}
+			// 	}));
+			// },
+
+			updateUserItems: () => {
+				const updatedItems = getStore().user.items.map((item) => {
+					return {
+						...item,
+						in_progress: false
+					};
+				});
+				console.log(updatedItems)
+				setStore({ ...getStore().user, user: { items: updatedItems } });
+			},
+
 			setActiveTab: (tab) => {
 				setStore({ activeTab: tab })
 			},
@@ -229,34 +251,61 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error(`Error during fetch: ${process.env.BACKEND_URL}api/checkout`, error);
 				}
 			},
-			// we might not need this one
-			removeFromCart: async (payment_method_id) => {
+
+			removeFromReviews: async (review_id) => {
 				const opts = {
 					method: 'DELETE',
 					headers: {
 						Authorization: "Bearer " + sessionStorage.getItem("token"),
 						"Content-Type": "application/json"
 					},
-					body: JSON.stringify({ "payment_method_id": payment_method_id })
+					body: JSON.stringify({ "review_id": review_id })
 				};
 
 				try {
-					const resp = await fetch(process.env.BACKEND_URL + 'api/user/payment-method', opts);
+					const resp = await fetch(process.env.BACKEND_URL + 'api/removeReview', opts);
 					if (resp.status !== 200) {
 						const data = await resp.json();
-						const errorMessage = data.error || "Something went wrong";
+						const errorMessage = data.error || "Something went wrong with deleting the review";
 						setStore({ errorMsg: errorMessage });
 						return false;
 					} else {
 						await actions.validate_user();
-						getActions().createAlertMsg("Your card was deleted successfully");
+						getActions().createAlertMsg("Your review was deleted successfully");
 						return true;
 					}
 				} catch (error) {
-					console.error(`Error during fetch: ${process.env.BACKEND_URL}api/user/payment-method`, error);
+					console.error(`Error during fetch: ${process.env.BACKEND_URL}api/removeReview`, error);
 				}
 			},
+			// I don't think we are using this one
+			// removeFromCart: async (review_id) => {
+			// 	const opts = {
+			// 		method: 'DELETE',
+			// 		headers: {
+			// 			Authorization: "Bearer " + sessionStorage.getItem("token"),
+			// 			"Content-Type": "application/json"
+			// 		},
+			// 		body: JSON.stringify({ "review_id": review_id })
+			// 	};
 
+			// 	try {
+			// 		const resp = await fetch(process.env.BACKEND_URL + 'api/user/payment-method', opts);
+			// 		if (resp.status !== 200) {
+			// 			const data = await resp.json();
+			// 			const errorMessage = data.error || "Something went wrong";
+			// 			setStore({ errorMsg: errorMessage });
+			// 			return false;
+			// 		} else {
+			// 			await actions.validate_user();
+			// 			getActions().createAlertMsg("Your card was deleted successfully");
+			// 			return true;
+			// 		}
+			// 	} catch (error) {
+			// 		console.error(`Error during fetch: ${process.env.BACKEND_URL}api/user/payment-method`, error);
+			// 	}
+			// },
+			// we might not need this one
 			postPaymentMethod: async (card_type, card_number, card_name, cvc, expiry_date) => {
 				const first_four_numbers = card_number.slice(0, 4);
 				const opts = {

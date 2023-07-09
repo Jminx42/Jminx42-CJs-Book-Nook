@@ -8,7 +8,7 @@ import CartCard from "./cartCard";
 
 
 
-export const HomeCard = ({ item }) => {
+export const WishlistCard = ({ item }) => {
     const { store, actions } = useContext(Context);
     const navigate = useNavigate();
     const [showCartModal, setShowCartModal] = useState(false);
@@ -22,8 +22,6 @@ export const HomeCard = ({ item }) => {
 
         }
     };
-
-    //yes this function is repeated... need to think a bit longer about how to handle it better
     const handleAddToCart = () => {
         if (sessionStorage.getItem("token") && store.user) {
             setShowCartModal(true);
@@ -33,7 +31,6 @@ export const HomeCard = ({ item }) => {
 
         }
     };
-
 
 
     return (
@@ -46,18 +43,8 @@ export const HomeCard = ({ item }) => {
                         <Link to={`/book/${item.isbn}`}>
                             <img src={item.book_cover_b} className="card-img-top contain" alt="Book Cover" style={{ height: "300px" }} />
                         </Link>
-                        <button
-                            type="button"
-                            className="btn position-absolute top-0 start-0 bg-blue border-0 text-white dark-button rounded-circle mt-2 ms-2"
-                            onClick={handleAddToWishlist}
-                            style={{ zIndex: 1 }}
-                        >
-                            {store.user.wishlist.some((wishlistItem) => wishlistItem.book_id.id === item.id) ? (
-                                <i className="fas fa-heart"></i>
-                            ) : (
-                                <i className="far fa-heart"></i>
-                            )}
-                        </button>
+
+
                     </>
                 ) : (
                     <>
@@ -70,12 +57,10 @@ export const HomeCard = ({ item }) => {
                             onClick={handleAddToWishlist}
                             style={{ zIndex: 1 }}
                         >
-                            {store.user.wishlist.some((wishlistItem) => wishlistItem.book_id.id === item.id) ? (
-                                <i className="fas fa-heart"></i>
-                            ) : (
-                                <i className="far fa-heart"></i>
-                            )}
+                            <i className="fa-solid fa-trash"></i>
+
                         </button>
+
                     </>
                 )}
 
@@ -83,16 +68,15 @@ export const HomeCard = ({ item }) => {
                 <div className="card-body">
                     <Link to={`/book/${item.isbn}`} className="link-like">
                         <div className="row d-flex flex-grow-1">
-                            <h5 className="card-title">{actions.capitalizeWords(item.title)}</h5>
+                            <h5 className="card-title text-center">{actions.capitalizeWords(item.title)}</h5>
                         </div>
                         <div className="row align-items-end">
 
-                            <p className="card-text">{item.author}</p>
+                            <p className="card-text text-center">{item.author}</p>
                         </div>
                     </Link>
                 </div>
             </div>
-
             <div className="card-footer bg-white border-0 d-flex justify-content-center align-items-end flex-grow-1">
 
                 <button type="button"
@@ -107,6 +91,8 @@ export const HomeCard = ({ item }) => {
                 }
 
             </div>
+
+
         </div>
     );
 };

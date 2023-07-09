@@ -12,6 +12,11 @@
     color: #0c6e68;
 }
 
+.input-custom:focus {
+    box-shadow: 0 0 0 0.25rem #cdeeec;
+    border-color: #bce4e2;
+}
+
 .dark-button {
     background-color: #68B0AB;
     border-color: #68B0AB;
@@ -163,7 +168,7 @@
     border-color: white;
     color: #0c6e68;
     border-radius: 0;
-    font-family: 'Merriweather', serif;
+    /* font-family: 'Merriweather', serif; */
 
 }
 
@@ -197,6 +202,10 @@
     background-color: #68B0AB;
 }
 
+.custom-text {
+    color: #68B0AB;
+}
+
 /* Increase the size of the dots*/
 .slick-dots li button:before {
     font-size: 30px !important;
@@ -207,9 +216,14 @@
     font-size: 30px;
 }
 
-.legal-title {
+.profile-li {
     color: #68B0AB;
     font-family: 'Merriweather', serif;
+}
+
+.legal-title {
+    color: #68B0AB;
+    /* font-family: 'Merriweather', serif; */
 }
 
 .legal-text {
@@ -227,21 +241,44 @@
 }
 
 /* Media Queries!!! Define different styles for different screen sizes */
-@media (max-width: 414px) {
+/* @media (max-width: 414px) {
     .img-responsive {
         max-height: 100px;
 
     }
+} */
+
+/* @media (max-width: 570px) {
+    .div-landing {
+        flex-direction: column-reverse;
+
+    }
+} */
+
+.landing-text {
+    font-size: calc(1.525rem + 3.3vw);
 }
 
-@media (min-width: 769px) and (max-width: 768px) {
+@media (max-width: 582px) {
+    .landing-text {
+        font-size: 2.4rem;
+    }
+}
+
+@media (min-width: 583px) and (max-width: 659px) {
+    .landing-text {
+        font-size: 2.5rem;
+    }
+}
+
+@media (min-width: 415px) and (max-width: 768px) {
     .img-responsive {
         max-height: 200px;
 
     }
-}
+} */
 
-@media (min-width: 769px) and (max-width: 1024px) {
+/* @media (min-width: 769px) and (max-width: 1024px) {
     .img-responsive {
         max-height: 300px;
 
@@ -253,4 +290,4 @@
         max-height: 400px;
 
     }
-}
+} */

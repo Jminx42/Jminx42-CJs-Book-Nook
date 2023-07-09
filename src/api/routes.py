@@ -16,7 +16,11 @@ import pytz
 import os
 import stripe
 from stripe.error import StripeError
-stripe.api_key = 'sk_test_51NOm30LDriABBO719nhvoZuy8msaKkmkekKWuLucfqiLlWMxYAdiuPKvGjUi8XIqrtsJ8UW5NUcMFboDWROSV1fS00mXbmKzvJ'
+stripe_keys = {
+    "secret_key": os.environ["STRIPE_SECRET_KEY"],
+    "publishable_key": os.environ["STRIPE_PUBLISHABLE_KEY"],
+}
+stripe.api_key = stripe_keys["secret_key"]
 
 
 from api.models import db, User, Book, Review, Wishlist, Transaction, Support, PaymentMethod, TransactionItem, BookFormat
@@ -24,42 +28,6 @@ from api.utils import APIException, generate_sitemap
 
 
 api = Blueprint('api', __name__)   
-@jwt_required()
-def calculate_order_amount(items):
-    # Replace this constant with a calculation of the order's amount
-    # Calculate the order total on the server to prevent
-    # people from directly manipulating the amount on the client
-    user_id = get_jwt_identity()
-    
-    total_price = 0
-    items = TransactionItem.query.filter_by(user_id=user_id, in_progress=True).all()
-    for x in items:
-        total_price += x.total_price_per_book  
-
-    total_price = round(total_price, 2)  
-    
-    return int(total_price * 100)
-
-
-@api.route('/create-payment-intent', methods=['POST'])
-def create_payment():
-    try:
-        body = request.json
-        # Create a PaymentIntent with the order amount and currency
-        intent = stripe.PaymentIntent.create(
-            amount=calculate_order_amount(body['items']),
-            currency='eur',
-            automatic_payment_methods={
-                'enabled': True,
-            },
-        )
-        return jsonify({
-            'clientSecret': intent['client_secret']
-        })
-    except Exception as e:
-        print(e)
-        return jsonify(error=str(e)), 403
-
 
 @api.route("/create/user", methods=["POST"])
 def create_user():
@@ -295,16 +263,30 @@ def create_review():
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@api.route("/removeReview", methods=["DELETE"])
+@jwt_required()
+def delete_review():
+    user_id = get_jwt_identity()
+    body = request.json 
 
-@api.route("/review/<int:review_id>", methods=["DELETE"])
-def delete_review(review_id):
-    review = Review.query.get(review_id)
+    review = Review.query.get(body["review_id"])
     if not review:
-        return jsonify({"error": "No review found with this id"}), 400
+        return jsonify({"error": "No review found with this ID"}), 400
 
     db.session.delete(review)
     db.session.commit()
-    return jsonify("review deleted"), 200
+    return jsonify({"review": "review deleted"}), 200
+
+# @api.route("/review/<int:review_id>", methods=["DELETE"])
+# def delete_review(review_id):
+#     review = Review.query.get(review_id)
+#     if not review:
+#         return jsonify({"error": "No review found with this id"}), 400
+
+#     db.session.delete(review)
+#     db.session.commit()
+#     return jsonify("review deleted"), 200
 
 @api.route("/wishlist", methods=["POST"])
 @jwt_required()
@@ -339,6 +321,7 @@ def create_wishlist():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+#this one isn't working!
 @api.route("/createtransaction", methods=["POST"])
 @jwt_required()
 def create_transaction():
@@ -351,23 +334,23 @@ def create_transaction():
         items = TransactionItem.query.filter_by(user_id=user_id, in_progress=True).all()
         for x in items:
             total_price += x.total_price_per_book
-
+        
         # Create a Stripe checkout session
-        checkout_session = stripe.checkout.Session.create(
-            payment_method_types=['card'],
-            line_items=[
-                {
-                    # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-                    'price': 'price_1NOmITLDriABBO71zYhNNV1c',
-                    'quantity': 1,
-                },
-            ],
-            mode='payment',
-            success_url=os.getenv('BACKEND_URL') + '?success=true',
-            cancel_url=os.getenv('BACKEND_URL') + '?canceled=true',
-        )
-        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-        print(checkout_session)
+        # checkout_session = stripe.checkout.Session.create(
+        #     payment_method_types=['card'],
+        #     line_items=[
+        #         {
+        #             Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+        #             'price': items["book_format_id"]["price_id"],
+        #             'quantity': 1,
+        #         },
+        #     ],
+        #     mode='payment',
+        #     success_url=os.getenv('BACKEND_URL') + '?success=true',
+        #     cancel_url=os.getenv('BACKEND_URL') + '?canceled=true',
+        # )
+        # print("aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        # print(checkout_session)
         
         new_transaction = Transaction(
             payment_method_id=body["payment_method_id"],
@@ -382,7 +365,7 @@ def create_transaction():
         db.session.add(new_transaction)
         db.session.commit()
 
-        return jsonify({"transaction": new_transaction.serialize(), "checkout_session": checkout_session}), 200
+        return jsonify({"transaction": new_transaction.serialize(),  'clientSecret': intent['client_secret']}), 200
 
     except StripeError as e:
         # Handle Stripe errors
@@ -392,26 +375,86 @@ def create_transaction():
         print(e)
         return jsonify({"error": str(e)}), 500
 
+@jwt_required()
+def calculate_order_amount(items):
+    # Replace this constant with a calculation of the order's amount
+    # Calculate the order total on the server to prevent
+    # people from directly manipulating the amount on the client
+    user_id = get_jwt_identity()
+    
+    total_price = 0
+    items = TransactionItem.query.filter_by(user_id=user_id, in_progress=True).all()
+    for x in items:
+        total_price += x.total_price_per_book  
+
+    total_price = round(total_price, 2)  
+    
+    return int(total_price * 100)
+
+#This one is working!!!
+@api.route('/create-payment-intent', methods=['POST'])
+@jwt_required()
+def create_payment():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    try:
+        body = request.json
+        # Create a PaymentIntent with the order amount and currency
+        intent = stripe.PaymentIntent.create(
+            amount=calculate_order_amount(body['items']),
+            currency='eur',
+            automatic_payment_methods={
+                'enabled': True,
+            },
+        )
+        
+        items = TransactionItem.query.filter_by(user_id=user_id, in_progress=True).all()
+        
+        new_transaction = Transaction(
+            payment_method_id=body["payment_method_id"],
+            user=user,
+            total_price=calculate_order_amount(body['items']),
+            in_progress=True,
+        )
+
+        print(new_transaction)
+        new_transaction.items.extend(items)
+        
+        db.session.add(new_transaction)
+        db.session.commit()
+
+        return jsonify({
+            'clientSecret': intent['client_secret'], "transaction": new_transaction.serialize()
+        })
+    except Exception as e:
+        print(e)
+        return jsonify(error=str(e)), 403
     
 @api.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
+    domain_url = os.getenv('FRONTEND_URL')
+    stripe.api_key = stripe_keys["secret_key"]
     try:
         checkout_session = stripe.checkout.Session.create(
+            success_url=domain_url + "success?session_id={CHECKOUT_SESSION_ID}",
+            cancel_url=domain_url + "cancelled",
+            mode='payment',
+
             line_items=[
                 {
                     # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-                    'price': 'price_1NOmITLDriABBO71zYhNNV1c',
+                    'price': 'price_1NOmHXLDriABBO71yY77GziP',
                     'quantity': 1,
                 },
             ],
-            mode='payment',
-            success_url=os.getenv('BACKEND_URL') + '?success=true',
-            cancel_url=os.getenv('BACKEND_URL') + '?canceled=true',
+            
+            
         )
+        print(checkout_session["url"])
     except Exception as e:
         return str(e)
 
-    return redirect(checkout_session.url, code=303)
+    return jsonify({"checkout_session": checkout_session}), 303
 
 @api.route("/checkout", methods=["POST"])
 @jwt_required()
