@@ -241,12 +241,12 @@
 }
 
 /* Media Queries!!! Define different styles for different screen sizes */
-@media (max-width: 414px) {
+/* @media (max-width: 414px) {
     .img-responsive {
         max-height: 100px;
 
     }
-}
+} */
 
 /* @media (max-width: 570px) {
     .div-landing {
@@ -276,9 +276,9 @@
         max-height: 200px;
 
     }
-}
+} */
 
-@media (min-width: 769px) and (max-width: 1024px) {
+/* @media (min-width: 769px) and (max-width: 1024px) {
     .img-responsive {
         max-height: 300px;
 
@@ -290,4 +290,4 @@
         max-height: 400px;
 
     }
-}
+} */

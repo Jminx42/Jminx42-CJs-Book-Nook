@@ -4,7 +4,9 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Navbar } from "../component/navbar";
 import { CheckoutCard } from "../component/checkoutCard";
+
 import { MobileCheckoutCard } from "../component/mobileCheckoutCard";
+
 import "../../styles/index.css"
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
@@ -13,7 +15,8 @@ import "../../styles/stripe.css"
 
 export const Checkout = () => {
     const { store, actions } = useContext(Context);
-    const checkout = JSON.parse(sessionStorage.getItem("checkout"));
+
+    const navigate = useNavigate();
     // we need to add a new card to show on the checkout... maybe it should be the same as the favorites??
     const [user, setUser] = useState(store.user);
     const [editAddress, setEditAddress] = useState(false);
@@ -85,10 +88,56 @@ export const Checkout = () => {
         }
         return totalCheckout
     }
+
+    const createCheckoutSession = async () => {
+        try {
+            const response = await fetch(process.env.BACKEND_URL + 'api/create-checkout-session', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({})
+            });
+
+            if (response.status === 303) {
+                const data = await response.json();
+                console.log(data)
+                const url = data.checkout_session.url
+                console.log(url)
+                const checkout_url = data.checkout_session.url;
+
+                window.location.replace(checkout_url)
+                console.log("response was okay")
+            } else {
+                throw new Error('Failed to create checkout session');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
     return (
         <div>
             <Navbar />
             <div className="container mt-4">
+
+                    
+                <div className="row d-flex justify-content-center mt-4">
+                    {store.user.items && store.user.items.length > 0 ?
+
+                        (<div className="row d-flex justify-content-center">
+                            {store.user.items.sort((a, b) => a.id - b.id).map((items) => {
+                                return <CheckoutCard key={items.id} item={items} />;
+
+                            })}
+                            <div className="row d-flex justify-content-end pe-0">
+                                <div className="col-sm-6 col-md-6 col-lg-4 text-center d-flex justify-content-end pe-0">
+                                    <h5 className="text-center px-4 py-2 m-0"> Total: {parseFloat(total().toFixed(2))}€ </h5>
+                                    <Link to="/confirmDetails">
+                                        <button className="btn custom-button text-center"><i className="fa-solid">Proceed &nbsp;</i><i className="fa-solid fa-arrow-right"></i></button>
+                                    </Link>
+                                    <button onClick={createCheckoutSession}>Stripe redirect</button>
+                                </div>
+
                 <h1 className="feature-title m-5">CHECKOUT</h1>
                 {store.user.items && store.user.items.length > 0 ?
                     <>
@@ -107,6 +156,7 @@ export const Checkout = () => {
                                     />
                                 )}
                                 {!editAddress ? (
+
 
                                     <button className="btn btn-secondary custom-button" onClick={() => setEditAddress(true)}>
                                         <i className="fa-solid fa-pen-to-square"></i>
