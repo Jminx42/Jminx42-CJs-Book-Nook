@@ -119,7 +119,7 @@ export const CheckoutCard = ({ item }) => {
 
             }
 
-            <div className="row mb-2">
+            <div className="row mb-2" >
                 <div className="col-3 col-sm-2 col-md-2 col-lg-2">
                     <Link to={`/book/${item.book_id.isbn}`}>
                         <img src={item.book_id.book_cover} className="card-img-top" alt="..." />
@@ -135,10 +135,10 @@ export const CheckoutCard = ({ item }) => {
                     <button className="btn custom-button" onClick={() => handleRemoveUnit(item.id)}><i className="fa-solid fa-minus"></i></button>
 
                 </div>
-                <div className="col-3 col-sm-2 col-md-2 col-lg-1 h-25 align-items-center">
+                <div className="col-3 col-sm-2 col-md-2 col-lg-1 h-25 d-flex align-items-center">
                     <p className="text-center mb-0 p-2">{item.book_format_id.book_price * item.unit}€</p>
                 </div>
-                <div className="col-1 col-sm-1 col-md-1 col-lg-1 h-25 align-items-center">
+                <div className="col-1 col-sm-1 col-md-1 col-lg-1 h-25 d-flex justify-content-end align-items-center pe-1">
                     <button className="btn custom-button" onClick={() => handleRemove(item.id)}><i className="fa-solid fa-trash"></i></button>
 
 

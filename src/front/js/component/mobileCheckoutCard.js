@@ -125,7 +125,7 @@ export const MobileCheckoutCard = ({ item }) => {
                         <img src={item.book_id.book_cover} className="card-img-top" alt="..." />
                     </Link>
                 </div>
-                <div className="col-8 col-sm-7">
+                <div className="col-8 col-sm-8">
                     <h4 className="text-start">{actions.capitalizeWords(item.book_id.title)}</h4>
                     <p className="text-start mb-0">{item.book_format_id.book_format}</p>
                     <div className="d-flex justify-content-between align-items-center">

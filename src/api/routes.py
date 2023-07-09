@@ -432,9 +432,14 @@ def create_payment():
     
 @api.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
-    domain_url = os.getenv('FRONTEND_URL')
+   
+    # domain_url = os.getenv('FRONTEND_URL') This isn't working!!!! WHY GODDAMNIT
+    domain_url= "https://carolina-hora-curly-engine-44679qp76gxfj6rq-3000.preview.app.github.dev/"
+    print(domain_url)
     stripe.api_key = stripe_keys["secret_key"]
+    print(stripe.api_key)
     try:
+      
         checkout_session = stripe.checkout.Session.create(
             success_url=domain_url + "success?session_id={CHECKOUT_SESSION_ID}",
             cancel_url=domain_url + "cancelled",
@@ -448,13 +453,13 @@ def create_checkout_session():
                 },
             ],
             
-            
+             
         )
-        print(checkout_session["url"])
+        print(checkout_session)
     except Exception as e:
         return str(e)
 
-    return jsonify({"checkout_session": checkout_session}), 303
+    return jsonify({"checkout_session": checkout_session}), 200
 
 @api.route("/checkout", methods=["POST"])
 @jwt_required()
