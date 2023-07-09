@@ -99,7 +99,7 @@ export const PersonalInformation = () => {
             <Navbar />
             <div className="d-flex">
                 {!isMobile ?
-                    (<div className="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary" style={{ width: '15rem' }}>
+                    (<div className="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary">
 
                         <p className="fs-4 legal-title">Profile</p>
 
@@ -234,16 +234,16 @@ export const PersonalInformation = () => {
                     <div className={`tab-content ${isMobile ? 'mt-0' : 'profile-container'}`} >
                         <div className="" aria-labelledby="personal-tab">
                             <div className="container mt-3">
-                                <div className="row">
-                                    <div className="col-3">
+                                <div className="row d-flex">
+                                    <div className="col-5 col-sm-5 col-md-4 col-lg-4 col-xl-3">
                                         {!editClicked ? (
                                             !user.profile_picture
                                                 ?
                                                 <img
                                                     src="https://www.pngmart.com/files/10/User-Account-Person-PNG-Transparent-Image.png"
-                                                    className="card-img-top"
+                                                    className="img-responsive"
                                                     alt="Profile Picture"
-                                                    style={{ width: "200px" }} />
+                                                />
                                                 :
                                                 <img
                                                     src={user.profile_picture}
@@ -257,82 +257,110 @@ export const PersonalInformation = () => {
                                             </div>
                                         )}
                                     </div>
-                                    <div className="col-9">
-                                        <label className="">Email: </label>
-                                        <p> {user.email}</p>
+                                    <div className="col-7 col-sm-7 col-md-7 col-lg-5">
+                                        <div className="d-flex align-items-center my-2">
+                                            <label htmlFor="full_name" className="form-floating fw-bold custom-text">Email:</label>
+                                            <p className="ms-2 my-auto">{user.email}</p>
+                                        </div>
 
-                                        <label className="text-start">Name: </label>
                                         {!editClicked ? (
-                                            <p> {user.full_name}</p>
+                                            <div className="d-flex align-items-center my-2">
+                                                <label htmlFor="full_name" className="form-floating fw-bold custom-text">Name:</label>
+                                                <p className="ms-2 my-auto">{user.full_name}</p>
+                                            </div>
                                         ) : (
-                                            <input
-                                                className="form-control"
-                                                id="full_name"
-                                                aria-describedby="full_name"
-                                                value={user.full_name}
-                                                onChange={(e) => setUser({ ...user, full_name: e.target.value })}
-                                            />
-                                        )}
-
-
-                                        <label className="text-start">Password: </label>
-                                        {!editClicked ? (
-                                            <p>{user.password}***</p>
-                                        ) : (
-                                            <input
-                                                className="form-control"
-                                                id="password"
-                                                aria-describedby="password"
-                                                value={user.password || ""}
-                                                onChange={(e) => setUser({ ...user, password: e.target.value })}
-                                            />
-                                        )}
-
-                                        <label className="text-start">Shipping Address: </label>
-                                        {!editClicked ? (
-
-                                            <p>{user.address}</p>
-                                        ) : (
-                                            <input
-                                                className="form-control"
-                                                id="address"
-                                                aria-describedby="address"
-                                                value={user.address || ""}
-                                                onChange={(e) => setUser({ ...user, address: e.target.value })}
-                                            />
-                                        )}
-
-                                        <label className="text-start">Billing Address: </label>
-                                        {!editClicked ? (
-
-                                            <p>{user.billing_address}</p>
-                                        ) : (
-                                            <input
-                                                className="form-control"
-                                                id="billing_address"
-                                                aria-describedby="billing_address"
-                                                value={user.billing_address || ""}
-                                                onChange={(e) => setUser({ ...user, billing_address: e.target.value })}
-                                            />
-                                        )}
-                                    </div>
-                                    <div className="d-flex justify-content-end">
-                                        {!editClicked ? (
-
-                                            <button className="btn btn-secondary custom-button" onClick={() => setEditClicked(true)}>
-                                                <i className="fa-solid fa-pen-to-square"></i>
-                                            </button>
-
-                                        ) : (
-                                            <div className="d-flex">
-                                                <button className="btn btn-secondary me-2 custom-button" onClick={handleSave}>
-                                                    <i className="fa-solid fa-floppy-disk"></i>
-                                                </button>
-                                                <button className="btn btn-secondary " onClick={() => setEditClicked(false)}>
-                                                    <i className="fa-solid fa-x"></i>
-                                                </button>
+                                            <div className="form-floating">
+                                                <input
+                                                    type="text"
+                                                    className="form-control input-custom my-2"
+                                                    id="full_name"
+                                                    aria-describedby="full_name"
+                                                    value={user.full_name}
+                                                    onChange={(e) => setUser({ ...user, full_name: e.target.value })}
+                                                />
+                                                <label htmlFor="full_name">Name</label>
                                             </div>
                                         )}
+
+
+
+                                        {!editClicked ? (
+                                            <div className="d-flex align-items-center my-2">
+                                                <label htmlFor="password" className="form-floating fw-bold custom-text">Password:</label>
+                                                <p className="ms-2 my-auto">{user.password}***</p>
+                                            </div>
+                                        ) : (
+                                            <div className="form-floating">
+                                                <input
+                                                    className="form-control input-custom my-2"
+                                                    id="password"
+                                                    aria-describedby="password"
+                                                    value={user.password || ""}
+                                                    onChange={(e) => setUser({ ...user, password: e.target.value })}
+
+                                                />
+                                                <label htmlFor="password">Password</label>
+                                            </div>
+                                        )}
+
+                                        {!editClicked ? (
+                                            <div className="d-flex align-items-center my-2">
+                                                <label htmlFor="shipping" className="form-floating fw-bold custom-text">Shipping Address:</label>
+                                                <p className="ms-2 my-auto">{user.address}</p>
+                                            </div>
+                                        ) : (
+                                            <div className="form-floating">
+                                                <input
+                                                    className="form-control input-custom my-2"
+                                                    id="address"
+                                                    aria-describedby="address"
+                                                    value={user.address || ""}
+                                                    onChange={(e) => setUser({ ...user, address: e.target.value })}
+                                                />
+                                                <label htmlFor="shipping">Shipping Address</label>
+                                            </div>
+                                        )}
+
+
+                                        {!editClicked ? (
+                                            <div className="d-flex align-items-center my-2">
+                                                <label htmlFor="billing_address" className="form-floating fw-bold custom-text">Billing Address:</label>
+                                                <p className="ms-2 my-auto">{user.billing_address}</p>
+                                            </div>
+                                        ) : (
+                                            <div className="form-floating">
+                                                <input
+                                                    className="form-control input-custom my-2"
+                                                    id="billing_address"
+                                                    aria-describedby="billing_address"
+                                                    value={user.billing_address || ""}
+                                                    onChange={(e) => setUser({ ...user, billing_address: e.target.value })}
+                                                />
+                                                <label htmlFor="billing_address">Billing Address</label>
+                                            </div>
+                                        )}
+                                        <div className="d-flex justify-content-end">
+
+                                            {!editClicked ? (
+
+                                                <button className="btn btn-secondary custom-button" onClick={() => setEditClicked(true)}>
+                                                    <i className="fa-solid fa-pen-to-square"></i>
+                                                </button>
+
+                                            ) : (
+                                                <div className="d-flex">
+                                                    <button className="btn btn-secondary me-2 custom-button" onClick={handleSave}>
+                                                        <i className="fa-solid fa-floppy-disk"></i>
+                                                    </button>
+                                                    <button className="btn btn-secondary " onClick={() => setEditClicked(false)}>
+                                                        <i className="fa-solid fa-x"></i>
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="d-flex justify-content-end">
+
                                     </div>
                                 </div>
                             </div>

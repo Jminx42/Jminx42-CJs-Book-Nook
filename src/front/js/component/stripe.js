@@ -81,7 +81,8 @@ export const Stripe = () => {
             setError(null);
             setProcessing(false);
             setSucceeded(true);
-            actions.clearItems()
+            // actions.clearItems()
+            actions.updateUserItems()
             navigate('/success')
 
         }

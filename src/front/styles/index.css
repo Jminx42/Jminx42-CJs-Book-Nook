@@ -12,6 +12,11 @@
     color: #0c6e68;
 }
 
+.input-custom:focus {
+    box-shadow: 0 0 0 0.25rem #cdeeec;
+    border-color: #bce4e2;
+}
+
 .dark-button {
     background-color: #68B0AB;
     border-color: #68B0AB;
@@ -195,6 +200,10 @@
     width: 2px;
     height: 100%;
     background-color: #68B0AB;
+}
+
+.custom-text {
+    color: #68B0AB;
 }
 
 /* Increase the size of the dots*/
