@@ -319,10 +319,10 @@ export const Profile = () => {
 										) : (
 											<div className="d-flex">
 												<button className="btn btn-secondary me-2 custom-button" onClick={handleSave}>
-													Save
+													<i className="fa-solid fa-floppy-disk"></i>
 												</button>
 												<button className="btn btn-secondary " onClick={() => setEditClicked(false)}>
-													Close
+													<i class="fa-solid fa-x"></i>
 												</button>
 											</div>
 

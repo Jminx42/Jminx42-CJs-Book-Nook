@@ -37,9 +37,10 @@ export const InputProfilePic = () => {
                     !store.user.profile_picture
                         ?
                         <img
-                            src="https://placehold.co/600x400.png"
-                            className="card-img-top"
-                            alt="Profile Picture" />
+                            src="https://www.pngmart.com/files/10/User-Account-Person-PNG-Transparent-Image.png"
+                            className="img-responsive"
+                            alt="Profile Picture"
+                        />
                         :
                         files == null ?
                             <img src={store.user.profile_picture} className="card-img-top" alt="saved profile picture" />

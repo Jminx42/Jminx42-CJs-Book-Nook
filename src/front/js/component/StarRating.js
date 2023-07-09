@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "../../styles/index.css"
 
 export const StarRating = ({ rating, editable, onRatingChange }) => {
@@ -46,8 +46,6 @@ export const StarRating = ({ rating, editable, onRatingChange }) => {
             {[1, 2, 3, 4, 5].map((position) => (
                 <span key={position}>{renderStar(position)}</span>
             ))}
-
         </div>
     );
 };
-

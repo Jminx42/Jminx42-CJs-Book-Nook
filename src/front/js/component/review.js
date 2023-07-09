@@ -46,16 +46,8 @@ export const Review = ({ item }) => {
                             <button className="btn custom-button" onClick={async () => {
                                 await actions.editReview(item.book_id.id, editReview.review, rating)
                                 setEditClicked(false)
-                            }}>Save</button>
+                            }}><i className="fa-solid fa-floppy-disk"></i></button>
                         }
-                        {/* {!editClicked ?
-                            <button className="btn custom-button" onClick={() => setEditClicked(true)}><i className="fa-solid fa-pen-to-square"></i></button>
-                            :
-                            <button className="btn custom-button" onClick={() => {
-                                setEditClicked(false)
-                                actions.editReview(item.book_id, editReview.review, rating)
-
-                            }}>Save</button>} */}
                     </div>
 
                     <div className="d-flex align-items-center"> {/* Wrap label and input in a flex container */}
@@ -75,10 +67,11 @@ export const Review = ({ item }) => {
                         {!editClicked ? (
                             <p className="mb-1">{item.review}</p>
                         ) : (
-                            <input
+                            <textarea
                                 className="form-control p-0 mb-1"
                                 id="review"
                                 aria-describedby="review"
+                                rows="5"
                                 defaultValue={editReview.review}
                                 onChange={(e) => setEditReview({ ...editReview, review: e.target.value })}
                             />
