@@ -16,7 +16,11 @@ import pytz
 import os
 import stripe
 from stripe.error import StripeError
-stripe.api_key = 'sk_test_51NOm30LDriABBO719nhvoZuy8msaKkmkekKWuLucfqiLlWMxYAdiuPKvGjUi8XIqrtsJ8UW5NUcMFboDWROSV1fS00mXbmKzvJ'
+stripe_keys = {
+    "secret_key": os.environ["STRIPE_SECRET_KEY"],
+    "publishable_key": os.environ["STRIPE_PUBLISHABLE_KEY"],
+}
+stripe.api_key = stripe_keys["secret_key"]
 
 
 from api.models import db, User, Book, Review, Wishlist, Transaction, Support, PaymentMethod, TransactionItem, BookFormat
@@ -24,6 +28,7 @@ from api.utils import APIException, generate_sitemap
 
 
 api = Blueprint('api', __name__)   
+
 @jwt_required()
 def calculate_order_amount(items):
     # Replace this constant with a calculation of the order's amount
@@ -409,23 +414,29 @@ def create_transaction():
     
 @api.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
+    domain_url = os.getenv('FRONTEND_URL')
+    stripe.api_key = stripe_keys["secret_key"]
     try:
         checkout_session = stripe.checkout.Session.create(
+            success_url=domain_url + "success?session_id={CHECKOUT_SESSION_ID}",
+            cancel_url=domain_url + "cancelled",
+            mode='payment',
+
             line_items=[
                 {
                     # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-                    'price': 'price_1NOmITLDriABBO71zYhNNV1c',
+                    'price': 'price_1NOmHXLDriABBO71yY77GziP',
                     'quantity': 1,
                 },
             ],
-            mode='payment',
-            success_url=os.getenv('BACKEND_URL') + '?success=true',
-            cancel_url=os.getenv('BACKEND_URL') + '?canceled=true',
+            
+            
         )
+        print(checkout_session["url"])
     except Exception as e:
         return str(e)
 
-    return redirect(checkout_session.url, code=303)
+    return jsonify({"checkout_session": checkout_session}), 303
 
 @api.route("/checkout", methods=["POST"])
 @jwt_required()

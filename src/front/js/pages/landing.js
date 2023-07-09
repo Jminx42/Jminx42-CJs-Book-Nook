@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, Suspense, lazy } from "react";
 import CJBookNookLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/cjbooknookwhitesmall.png";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
@@ -95,13 +95,13 @@ export const Landing = () => {
         <div>
             <Navbar />
             <div className="position-relative overflow-hidden p-3 p-md-5 p-lg-5 text-center image-background d-flex">
-                <div className="position-relative overflow-hidden p-3 p-md-5 p-lg-5 m-md-3 text-center landing-background d-flex">
+                <div className="position-relative overflow-hidden p-3 p-md-5 p-lg-5 m-md-3 text-center landing-background d-flex rounded">
                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 my-5 p-2">
                         <h1 className="display-3 fw-bold landing-text">Designed for Book Lovers</h1>
                         <h3 className="fs-4 px-2 landing-text mt-3 mb-3">Discover Your Next 5-Star Read</h3>
                         <div className="d-flex gap-3 justify-content-center lead fw-normal pt-5 mt-xl-5">
                             <Link to={`/explore`}>
-                                <button className="btn landing-button px-3 py-2 fs-4 mb-xl-5">
+                                <button className="btn landing-button px-3 py-2 fs-4 mb-xl-5 rounded">
                                     Start Exploring
                                 </button>
                             </Link>
@@ -150,19 +150,22 @@ export const Landing = () => {
             </div>
 
             <div className="container mt-5 mb-5">
-                <div className="row mt-5 mb-3">
-                    <h3 className="feature-title mt-4 mb-0">Recommended for you</h3>
-                </div>
+
 
 
                 {!sessionStorage.getItem("token") ?
                     null
                     :
                     store.user.wishlist.length > 1 ? (
-                        <Slider {...settings}>
-                            {recommendedBooks.map((book) => (
-                                <LandingCard key={book.id} item={book} />
-                            ))}</Slider>
+                        <>
+                            <div className="row mt-5 mb-3">
+                                <h3 className="feature-title mt-4 mb-0">Recommended for you</h3>
+                            </div>
+                            <Slider {...settings}>
+                                {recommendedBooks.map((book) => (
+                                    <LandingCard key={book.id} item={book} />
+                                ))}</Slider>
+                        </>
                     ) : (
                         <p className="fs-5 text-center mb-5">
                             Add books to your wishlist first!
