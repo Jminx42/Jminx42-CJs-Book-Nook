@@ -201,9 +201,15 @@ export const ProfileReviews = () => {
                                         Add a review to your latest read now!
                                     </div>
                                 ) : (
-                                    store.user.review.sort((a, b) => a.id - b.id).map((review) => {
+
+                                    <div className="col-10 m-1">
+                                        {
+                                           store.user.review.sort((a, b) => a.id - b.id).map((review) => {
                                         return <Review key={review.id} item={review} />
-                                    })
+                                            
+                                            )}
+                                    </div>                               
+                              
                                 )}
                             </div>
                         </div>

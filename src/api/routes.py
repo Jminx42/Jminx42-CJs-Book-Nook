@@ -96,13 +96,6 @@ def validate_user():
     return jsonify({"user": user.serialize()}), 200
     
 
-# @api.route("/user/all", methods=['GET'])
-# def get_all_users():
-#     users = User.query.all()
-#     serialized_users = [user.serialize() for user in users]
-
-#     return jsonify(serialized_users), 200  
-
 @api.route("/user", methods=['GET'])
 @jwt_required()
 def get_user_by_id():
@@ -189,12 +182,6 @@ def get_one_book_by_id(isbn):
 
     return jsonify({"book": book.serialize()}), 200 
 
-# @api.route("/review", methods=['GET'])
-# def get_all_reviews():
-#     reviews = Review.query.all()
-#     serialized_reviews = [review.serialize() for review in reviews]
-
-#     return jsonify({"reviews": serialized_reviews}), 200
 
 @api.route("/user_reviews", methods=['GET'])
 @jwt_required()
@@ -205,14 +192,6 @@ def get_user_reviews():
 
     return jsonify({"reviews": serialized_reviews}), 200
  
-
-# @api.route("/review/<int:review_id>", methods=['GET'])
-# def get_one_review_by_id(review_id):
-#     review = Review.query.get(review_id)
-#     if not review:
-#         return jsonify({"error": "No review found with this id"}), 400
-
-#     return jsonify(review.serialize()), 200 
 
 @api.route("/edit-review", methods=["PUT"]) #Why don't we need the /<int:book_id>
 @jwt_required()
@@ -278,15 +257,6 @@ def delete_review():
     db.session.commit()
     return jsonify({"review": "review deleted"}), 200
 
-# @api.route("/review/<int:review_id>", methods=["DELETE"])
-# def delete_review(review_id):
-#     review = Review.query.get(review_id)
-#     if not review:
-#         return jsonify({"error": "No review found with this id"}), 400
-
-#     db.session.delete(review)
-#     db.session.commit()
-#     return jsonify("review deleted"), 200
 
 @api.route("/wishlist", methods=["POST"])
 @jwt_required()
@@ -321,42 +291,34 @@ def create_wishlist():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-#this one isn't working!
-@api.route("/createtransaction", methods=["POST"])
+
+@api.route("/createTransaction", methods=["POST"])
 @jwt_required()
 def create_transaction():
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
     try:
         body = request.json
+        
+        if "items" not in body:
+            return jsonify({"error": "'items' key is missing in the request body"}), 400
+
+        items_data = body["items"]
+
+        if not isinstance(items_data, list):
+            return jsonify({"error": "'items' should be an array in the request body"}), 400
+
 
         total_price = 0
         items = TransactionItem.query.filter_by(user_id=user_id, in_progress=True).all()
         for x in items:
             total_price += x.total_price_per_book
         
-        # Create a Stripe checkout session
-        # checkout_session = stripe.checkout.Session.create(
-        #     payment_method_types=['card'],
-        #     line_items=[
-        #         {
-        #             Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-        #             'price': items["book_format_id"]["price_id"],
-        #             'quantity': 1,
-        #         },
-        #     ],
-        #     mode='payment',
-        #     success_url=os.getenv('BACKEND_URL') + '?success=true',
-        #     cancel_url=os.getenv('BACKEND_URL') + '?canceled=true',
-        # )
-        # print("aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-        # print(checkout_session)
         
         new_transaction = Transaction(
-            payment_method_id=body["payment_method_id"],
             user=user,
             total_price=total_price,
-            in_progress=True,
+            in_progress=False,
         )
         print(new_transaction)
          # Assign the items to the new transaction
@@ -365,11 +327,8 @@ def create_transaction():
         db.session.add(new_transaction)
         db.session.commit()
 
-        return jsonify({"transaction": new_transaction.serialize(),  'clientSecret': intent['client_secret']}), 200
+        return jsonify({"transaction": new_transaction.serialize()}), 200
 
-    except StripeError as e:
-        # Handle Stripe errors
-        return jsonify({"error": str(e)}), 500
     except Exception as e:
         # Handle other errors
         print(e)
@@ -431,27 +390,47 @@ def create_payment():
         return jsonify(error=str(e)), 403
     
 @api.route('/create-checkout-session', methods=['POST'])
+@jwt_required()
 def create_checkout_session():
-   
+
+    user_id = get_jwt_identity()
     # domain_url = os.getenv('FRONTEND_URL') This isn't working!!!! WHY GODDAMNIT
     domain_url= "https://carolina-hora-curly-engine-44679qp76gxfj6rq-3000.preview.app.github.dev/"
     print(domain_url)
     stripe.api_key = stripe_keys["secret_key"]
-    print(stripe.api_key)
+    
     try:
-      
+        body = request.json
+
+        if not isinstance(body, list):
+            return jsonify({"error": "Invalid request body. Expected a list of items."}), 400
+        
+        line_items = {}
+        
+        for item in body:
+            price_id = item.get('price_id')
+            quantity = item.get('quantity')
+            
+            if not price_id or not quantity:
+                return jsonify({"error": "Invalid item format. Each item must have a 'price_id' and 'quantity'."}), 400
+            
+            if price_id and quantity:
+                if price_id in line_items:
+                    line_items[price_id] += quantity
+                else:
+                    line_items[price_id] = quantity
+        
+        formatted_line_items = [
+            {'price': price_id, 'quantity': quantity}
+            for price_id, quantity in line_items.items()
+        ]
+
         checkout_session = stripe.checkout.Session.create(
             success_url=domain_url + "success?session_id={CHECKOUT_SESSION_ID}",
             cancel_url=domain_url + "cancelled",
             mode='payment',
 
-            line_items=[
-                {
-                    # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-                    'price': 'price_1NOmHXLDriABBO71yY77GziP',
-                    'quantity': 1,
-                },
-            ],
+            line_items=formatted_line_items,
             
              
         )

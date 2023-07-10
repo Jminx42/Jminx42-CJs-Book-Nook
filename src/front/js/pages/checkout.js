@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Navbar } from "../component/navbar";
 import { CheckoutCard } from "../component/checkoutCard";
@@ -17,6 +17,9 @@ export const Checkout = () => {
     const promise = loadStripe("pk_test_51NOm30LDriABBO71EslVAUR52crSoSLYDfGJgAF61S1HyL5sxQ63PGMxS2xffxW2x9ugJm1sPSuNfhNibLoODb6M00SiS5BrMT");
     const [alert, setAlert] = useState("");
     const [error, setError] = useState("");
+    const [checked, setChecked] = useState(false);
+    const navigate = useNavigate();
+    const promise = loadStripe("pk_test_51NOm30LDriABBO71EslVAUR52crSoSLYDfGJgAF61S1HyL5sxQ63PGMxS2xffxW2x9ugJm1sPSuNfhNibLoODb6M00SiS5BrMT");
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const isMobile = window.innerWidth <= 582;
@@ -79,21 +82,27 @@ export const Checkout = () => {
         }
         return totalCheckout
     }
-
     const createCheckoutSession = async () => {
+        const priceIdsAndUnits = [];
+        store.user.items.forEach(item => {
+            const priceId = item.book_format_id.price_id;
+            const quantity = item.unit;
+            priceIdsAndUnits.push({ "price_id": priceId, "quantity": quantity })
+
+        });
+        console.log(priceIdsAndUnits)
         try {
             const response = await fetch(process.env.BACKEND_URL + 'api/create-checkout-session', {
                 method: 'POST',
                 headers: {
+                    Authorization: "Bearer " + sessionStorage.getItem("token"),
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({})
+                body: JSON.stringify(priceIdsAndUnits)
             });
             if (response.status === 200) {
                 const data = await response.json();
                 console.log(data)
-                const url = data.checkout_session.url
-                console.log(url)
                 const checkout_url = data.checkout_session.url;
 
                 window.location.replace(checkout_url)
@@ -156,35 +165,7 @@ export const Checkout = () => {
                                     Is the billing address the same as the shipping address?
                                 </label>
                             </div>
-                            <div className="d-flex justify-content-between">
-                                {checked ? (
-                                    <p>{store.user.address}</p>
-                                ) : !editBilling ? (
-                                    <p>{store.user.billing_address}</p>
-                                ) : (
-                                    <input
-                                        className="form-control"
-                                        id="billing_address"
-                                        aria-describedby="billing_address"
-                                        value={user.billing_address}
-                                        onChange={(e) => setUser({ ...user, billing_address: e.target.value })}
-                                    />
-                                )}
-                                {!editBilling ? (
-
-                                    <button className="btn btn-secondary custom-button" onClick={() => setEditBilling(true)}>
-                                        <i className="fa-solid fa-pen-to-square"></i>
-                                    </button>
-
-                                ) : (
-                                    <div className="d-flex">
-                                        <button className="btn btn-secondary me-2 custom-button" onClick={handleSave}>
-                                        </button>
-                                        <button className="btn btn-secondary " onClick={() => setEditBilling(false)}>
-                                            <i className="fa-solid fa-x"></i>
-                                        </button>
-                                    </div>
-
+                            <div className="row d-flex justify-content-center mt-4">
                                 )}
                             </div>
                         </div>
@@ -221,5 +202,9 @@ export const Checkout = () => {
 
             </div>
         </div>
+
+
+
+
     );
 };
