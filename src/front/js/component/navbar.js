@@ -69,7 +69,7 @@ export const Navbar = () => {
 							{!sessionStorage.getItem("token") ? (
 								<>
 									<Link to="/explore">
-										<button className="btn mx-2 custom-button"><i class="bi bi-book-fill"></i></button>
+										<button className="btn mx-2 custom-button"><i className="bi bi-book-fill"></i></button>
 									</Link>
 									<Link to="/login">
 										<button className="btn btn-secondary custom-button "> Login <i className="fa-solid fa-right-to-bracket"></i></button>
@@ -80,7 +80,7 @@ export const Navbar = () => {
 
 								<>
 									<Link to="/explore">
-										<button className="btn mx-2 custom-button"><i class="bi bi-book-fill"></i></button>
+										<button className="btn mx-2 custom-button"><i className="bi bi-book-fill"></i></button>
 									</Link>
 									<Link to="/checkout">
 										<button type="button" className="btn btn-secondary me-2 custom-button position-relative">

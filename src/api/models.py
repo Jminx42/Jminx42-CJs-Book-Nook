@@ -211,7 +211,7 @@ class TransactionItem(db.Model):
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    payment_method_id = db.Column(db.Integer, db.ForeignKey('payment_method.id'), nullable=False)
+    # payment_method_id = db.Column(db.Integer, db.ForeignKey('payment_method.id'), nullable=False)
     items = db.relationship("TransactionItem", backref="transaction")
     total_price = db.Column(db.Float, unique= False, nullable=True)
     transaction_created = db.Column(db.DateTime, default=datetime.utcnow)
@@ -225,7 +225,7 @@ class Transaction(db.Model):
         return {
             "id": self.id,
             "user_id": User.query.get(self.user_id).serialize(),
-            "payment_method_id": self.payment_method_id,
+            # "payment_method_id": self.payment_method_id,
             "items": [item.serialize() for item in self.items],
             "total_price": self.total_price,
             "transaction_created": self.transaction_created.strftime("%d/%m/%Y"),
@@ -235,7 +235,7 @@ class Transaction(db.Model):
         return {
             "id": self.id,
             "user_id": self.user_id,
-            "payment_method_id": self.payment_method_id,
+            # "payment_method_id": self.payment_method_id,
             "items": [item.serialize() for item in self.items],
             "total_price": self.total_price,
             "transaction_created": self.transaction_created.strftime("%d/%m/%Y"),
@@ -251,7 +251,7 @@ class PaymentMethod(db.Model):
     card_name = db.Column(db.Text, unique=False, nullable=False)
     cvc_hash = db.Column(db.Text, unique=False, nullable=False)
     expiry_date = db.Column(db.DateTime, default=datetime.utcnow)
-    transactions = db.relationship("Transaction", backref="payment_method")
+    # transactions = db.relationship("Transaction", backref="payment_method")
     
     def __repr__(self):
         return f'<PaymentMethods {self.card_name}>'

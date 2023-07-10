@@ -154,7 +154,7 @@ export const Register = () => {
                                     <LazyLoadImage
                                         src={CJBookNookLogo}
                                         alt="CJ Book Nook Logo"
-                                        className="my-2 border rounded-circle"
+                                        className="my-2 border rounded-circle img-responsive"
                                         effect="blur"
                                         style={{ width: '150px' }} />
                                 </div>

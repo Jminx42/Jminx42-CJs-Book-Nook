@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useContext, Suspense, lazy } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import CJBookNookLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/cjbooknookwhitesmall.png";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
 import "../../styles/index.css";
@@ -109,7 +110,7 @@ export const Landing = () => {
                         </div>
                     </div>
                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 my-auto">
-                        <img src={CJBookNookLogo} alt="CJBookNookLogo" className="text-center img-responsive" />
+                        <LazyLoadImage src={CJBookNookLogo} alt="CJBookNookLogo" className="text-center img-responsive" />
                     </div>
 
                     <div className="product-device shadow-sm d-none d-md-block"></div>

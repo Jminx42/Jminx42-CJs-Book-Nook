@@ -201,9 +201,14 @@ export const ProfileReviews = () => {
                                         Add a review to your latest read now!
                                     </div>
                                 ) : (
-                                    store.user.review.map((review) => {
-                                        return <Review key={review.id} item={review} />
-                                    })
+                                    <div className="col-10 m-1">
+                                        {
+                                            store.user.review.map((review) => {
+                                                return <Review key={review.id} item={review} />
+                                            }
+                                            )}
+                                    </div>
+
                                 )}
                             </div>
                         </div>

@@ -163,7 +163,7 @@ export const Support = () => {
                         value={formData.message || ""}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     />
-                    <button className="btn custom-button text-white mt-3 mb-4" type="submit">
+                    <button className="btn custom-button mt-3 mb-4" type="submit">
                         Submit
                     </button>
 
