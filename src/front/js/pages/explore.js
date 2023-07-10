@@ -423,7 +423,6 @@ export const Explore = () => {
 							</div> {/*END OF COL*/}
 
 							<div className="row d-flex justify-content-center">
-								{/* <div className="col-sm-12 col-md-12 col-lg-9"> */}
 								{store.books
 									.filter(
 										(book) =>
@@ -443,7 +442,6 @@ export const Explore = () => {
 									)
 									.filter((book) => year === "" || (book.year && book.year.includes(year)))
 									.map((book) => <HomeCard key={book.id} item={book} />)}
-								{/* </div> */}
 							</div>
 							<Footer />
 						</>

@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 export const LegalNotice = () => {
   return (
-    <div className="">
+    <div>
       <Navbar />
       <div className="container mx-auto">
         <div className="row mx-auto">

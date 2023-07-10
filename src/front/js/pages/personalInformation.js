@@ -2,14 +2,9 @@ import React, { useState, useEffect, useContext } from "react";
 import { Navbar } from "../component/navbar";
 import { Link } from "react-router-dom";
 import "../../styles/index.css"
-import { Card } from "../component/card";
-import { Review } from "../component/review";
-
-import { TransactionCard } from "../component/transactionCard";
-
 import { Context } from "../store/appContext";
 import { InputProfilePic } from "../component/inputProfilePic";
-import { SupportCard } from "../component/supportCard";
+import { Footer } from "../component/footer";
 
 
 export const PersonalInformation = () => {
@@ -17,7 +12,6 @@ export const PersonalInformation = () => {
     const [user, setUser] = useState(store.user);
     const [editClicked, setEditClicked] = useState(false);
     const [reviews, setReviews] = useState([]);
-    const [showForm, setShowForm] = useState(false)
     const [alert, setAlert] = useState("");
     const [error, setError] = useState("");
     const [activeTab, setActiveTab] = useState('personal')
@@ -368,6 +362,7 @@ export const PersonalInformation = () => {
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
     );
 };

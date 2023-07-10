@@ -1,26 +1,21 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Navbar } from "../component/navbar";
 import { CheckoutCard } from "../component/checkoutCard";
-
 import { MobileCheckoutCard } from "../component/mobileCheckoutCard";
-
 import "../../styles/index.css"
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { Stripe } from "../component/stripe";
 import "../../styles/stripe.css"
+import { Footer } from "../component/footer";
 
 export const Checkout = () => {
     const { store, actions } = useContext(Context);
-
-
-    // we need to add a new card to show on the checkout... maybe it should be the same as the favorites??
     const [user, setUser] = useState(store.user);
     const [editAddress, setEditAddress] = useState(false);
     const [editBilling, setEditBilling] = useState(false);
-    const [showForm, setShowForm] = useState(false);
     const [alert, setAlert] = useState("");
     const [error, setError] = useState("");
     const [checked, setChecked] = useState(false);
@@ -246,6 +241,7 @@ export const Checkout = () => {
                 }
 
             </div>
+            <Footer />
         </div>
 
 

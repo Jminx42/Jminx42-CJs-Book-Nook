@@ -3,13 +3,8 @@ import { Navbar } from "../component/navbar";
 import { Link } from "react-router-dom";
 import "../../styles/index.css"
 import { WishlistCard } from "../component/wishlistCard";
-import { Review } from "../component/review";
-
-import { TransactionCard } from "../component/transactionCard";
-
 import { Context } from "../store/appContext";
-import { InputProfilePic } from "../component/inputProfilePic";
-import { SupportCard } from "../component/supportCard";
+import { Footer } from "../component/footer";
 
 
 export const Wishlist = () => {
@@ -176,9 +171,7 @@ export const Wishlist = () => {
                     <div className={`tab-content ${isMobile ? 'mt-0' : 'profile-container'}`} >
                         <div className="container mt-4">
                             <div className="row d-flex">
-                                {/* {store.user.wishlist && store.user.wishlist.length !== 0 ? store.user.wishlist.filter((book) => book.title.toLowerCase().includes(store.search)).map((book) => {
-								return <Card key={book.isbn} item={book} />
-							}) : null} */}
+
                                 {store.user.wishlist && store.user.wishlist.length !== 0 ? store.user.wishlist.map((book) => {
                                     return <WishlistCard key={book.id} item={book.book_id} />
                                 }) :
@@ -190,6 +183,7 @@ export const Wishlist = () => {
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
     );
 };

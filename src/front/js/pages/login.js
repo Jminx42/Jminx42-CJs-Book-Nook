@@ -115,9 +115,7 @@ export const Login = () => {
                                 Login
                             </button>
                         </div>
-                        {/* <p className="text-center mt-2">
-                            Forgot <a className="link-like" href="#">password?</a>
-                        </p> */}
+
                     </div>
                 </form>
             </div>
