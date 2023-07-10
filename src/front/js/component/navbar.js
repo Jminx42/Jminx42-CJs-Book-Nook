@@ -22,7 +22,7 @@ export const Navbar = () => {
 
 
 	return (
-		<nav className="navbar navbar-expand-lg background-custom px-5 py-0">
+		<nav className="navbar navbar-expand-lg background-custom px-md-5 px-lg-5 py-0">
 			<div className="container-fluid">
 				<Link to="/" className="navbar-brand">
 					<img src={CJBookNookNoLogo} height={50} alt="CJBookNookLogo" />
@@ -93,6 +93,7 @@ export const Navbar = () => {
 										</button>
 									</Link>
 									<Link to="/wishlist">
+
 										<button className="btn me-2 custom-button"><i className="fa-solid fa-heart"></i></button>
 									</Link>
 									<Link to="/support">

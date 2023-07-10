@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../store/appContext";
+import { Link, useParams, useNavigate, Navigate } from "react-router-dom";
 import {
     CardElement,
     useStripe,
@@ -16,6 +17,7 @@ export const Stripe = () => {
     const [clientSecret, setClientSecret] = useState('');
     const stripe = useStripe();
     const elements = useElements();
+    const navigate = useNavigate()
 
 
     // Create PaymentIntent as soon as the page loads
@@ -26,7 +28,7 @@ export const Stripe = () => {
                 Authorization: "Bearer " + sessionStorage.getItem("token"),
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ "items": store.user.items })
+            body: JSON.stringify({ "payment_method_id": store.user.payment_method[0].id, "items": store.user.items })
         })
         const data = await response.json()
 
@@ -35,7 +37,6 @@ export const Stripe = () => {
 
 
     }
-
 
     const cardStyle = {
         style: {
@@ -80,31 +81,42 @@ export const Stripe = () => {
             setError(null);
             setProcessing(false);
             setSucceeded(true);
+            // actions.clearItems()
+            actions.updateUserItems()
+            navigate('/success')
+
         }
     };
 
     return (
         <form id="payment-form" onSubmit={handleSubmit}>
             <CardElement id="card-element" options={cardStyle} onChange={handleChange} />
-            <button
-                disabled={processing || disabled || succeeded}
-                id="submit"
-            >
-                <span id="button-text">
-                    {processing ? (
-                        <div className="spinner" id="spinner"></div>
-                    ) : (
-                        "Pay now"
-                    )}
-                </span>
-            </button>
+            <div className="d-flex justify-content-end pe-0 mt-3">
+                <Link to="/confirmDetails">
+                    <button className="btn custom-button text-center me-2"><i className="fa-solid fa-arrow-left">&nbsp; Go back</i></button>
+                </Link>
+                <button
+                    disabled={processing || disabled || succeeded}
+                    id="submit" className="btn custom-button"
+                >
+                    <span id="button-text">
+                        {processing ? (
+                            <div className="spinner" id="spinner"></div>
+                        ) : (
+                            <>
+                                <i className="fa-solid">Pay &nbsp;</i><i className="fa-solid fa-arrow-right"></i>
+                            </>
+                        )}
+                    </span>
+                </button>
+            </div>
             {/* Show any error that happens when processing the payment */}
             {error && (
                 <div className="card-error" role="alert">
                     {error}
                 </div>
             )}
-            {/* Show a success message upon completion */}
+            {/* Show a success message upon completion
             <p className={succeeded ? "result-message" : "result-message hidden"}>
                 Payment succeeded, see the result in your
                 <a
@@ -113,7 +125,7 @@ export const Stripe = () => {
                     {" "}
                     Stripe dashboard.
                 </a> Refresh the page to pay again.
-            </p>
+            </p> */}
         </form>
     );
 }

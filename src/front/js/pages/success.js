@@ -51,9 +51,14 @@ export const Success = () => {
 
             }
             <div className="container mt-5 mx-auto">
-                <h1 className='fs-1 mt-5 fw-bold legal-title mb-3 text-center'>Thank you for your order</h1>
+                <h1 className='fs-1 mt-5 fw-bold legal-title my-3 text-center'>Thank you for your order</h1>
 
+                <p className="text-center my-5">Keep Exploring and Find New Books!</p>
+                <img src="https://www.liveabout.com/thmb/A17WsoyH1xnIsJnT15yOL60-OBg=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/bookmemecover-5c520a8ec9e77c0001d764a1.png" className="img-fluid" alt="book meme" />
 
+                <Link to="/explore">
+                    <button className="btn custom-button text-center mt-5 mb-5"><i className="fa-solid fa-arrow-left">&nbsp; Go Back</i></button>
+                </Link>
             </div>
 
 

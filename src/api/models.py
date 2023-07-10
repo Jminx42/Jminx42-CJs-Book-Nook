@@ -118,6 +118,7 @@ class BookFormat(db.Model):
             "book_format": self.book_format,
             "book_price": self.book_price,
             "prod_id": self.prod_id,
+            "price_id": self.price_id
         }
     
 class Review(db.Model):

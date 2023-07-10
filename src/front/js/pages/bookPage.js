@@ -36,7 +36,7 @@ export const BookPage = () => {
 			actions.clearAlert();
 		}, 3000);
 
-	}, [params.isbn]);
+	}, [params.isbn, store.alert]);
 
 	useEffect(() => {
 		if (store.book.preview && store.book.preview.includes("printsec=frontcover")) {

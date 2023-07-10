@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Navbar } from "../component/navbar";
 import { Link } from "react-router-dom";
 import "../../styles/index.css"
-import { HomeCard } from "../component/homeCard";
+import { WishlistCard } from "../component/wishlistCard";
 import { Review } from "../component/review";
 
 import { TransactionCard } from "../component/transactionCard";
@@ -34,6 +34,7 @@ export const Wishlist = () => {
     }, []);
 
     const isMobile = windowWidth <= 768;
+
 
     return (
         <div>
@@ -179,7 +180,7 @@ export const Wishlist = () => {
 								return <Card key={book.isbn} item={book} />
 							}) : null} */}
                                 {store.user.wishlist && store.user.wishlist.length !== 0 ? store.user.wishlist.map((book) => {
-                                    return <HomeCard key={book.id} item={book.book_id} />
+                                    return <WishlistCard key={book.id} item={book.book_id} />
                                 }) :
                                     <div>
                                         Add books to your wishlist!
