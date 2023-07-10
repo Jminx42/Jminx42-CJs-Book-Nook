@@ -1,6 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
-import PropTypes from "prop-types";
-import { Link, useParams } from "react-router-dom";
+import React, { useState, useContext } from "react";
 import { Context } from "../store/appContext";
 import { Navbar } from "../component/navbar";
 import { Footer } from "../component/footer";

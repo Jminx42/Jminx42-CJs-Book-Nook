@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import PropTypes from "prop-types";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Navbar } from "../component/navbar";
 import { CheckoutCard } from "../component/checkoutCard";
@@ -8,7 +7,7 @@ import { CheckoutCard } from "../component/checkoutCard";
 import "../../styles/index.css"
 
 export const Checkout = () => {
-    const { store, actions } = useContext(Context);
+    const { store } = useContext(Context);
 
     const navigate = useNavigate();
     // we need to add a new card to show on the checkout... maybe it should be the same as the favorites??
@@ -34,8 +33,6 @@ export const Checkout = () => {
             if (response.status === 303) {
                 const data = await response.json();
                 console.log(data)
-                const url = data.checkout_session.url
-                console.log(url)
                 const checkout_url = data.checkout_session.url;
 
                 window.location.replace(checkout_url)

@@ -12,7 +12,7 @@ import { Footer } from "../component/footer";
 import { LandingCard } from "../component/landingCard";
 
 export const Landing = () => {
-    const { store, actions } = useContext(Context);
+    const { store } = useContext(Context);
     const [userGenres, setUserGenres] = useState([]);
 
     const EditorsBooks = store.books.filter((book) => book.average_rating > 4).slice(0, 10);
@@ -102,7 +102,7 @@ export const Landing = () => {
                         <div className="d-flex gap-3 justify-content-center lead fw-normal pt-5 mt-xl-5">
                             <Link to={`/explore`}>
                                 <button className="btn landing-button px-3 py-2 fs-4 mb-xl-5 rounded">
-                                    Start Exploring
+                                    Start Exploring <i className="bi bi-book"></i>
                                 </button>
                             </Link>
                         </div>
