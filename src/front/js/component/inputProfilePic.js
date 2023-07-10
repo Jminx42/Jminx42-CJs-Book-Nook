@@ -29,26 +29,29 @@ export const InputProfilePic = () => {
     return (
         <div>
             <form onSubmit={uploadImage}>
-                <input
-                    type="file"
-                    id="profile-pic-upload"
-                    onChange={e => setFiles(e.target.files)} />
-                {
-                    !store.user.profile_picture
-                        ?
-                        <img
-                            src="https://www.pngmart.com/files/10/User-Account-Person-PNG-Transparent-Image.png"
-                            className="img-responsive"
-                            alt="Profile Picture"
-                        />
-                        :
-                        files == null ?
-                            <img src={store.user.profile_picture} className="card-img-top" alt="saved profile picture" />
+                <div>
+                    {
+                        !store.user.profile_picture
+                            ?
+                            <img
+                                src="https://www.pngmart.com/files/10/User-Account-Person-PNG-Transparent-Image.png"
+                                className="profile-responsive"
+                                alt="Profile Picture"
+                            />
                             :
-                            <img src={URL.createObjectURL(files[0])} className="card-img-top" alt="new profile picture" />
-                }
-
-                <div className="mt-2 d-flex justify-content-end">
+                            files == null ?
+                                <img src={store.user.profile_picture} className="card-img-top" alt="saved profile picture" />
+                                :
+                                <img src={URL.createObjectURL(files[0])} className="card-img-top" alt="new profile picture" />
+                    }
+                </div>
+                <div className="mt-2 d-flex justify-content-start">
+                    <input
+                        type="file"
+                        id="profile-pic-upload"
+                        onChange={e => setFiles(e.target.files)} />
+                </div>
+                <div className="mt-2 d-flex justify-content-start">
                     <div className="me-2">
                         <button className="btn custom-button">Upload image</button>
                     </div>
