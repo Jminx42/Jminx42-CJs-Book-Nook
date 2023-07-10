@@ -109,6 +109,7 @@ export const Stripe = () => {
                         )}
                     </span>
                 </button>
+
             </div>
             {/* Show any error that happens when processing the payment */}
             {error && (

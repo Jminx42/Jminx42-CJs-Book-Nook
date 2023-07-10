@@ -5,6 +5,7 @@ import "../../styles/index.css";
 
 import CJBookNookLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/CJBookNookBG.png";
 
+
 export const Register = () => {
     const [formData, setFormData] = useState({
         full_name: "",
@@ -101,7 +102,7 @@ export const Register = () => {
 
     return (
 
-        <div className="Auth-form container-lg container-md container-sm p-5">
+        <div className="container-lg container-md container-sm p-5">
             {
                 alert && alert !== ""
                     ?
@@ -147,13 +148,14 @@ export const Register = () => {
             ) : (
                 <div className="card p-4">
                     <div className="card-body">
-                        <form onSubmit={handleRegisterSubmit}>
+                        <form className="Auth-form container" onSubmit={handleRegisterSubmit}>
                             <Link to="/">
                                 <div className="text-center custom-bg-img rounded">
                                     <LazyLoadImage
                                         src={CJBookNookLogo}
                                         alt="CJ Book Nook Logo"
-                                        className="my-2 border rounded-circle"
+                                        className="my-2 border rounded-circle img-responsive"
+                                        effect="blur"
                                         style={{ width: '150px' }} />
                                 </div>
                             </Link>

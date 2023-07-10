@@ -28,9 +28,9 @@ const CartCard = ({ item, setShowModal }) => {
                 <div className="modal-dialog modal-dialog-centered modal-xl">
                     <div className="modal-content">
                         <div className="modal-body">
-                            <div className="card container mt-3">
+                            <div className="card container border-0 mt-3">
                                 <div className="p-4 text-center bg-body-tertiary rounded-3">
-                                    <div className="spinner-border" role="status">
+                                    <div className="spinner-border filter-link" role="status">
                                         <span className="visually-hidden">Loading...</span>
                                     </div>
                                     <div>Loading book...</div>
@@ -92,7 +92,7 @@ const CartCard = ({ item, setShowModal }) => {
             <div className="modal-dialog modal-dialog-centered modal-xl">
                 <div className="modal-content">
                     <div className="modal-body">
-                        <div className="card container mt-3">
+                        <div className="card container border-0 mt-3">
                             <div className="p-4 text-center bg-body-tertiary rounded-3">
                                 <img src={store.book.book_cover == null || store.book.book_cover == "" ? store.book.book_cover_b : store.book.book_cover} className=" w-25 float-start" alt="..." />
                                 <div>
@@ -101,33 +101,33 @@ const CartCard = ({ item, setShowModal }) => {
                                     <div className="row text-start">
 
                                         <div className="row">
-                                            <div className="col-3">Publisher:</div>
+                                            <div className="col-3 fw-bold">Publisher:</div>
                                             <div className="col-9">{store.book.publisher}</div>
                                         </div>
                                         <div className="row">
-                                            <div className="col-3">Published Date:</div>
+                                            <div className="col-3 fw-bold">Published Date:</div>
                                             <div className="col-9">{store.book.year}</div>
                                         </div>
                                         <div className="row">
-                                            <div className="col-3">Genre:</div>
+                                            <div className="col-3 fw-bold">Genre:</div>
                                             <div className="col-9">{store.book.genre}</div>
 
                                         </div>
                                         <div className="row">
-                                            <div className="col-3">Pages:</div>
+                                            <div className="col-3 fw-bold">Pages:</div>
                                             <div className="col-9">{store.book.pages == 0 ? "Not available" : store.book.pages}</div>
                                         </div>
                                         <div className="row">
                                             <div className="row">
-                                                <div className="col-3">ISBN:</div>
+                                                <div className="col-3 fw-bold">ISBN:</div>
                                                 <div className="col-9">{store.book.isbn}</div>
                                             </div>
                                             <div className="row">
-                                                <div className="col-3">Rating: </div>
+                                                <div className="col-3 fw-bold">Rating: </div>
                                                 <div className="col-9">{store.book.average_rating ? store.book.average_rating + " (out of " + store.book.ratings_count + " votes)" : "Not available"} </div>
                                             </div>
                                             <div className="row">
-                                                <div className="col-3">Book Format:</div>
+                                                <div className="col-3 fw-bold">Book Format:</div>
                                                 <div className="col-7">
                                                     <select className="form-select" aria-label="Default select example" defaultValue="" onChange={(e) => setFormat(e.target.value)}>
                                                         <option value="" disabled>Select your format</option>
@@ -139,7 +139,7 @@ const CartCard = ({ item, setShowModal }) => {
                                             </div>
                                         </div>
                                         <div className="row">
-                                            <div className="col-3">Description:</div>
+                                            <div className="col-3 fw-bold">Description:</div>
                                             <div className="col-9">{store.book.description}</div>
                                         </div>
 

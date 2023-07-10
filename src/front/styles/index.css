@@ -240,6 +240,8 @@
     height: auto;
 }
 
+
+
 /* Media Queries!!! Define different styles for different screen sizes */
 /* @media (max-width: 414px) {
     .img-responsive {
@@ -276,7 +278,7 @@
         max-height: 200px;
 
     }
-} */
+}
 
 /* @media (min-width: 769px) and (max-width: 1024px) {
     .img-responsive {

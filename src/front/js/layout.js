@@ -21,6 +21,8 @@ import { ProfileReviews } from "./pages/profileReviews";
 import { ProfileSupport } from "./pages/profileSupport";
 import { PurchaseHistory } from "./pages/purchaseHistory";
 import { Success } from "./pages/success";
+
+import { Cancelled } from "./pages/cancelled";
 import { StripeCheckout } from "./pages/stripeCheckout";
 
 import injectContext from "./store/appContext";
@@ -66,6 +68,7 @@ const Layout = () => {
                         <Route element={<ConfirmDetails />} path="/confirmDetails" />
                         <Route element={<OrderSummary />} path="/orderSummary" />
                         <Route element={<Success />} path="/success" />
+                        <Route element={<Cancelled />} path="/cancelled" />
                         <Route element={<BookPage />} path="/book/:theisbn" />
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>

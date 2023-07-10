@@ -6,6 +6,7 @@ import "../../styles/index.css"
 import CJBookNookLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/CJBookNookBG.png";
 
 
+
 export const Login = () => {
     const { store, actions } = useContext(Context);
     const [formData, setFormData] = useState({
@@ -51,21 +52,23 @@ export const Login = () => {
 
     return (
 
-        <div className="Auth-form container p-5">
+        <div className="container p-5">
             {store.errorMsg && (
                 <div className="alert alert-danger text-center" role="alert">
                     {store.errorMsg}
                 </div>
             )}
             <div className="card p-5">
-                <form className="Auth-form" onSubmit={handleLoginSubmit}>
+                <form className="Auth-form container" onSubmit={handleLoginSubmit}>
                     <Link to="/">
                         <div className="text-center custom-bg-img rounded">
                             <LazyLoadImage
                                 src={CJBookNookLogo}
                                 alt="CJ Book Nook Logo"
-                                className="my-2 border rounded-circle"
-                                style={{ width: '150px' }} />
+                                className="my-2 border rounded-circle img-responsive"
+                                effect="blur"
+                                style={{ width: '150px' }}
+                            />
                         </div>
                     </Link>
                     <div className="Auth-form-content">
@@ -108,7 +111,7 @@ export const Login = () => {
                             )}
                         </div>
                         <div className="d-grid gap-2 mt-3">
-                            <button type="submit" className="btn btn-secondary custom-button">
+                            <button type="submit" className="btn custom-button">
                                 Login
                             </button>
                         </div>
