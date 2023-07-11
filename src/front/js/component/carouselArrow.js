@@ -13,9 +13,9 @@ export const CarouselArrow = ({ className, style, onClick }) => {
     return (
         <div
             className={className}
-            style={{ ...style, display: "block", color: "#0c6e68", font: "30px" }}
+            style={{ ...style, display: "block" }}
             onClick={onClick}
-        />
+        ><i className="fa-solid fa-arrow-right fs-2 bg-dark rounded-circle text-white"></i></div>
     );
 }
 

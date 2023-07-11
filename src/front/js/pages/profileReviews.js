@@ -204,12 +204,12 @@ export const ProfileReviews = () => {
 
                                     <div className="col-10 m-1">
                                         {
-                                           store.user.review.sort((a, b) => a.id - b.id).map((review) => {
-                                        return <Review key={review.id} item={review} />
-                                            
-                                            )}
-                                    </div>                               
-                              
+                                            store.user.review.sort((a, b) => a.id - b.id).map((review) => {
+                                                return <Review key={review.id} item={review} />
+
+                                            })}
+                                    </div>
+
                                 )}
                             </div>
                         </div>

@@ -17,9 +17,7 @@ export const Checkout = () => {
     const promise = loadStripe("pk_test_51NOm30LDriABBO71EslVAUR52crSoSLYDfGJgAF61S1HyL5sxQ63PGMxS2xffxW2x9ugJm1sPSuNfhNibLoODb6M00SiS5BrMT");
     const [alert, setAlert] = useState("");
     const [error, setError] = useState("");
-    const [checked, setChecked] = useState(false);
     const navigate = useNavigate();
-    const promise = loadStripe("pk_test_51NOm30LDriABBO71EslVAUR52crSoSLYDfGJgAF61S1HyL5sxQ63PGMxS2xffxW2x9ugJm1sPSuNfhNibLoODb6M00SiS5BrMT");
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const isMobile = window.innerWidth <= 582;
@@ -100,7 +98,8 @@ export const Checkout = () => {
                 },
                 body: JSON.stringify(priceIdsAndUnits)
             });
-            if (response.status === 200) {
+            if (response.status === 303) {
+                console.log("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
                 const data = await response.json();
                 console.log(data)
                 const checkout_url = data.checkout_session.url;
@@ -164,9 +163,6 @@ export const Checkout = () => {
                                 <label className="form-check-label" htmlFor="flexCheckDefault">
                                     Is the billing address the same as the shipping address?
                                 </label>
-                            </div>
-                            <div className="row d-flex justify-content-center mt-4">
-                                )}
                             </div>
                         </div>
                         <div className="row d-flex justify-content-center mt-4">

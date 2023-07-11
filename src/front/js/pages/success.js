@@ -25,7 +25,7 @@ export const Success = () => {
                     Authorization: "Bearer " + sessionStorage.getItem("token"),
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ "items": items })
+
             });
 
             if (response.status === 200) {
@@ -33,6 +33,7 @@ export const Success = () => {
                 console.log(data)
 
                 console.log("response was okay")
+                await actions.validate_user()
             } else {
                 throw new Error('Failed to create transaction');
             }

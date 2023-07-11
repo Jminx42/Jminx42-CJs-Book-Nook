@@ -29,7 +29,8 @@ export const Landing = () => {
         speed: 2500,
         autoplaySpeed: 2500,
         pauseOnHover: true,
-
+        nextArrow: <CarouselArrow />,
+        prevArrow: <CarouselArrow />,
         responsive: [
             {
                 breakpoint: 1025,

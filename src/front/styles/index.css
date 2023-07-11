@@ -216,6 +216,11 @@
     content: "\2192";
 }
 
+.custom-arrow {
+    color: #0c6e68;
+    border-radius: 10px;
+}
+
 .slick-arrow:before,
 .slick-arrow:before {
     font-family: slick;

@@ -292,47 +292,47 @@ def create_wishlist():
         return jsonify({"error": str(e)}), 500
 
 
-@api.route("/createTransaction", methods=["POST"])
-@jwt_required()
-def create_transaction():
-    user_id = get_jwt_identity()
-    user = User.query.get(user_id)
-    try:
-        body = request.json
+# @api.route("/createTransaction", methods=["POST"])
+# @jwt_required()
+# def create_transaction():
+#     user_id = get_jwt_identity()
+#     user = User.query.get(user_id)
+#     try:
+#         body = request.json
         
-        if "items" not in body:
-            return jsonify({"error": "'items' key is missing in the request body"}), 400
+#         if "items" not in body:
+#             return jsonify({"error": "'items' key is missing in the request body"}), 400
 
-        items_data = body["items"]
+#         items_data = body["items"]
 
-        if not isinstance(items_data, list):
-            return jsonify({"error": "'items' should be an array in the request body"}), 400
+#         if not isinstance(items_data, list):
+#             return jsonify({"error": "'items' should be an array in the request body"}), 400
 
 
-        total_price = 0
-        items = TransactionItem.query.filter_by(user_id=user_id, in_progress=True).all()
-        for x in items:
-            total_price += x.total_price_per_book
+#         total_price = 0
+#         items = TransactionItem.query.filter_by(user_id=user_id, in_progress=True).all()
+#         for x in items:
+#             total_price += x.total_price_per_book
         
         
-        new_transaction = Transaction(
-            user=user,
-            total_price=total_price,
-            in_progress=False,
-        )
-        print(new_transaction)
-         # Assign the items to the new transaction
-        new_transaction.items.extend(items)
+#         new_transaction = Transaction(
+#             user=user,
+#             total_price=total_price,
+#             in_progress=False,
+#         )
+#         print(new_transaction)
+#          # Assign the items to the new transaction
+#         new_transaction.items.extend(items)
         
-        db.session.add(new_transaction)
-        db.session.commit()
+#         db.session.add(new_transaction)
+#         db.session.commit()
 
-        return jsonify({"transaction": new_transaction.serialize()}), 200
+#         return jsonify({"transaction": new_transaction.serialize()}), 200
 
-    except Exception as e:
-        # Handle other errors
-        print(e)
-        return jsonify({"error": str(e)}), 500
+#     except Exception as e:
+#         # Handle other errors
+#         print(e)
+#         return jsonify({"error": str(e)}), 500
 
 @jwt_required()
 def calculate_order_amount(items):
@@ -388,15 +388,50 @@ def create_payment():
     except Exception as e:
         print(e)
         return jsonify(error=str(e)), 403
+
+@api.route('/createTransaction', methods=['POST'])
+@jwt_required()
+def create_transaction():
+    user_id = get_jwt_identity()
+    
+    try:
+          
+        total_price = 0
+        items = TransactionItem.query.filter_by(user_id=user_id, in_progress=True).all()
+        for x in items:
+            total_price += x.total_price_per_book  
+      
+        total_price = round(total_price, 2)
+       
+        new_transaction = Transaction(
+            user_id=user_id,
+            total_price=total_price,
+            in_progress=False,
+        )
+                
+        for item in items:
+            new_transaction.items.append(item)
+
+            if not item:
+                return jsonify({"error": "Invalid transaction item."}), 400
+            
+            item.in_progress = False
+
+        db.session.add(new_transaction)
+        db.session.commit()
+
+       
+    except Exception as e:
+        print(e)
+        return str(e)
+
+    return jsonify({"transaction": new_transaction.serialize()}), 200
     
 @api.route('/create-checkout-session', methods=['POST'])
 @jwt_required()
 def create_checkout_session():
-
     user_id = get_jwt_identity()
-    # domain_url = os.getenv('FRONTEND_URL') This isn't working!!!! WHY GODDAMNIT
-    domain_url= "https://carolina-hora-curly-engine-44679qp76gxfj6rq-3000.preview.app.github.dev/"
-    print(domain_url)
+    domain_url = "https://carolina-hora-curly-engine-44679qp76gxfj6rq-3000.preview.app.github.dev/"
     stripe.api_key = stripe_keys["secret_key"]
     
     try:
@@ -429,16 +464,15 @@ def create_checkout_session():
             success_url=domain_url + "success?session_id={CHECKOUT_SESSION_ID}",
             cancel_url=domain_url + "cancelled",
             mode='payment',
-
             line_items=formatted_line_items,
+ 
             
-             
         )
-        print(checkout_session)
+        print(checkout_session["url"])
     except Exception as e:
         return str(e)
 
-    return jsonify({"checkout_session": checkout_session}), 200
+    return jsonify({"checkout_session": checkout_session}), 303
 
 @api.route("/checkout", methods=["POST"])
 @jwt_required()
