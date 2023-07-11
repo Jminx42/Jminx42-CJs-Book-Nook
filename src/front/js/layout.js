@@ -28,8 +28,6 @@ import { StripeCheckout } from "./pages/stripeCheckout";
 import injectContext from "./store/appContext";
 
 
-import { Footer } from "./component/footer";
-
 
 
 

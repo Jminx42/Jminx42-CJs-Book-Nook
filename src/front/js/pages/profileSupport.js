@@ -2,22 +2,15 @@ import React, { useState, useEffect, useContext } from "react";
 import { Navbar } from "../component/navbar";
 import { Link } from "react-router-dom";
 import "../../styles/index.css"
-import { HomeCard } from "../component/homeCard";
-import { Review } from "../component/review";
-
-import { TransactionCard } from "../component/transactionCard";
-
 import { Context } from "../store/appContext";
-import { InputProfilePic } from "../component/inputProfilePic";
 import { SupportCard } from "../component/supportCard";
+import { Footer } from "../component/footer";
 
 
 export const ProfileSupport = () => {
     const { store, actions } = useContext(Context);
     const [alert, setAlert] = useState("");
     const [error, setError] = useState("");
-    const [reviews, setReviews] = useState([]);
-    const [showForm, setShowForm] = useState(false)
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     useEffect(() => {
@@ -189,6 +182,7 @@ export const ProfileSupport = () => {
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
     );
 };

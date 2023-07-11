@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import PropTypes from "prop-types";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Navbar } from "../component/navbar";
 import { Footer } from "../component/footer";
@@ -9,7 +8,6 @@ import { Footer } from "../component/footer";
 
 export const Success = () => {
     const { store, actions } = useContext(Context);
-    const [formData, setFormData] = useState({ subject: "", message: "" });
     const [alert, setAlert] = useState("");
     const [error, setError] = useState("");
 
@@ -87,11 +85,6 @@ export const Success = () => {
                     <button className="btn custom-button text-center mt-5 mb-5"><i className="fa-solid fa-arrow-left">&nbsp; Go Back</i></button>
                 </Link>
             </div>
-
-
-
-
-
 
             <Footer />
         </div>

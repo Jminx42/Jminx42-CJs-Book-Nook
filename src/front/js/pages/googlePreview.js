@@ -1,29 +1,21 @@
-import React, { useState, useEffect, useContext } from "react";
-import PropTypes from "prop-types";
-import { Link, useParams } from "react-router-dom";
-import { Context } from "../store/appContext";
+import React from "react";
+import { useParams } from "react-router-dom";
 import { Navbar } from "../component/navbar";
 import { GoogleBooksViewer } from "../component/googleBooksViewer";
-import { Card } from "../component/card";
+import { Footer } from "../component/footer";
 
 export const GooglePreview = () => {
     const params = useParams();
-    const { store, actions } = useContext(Context);
-
-
     return (
         <div>
             <Navbar />
             <div className="container mt-4">
-
                 <h1 className="text-center">Where Magic Happens!</h1>
                 <div className="row d-flex justify-content-center">
                     <GoogleBooksViewer isbn={params.theisbn} />
                 </div>
-
-
-
             </div>
+            <Footer />
         </div>
     );
 }
