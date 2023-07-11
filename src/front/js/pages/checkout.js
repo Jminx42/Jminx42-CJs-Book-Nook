@@ -63,6 +63,7 @@ export const Checkout = () => {
     const handleBillingAddressChange = () => {
         setChecked(!checked);
         setUser({ ...user, billing_address: checked ? "" : user.address });
+
     };
 
     useEffect(() => {
@@ -117,11 +118,11 @@ export const Checkout = () => {
     return (
         <div>
             <Navbar />
-            <div className="container mt-4">
+            <div className="container mt-4 border rounded p-3">
                 <h1 className="feature-title m-5">CHECKOUT</h1>
                 {store.user.items && store.user.items.length > 0 ?
                     <>
-                        <div className="row d-flex">
+                        <div className="row mb-2">
                             <h5 className="text-start feature-title">1. Shipping Address:</h5>
                             <div className="col-md-10 col-lg-9">
 
@@ -165,10 +166,22 @@ export const Checkout = () => {
                         </div>
                         <div className="row">
                             <h5 className="text-start feature-title">2. Billing Address:</h5>
-                            <div className=" col-md-10 col-lg-9 mt-3">
-                                {!editAddress ? (
+                            <div className=" col-md-10 col-lg-9">
+
+                                {!editBilling ? (
                                     <>
-                                        {store.user.billing_address}
+                                        {
+                                            checked ?
+                                                user.billing_address
+                                                :
+                                                store.user.billing_address
+                                        }
+                                        <div className="form-check">
+                                            <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked={checked} onChange={handleBillingAddressChange} />
+                                            <label className="form-check-label" htmlFor="flexCheckDefault">
+                                                Is the billing address the same as the shipping address?
+                                            </label>
+                                        </div>
                                     </>
                                 ) : (
                                     <input
@@ -176,42 +189,68 @@ export const Checkout = () => {
                                         id="address"
                                         aria-describedby="address"
                                         value={user.billing_address}
-                                        onChange={(e) => setUser({ ...user, address: e.target.value })}
+                                        onChange={(e) => setUser({ ...user, billing_address: e.target.value })}
                                     />
                                 )}
-                                <p></p>
-                                <div className="form-check">
-                                    <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked={checked} onChange={handleBillingAddressChange} />
-                                    <label className="form-check-label" htmlFor="flexCheckDefault">
-                                        Is the billing address the same as the shipping address?
-                                    </label>
-                                </div>
+
+
+
                             </div>
+
+                            <div className="col-md-2 col-lg-3 d-flex justify-content-end">
+
+                                {!editBilling ? (
+
+                                    <button className="btn btn-secondary custom-button" onClick={() => setEditBilling(true)}>
+                                        <i className="fa-solid fa-pen-to-square"></i>
+                                    </button>
+
+                                ) : (
+                                    <div className="d-flex">
+                                        <button className="btn btn-secondary me-2 custom-button" onClick={handleSave}>
+                                            <i className="fa-solid fa-floppy-disk"></i>
+                                        </button>
+                                        <button className="btn btn-secondary " onClick={() => setEditBilling(false)}>
+                                            <i className="fa-solid fa-x"></i>
+                                        </button>
+                                    </div>
+
+
+                                )}
+                            </div>
+
                         </div>
-                        <div className="row d-flex justify-content-center mt-4">
+                        <div className="row d-flex justify-content-center mt-3">
                             <h5 className="text-start feature-title">3. Order Summary:</h5>
 
 
                             {!isMobile ? (store.user.items.sort((a, b) => a.id - b.id).map((items) => {
-                                return <CheckoutCard key={items.id} item={items} />;
+                                return (
+                                    <div className="row" key={items.id}>
+                                        <CheckoutCard key={items.id} item={items} />
+                                    </div>
+                                );
 
                             })) : (store.user.items.sort((a, b) => a.id - b.id).map((items) => {
-                                return <MobileCheckoutCard key={items.id} item={items} />;
+                                return (
+                                    <MobileCheckoutCard key={items.id} item={items} />
+                                );
 
                             }))}
-                            <div className="row d-flex justify-content-start ps-0">
-                                <div className="col-sm-6 col-md-6 col-lg-4 d-flex justify-content-start pe-0">
-                                    <h5 className="text-center feature-title py-2 m-0"> Order Total:
+
+                            <div className="row ps-0">
+                                <div className="col-md-6 col-lg-6 d-flex justify-content-start pe-0">
+                                    <h5 className="text-center feature-title py-2"> Order Total:
                                         <span className="text-dark ms-3">{parseFloat(total().toFixed(2))}€</span>
                                     </h5>
                                 </div>
-
+                                <div className="col-md-6 col-lg-6 d-flex justify-content-end pe-0">
+                                    <button className="btn custom-button text-center" onClick={createCheckoutSession}><i className="fa-solid">PAY &nbsp;</i><i className="fa-solid fa-arrow-right"></i></button>
+                                </div>
                             </div>
 
                         </div>
-                        <div className="d-flex justify-content-end pe-0 mt-3">
-                            <button className="btn custom-button text-center me-2" onClick={createCheckoutSession}><i className="fa-solid">PAY &nbsp;</i><i className="fa-solid fa-arrow-right"></i></button>
-                        </div>
+
                     </> : (
                         <div>Add a book to purchase!</div>
                     )}

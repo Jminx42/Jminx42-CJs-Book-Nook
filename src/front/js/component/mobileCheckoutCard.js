@@ -102,30 +102,14 @@ export const MobileCheckoutCard = ({ item }) => {
 
     return (
         <div className="container">
-            {
-                store.errorMsg && store.errorMsg !== "" || errorMessage && errorMessage !== ""
-                    ?
-                    <div className="container">
-                        <div className="alert alert-danger alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
-                            <i className="bi bi-exclamation-triangle-fill"></i>
-                            <div>
-                                {store.errorMsg}
-                            </div>
-                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    </div>
-                    :
-                    null
-
-            }
 
             <div className="row mb-2">
-                <div className="col-3 col-sm-2 col-md-2 col-lg-2">
+                <div className="col-sm-2 col-md-2 col-lg-2">
                     <Link to={`/book/${item.book_id.isbn}`}>
                         <img src={item.book_id.book_cover} className="card-img-top" alt="..." />
                     </Link>
                 </div>
-                <div className="col-8 col-sm-8">
+                <div className="col-sm-8">
                     <h4 className="text-start">{actions.capitalizeWords(item.book_id.title)}</h4>
                     <p className="text-start mb-0">{item.book_format_id.book_format}</p>
                     <div className="d-flex justify-content-between align-items-center">
