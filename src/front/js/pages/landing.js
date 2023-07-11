@@ -11,6 +11,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { Navbar } from "../component/navbar";
 import { Footer } from "../component/footer";
 import { LandingCard } from "../component/landingCard";
+import { CarouselArrow } from "../component/carouselArrow";
 
 export const Landing = () => {
     const { store } = useContext(Context);
@@ -28,6 +29,8 @@ export const Landing = () => {
         speed: 2500,
         autoplaySpeed: 2500,
         pauseOnHover: true,
+        nextArrow: <CarouselArrow />,
+        prevArrow: <CarouselArrow />,
         responsive: [
             {
                 breakpoint: 1025,
@@ -166,7 +169,8 @@ export const Landing = () => {
                             <Slider {...settings}>
                                 {recommendedBooks.map((book) => (
                                     <LandingCard key={book.id} item={book} />
-                                ))}</Slider>
+                                ))}
+                            </Slider>
                         </>
                     ) : (
                         <p className="fs-5 text-center mb-5">

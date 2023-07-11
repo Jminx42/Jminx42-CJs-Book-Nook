@@ -95,11 +95,12 @@ export const PersonalInformation = () => {
                 {!isMobile ?
                     (<div className="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary">
 
-                        <p className="fs-4 legal-title">Profile</p>
+                        <p className="fs-4 legal-title m-0 d-flex justify-content-center">Profile</p>
+                        {/* Not sure if this should be horizontally aligned as well */}
 
                         <hr />
-                        <ul className="nav nav-pills flex-column mb-auto ">
-                            <li className="nav-item profile-li">
+                        <ul className="nav nav-pills flex-column mb-auto profile-li">
+                            <li className="nav-item">
                                 <Link to={`/personalInformation`}>
                                     <button
                                         className="btn link-like w-100 text-start"
@@ -112,16 +113,16 @@ export const PersonalInformation = () => {
                             <li className="nav-item">
                                 <Link to={`/wishlist`}>
                                     <button
-                                        className="nav-link btn w-100 text-start"
+                                        className="btn link-like w-100 text-start"
                                     >
                                         <i className="fa-solid fa-heart"></i> Wishlist
                                     </button>
                                 </Link>
                             </li>
-                            <li className="nav-item">
+                            <li className="nav-item ">
                                 <Link to={`/profileReviews`}>
                                     <button
-                                        className="nav-link btn w-100 text-start"
+                                        className="btn link-like w-100 text-start"
                                     >
                                         <i className="fa-regular fa-keyboard"></i> My Reviews
                                     </button>
@@ -130,7 +131,7 @@ export const PersonalInformation = () => {
                             <li className="nav-item">
                                 <Link to={`/purchaseHistory`}>
                                     <button
-                                        className="nav-link btn w-100 text-start"
+                                        className="btn link-like w-100 text-start"
                                     >
                                         <i className="fa-regular fa-calendar-days"></i> Purchase History
                                     </button>
@@ -139,7 +140,7 @@ export const PersonalInformation = () => {
                             <li className="nav-item">
                                 <Link to={`/profileSupport`}>
                                     <button
-                                        className="nav-link btn w-100 text-start"
+                                        className="btn link-like w-100 text-start"
                                     >
                                         <i className="fa-solid fa-envelope"></i> Support
                                     </button>
@@ -153,35 +154,35 @@ export const PersonalInformation = () => {
                             <ul className="nav nav-pills nav-flush flex-column mb-auto text-center">
                                 <li className="nav-item">
                                     <Link to={`/personalInformation`}>
-                                        <button className="py-3 border-bottom rounded-0 nav-link btn" aria-current="page" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Personal" data-bs-original-title="Personal">
+                                        <button className="py-3 border-bottom rounded-0 btn link-like" aria-current="page" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Personal" data-bs-original-title="Personal">
                                             <i className="fa-solid fa-user"></i>
                                         </button>
                                     </Link>
                                 </li>
                                 <li>
                                     <Link to={`/wishlist`}>
-                                        <button className="py-3 border-bottom rounded-0 nav-link btn" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Reviews" data-bs-original-title="Reviews">
+                                        <button className="py-3 border-bottom rounded-0 btn link-like" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Reviews" data-bs-original-title="Reviews">
                                             <i className="fa-solid fa-heart"></i>
                                         </button>
                                     </Link>
                                 </li>
                                 <li>
                                     <Link to={`/profileReviews`}>
-                                        <button className="py-3 border-bottom rounded-0 nav-link btn" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Reviews" data-bs-original-title="Reviews">
+                                        <button className="py-3 border-bottom rounded-0 btn link-like" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Reviews" data-bs-original-title="Reviews">
                                             <i className="fa-regular fa-keyboard"></i>
                                         </button>
                                     </Link>
                                 </li>
                                 <li>
                                     <Link to={`/purchaseHistory`}>
-                                        <button className="py-3 border-bottom rounded-0 nav-link btn" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Purchase History" data-bs-original-title="Purchase History">
+                                        <button className="py-3 border-bottom rounded-0 btn link-like" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Purchase History" data-bs-original-title="Purchase History">
                                             <i className="fa-regular fa-calendar-days"></i>
                                         </button>
                                     </Link>
                                 </li>
                                 <li>
                                     <Link to={`/profileSupport`}>
-                                        <button className="py-3 border-bottom rounded-0 nav-link btn" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Support" data-bs-original-title="Support">
+                                        <button className="py-3 border-bottom rounded-0 btn link-like" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Support" data-bs-original-title="Support">
                                             <i className="fa-solid fa-envelope"></i>
                                         </button>
                                     </Link>
@@ -226,22 +227,22 @@ export const PersonalInformation = () => {
 
                     {/* Adding content to each tab: */}
                     <div className={`tab-content ${isMobile ? 'mt-0' : 'profile-container'}`} >
-                        <div className="" aria-labelledby="personal-tab">
+                        <div>
                             <div className="container mt-3">
                                 <div className="row d-flex">
-                                    <div className="col-5 col-sm-5 col-md-4 col-lg-4 col-xl-3">
+                                    <div className="col-9 col-sm-5 col-md-5 col-lg-4 col-xl-4">
                                         {!editClicked ? (
                                             !user.profile_picture
                                                 ?
                                                 <img
                                                     src="https://www.pngmart.com/files/10/User-Account-Person-PNG-Transparent-Image.png"
-                                                    className="img-responsive"
+                                                    className="profile-responsive"
                                                     alt="Profile Picture"
                                                 />
                                                 :
                                                 <img
                                                     src={user.profile_picture}
-                                                    className="card-img-top"
+                                                    className="profile-responsive"
                                                     id="profile-picture"
                                                     alt="Profile Picture"
                                                 />
@@ -251,7 +252,7 @@ export const PersonalInformation = () => {
                                             </div>
                                         )}
                                     </div>
-                                    <div className="col-7 col-sm-7 col-md-7 col-lg-5">
+                                    <div className="col-12 col-sm-7 col-md-7 col-lg-5">
                                         <div className="d-flex align-items-center my-2">
                                             <label htmlFor="full_name" className="form-floating fw-bold custom-text">Email:</label>
                                             <p className="ms-2 my-auto">{user.email}</p>

@@ -207,6 +207,30 @@
 }
 
 /* Increase the size of the dots*/
+.carousel-arrow {
+    font-size: 30px !important;
+    color: #0c6e68 !important;
+}
+
+.slick-arrow:before {
+    content: "\2192";
+}
+
+.custom-arrow {
+    color: #0c6e68;
+    border-radius: 10px;
+}
+
+.slick-arrow:before,
+.slick-arrow:before {
+    font-family: slick;
+    font-size: 20px;
+    line-height: 1;
+    opacity: .75;
+    color: #0c6e68;
+    -webkit-font-smoothing: antialiased;
+}
+
 .slick-dots li button:before {
     font-size: 30px !important;
 }
@@ -223,7 +247,7 @@
 
 .legal-title {
     color: #68B0AB;
-    /* font-family: 'Merriweather', serif; */
+    font-family: 'Merriweather', serif;
 }
 
 .legal-text {
@@ -234,7 +258,8 @@
     font-size: 12px;
 }
 
-.img-responsive {
+.img-responsive,
+.profile-responsive {
     width: auto;
     max-width: 100%;
     height: auto;
@@ -243,14 +268,16 @@
 
 
 /* Media Queries!!! Define different styles for different screen sizes */
-/* @media (max-width: 414px) {
-    .img-responsive {
+@media (max-width: 414px) {
+
+    .img-responsive,
+    .profile-responsive {
         max-height: 100px;
-
     }
-} */
+}
 
-/* @media (max-width: 570px) {
+/*  If we wanted to show the logo on the landing page on mobile view
+@media (max-width: 570px) {
     .div-landing {
         flex-direction: column-reverse;
 
@@ -274,15 +301,24 @@
 }
 
 @media (min-width: 415px) and (max-width: 768px) {
-    .img-responsive {
+
+    .img-responsive,
+    .profile-responsive {
         max-height: 200px;
 
     }
 }
 
-/* @media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 769px) and (max-width: 1024px) {
     .img-responsive {
         max-height: 300px;
+
+    }
+}
+
+@media (min-width: 769px) {
+    .profile-responsive {
+        max-height: 250px;
 
     }
 }
@@ -292,4 +328,4 @@
         max-height: 400px;
 
     }
-} */
+}

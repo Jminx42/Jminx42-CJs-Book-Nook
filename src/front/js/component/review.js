@@ -37,7 +37,7 @@ export const Review = ({ item }) => {
                     </Link>
                 </div>
                 <div className="col-sm-6 col-md-9 col-lg-9">
-                    <h4 className="card-title">{item.book_id.title}</h4>
+                    <h4 className="card-title">{actions.capitalizeWords(item.book_id.title)}</h4>
                     <h5 className="card-subtitle mb-2 text-muted">by {item.book_id.author}</h5>
                     <div className="d-flex justify-content-between align-items-center mb-2">
                         <p className="card-text mb-0">Posted on {item.created_at}</p>
