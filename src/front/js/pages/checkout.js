@@ -5,10 +5,6 @@ import { Navbar } from "../component/navbar";
 import { CheckoutCard } from "../component/checkoutCard";
 import { MobileCheckoutCard } from "../component/mobileCheckoutCard";
 import "../../styles/index.css"
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
-import { Stripe } from "../component/stripe";
-import "../../styles/stripe.css"
 import { Footer } from "../component/footer";
 
 
@@ -17,10 +13,7 @@ export const Checkout = () => {
     const [user, setUser] = useState(store.user);
     const [editAddress, setEditAddress] = useState(false);
     const [editBilling, setEditBilling] = useState(false);
-
     const [checked, setChecked] = useState(false);
-    const promise = loadStripe("pk_test_51NOm30LDriABBO71EslVAUR52crSoSLYDfGJgAF61S1HyL5sxQ63PGMxS2xffxW2x9ugJm1sPSuNfhNibLoODb6M00SiS5BrMT");
-
     const [alert, setAlert] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
@@ -128,11 +121,15 @@ export const Checkout = () => {
                 <h1 className="feature-title m-5">CHECKOUT</h1>
                 {store.user.items && store.user.items.length > 0 ?
                     <>
-                        <div className="col-11 col-sm-12 col-md-10 col-lg-9 col-xl-8">
+                        <div className="row d-flex">
                             <h5 className="text-start feature-title">1. Shipping Address:</h5>
-                            <div className="d-flex justify-content-between">
+                            <div className="col-md-10 col-lg-9">
+
+
                                 {!editAddress ? (
-                                    <p>{store.user.address}</p>
+                                    <>
+                                        {store.user.address}
+                                    </>
                                 ) : (
                                     <input
                                         className="form-control"
@@ -142,6 +139,8 @@ export const Checkout = () => {
                                         onChange={(e) => setUser({ ...user, address: e.target.value })}
                                     />
                                 )}
+                            </div>
+                            <div className="col-md-2 col-lg-3 d-flex justify-content-end">
                                 {!editAddress ? (
 
                                     <button className="btn btn-secondary custom-button" onClick={() => setEditAddress(true)}>
@@ -161,14 +160,32 @@ export const Checkout = () => {
 
                                 )}
                             </div>
+
+
                         </div>
-                        <div className="col-11 col-sm-12 col-md-10 col-lg-9 col-xl-8 mt-3">
+                        <div className="row">
                             <h5 className="text-start feature-title">2. Billing Address:</h5>
-                            <div className="form-check">
-                                <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked={checked} onChange={handleBillingAddressChange} />
-                                <label className="form-check-label" htmlFor="flexCheckDefault">
-                                    Is the billing address the same as the shipping address?
-                                </label>
+                            <div className=" col-md-10 col-lg-9 mt-3">
+                                {!editAddress ? (
+                                    <>
+                                        {store.user.billing_address}
+                                    </>
+                                ) : (
+                                    <input
+                                        className="form-control"
+                                        id="address"
+                                        aria-describedby="address"
+                                        value={user.billing_address}
+                                        onChange={(e) => setUser({ ...user, address: e.target.value })}
+                                    />
+                                )}
+                                <p></p>
+                                <div className="form-check">
+                                    <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked={checked} onChange={handleBillingAddressChange} />
+                                    <label className="form-check-label" htmlFor="flexCheckDefault">
+                                        Is the billing address the same as the shipping address?
+                                    </label>
+                                </div>
                             </div>
                         </div>
                         <div className="row d-flex justify-content-center mt-4">
@@ -184,19 +201,16 @@ export const Checkout = () => {
                             }))}
                             <div className="row d-flex justify-content-start ps-0">
                                 <div className="col-sm-6 col-md-6 col-lg-4 d-flex justify-content-start pe-0">
-                                    <h5 className="text-center py-2 m-0"> Order Total: {parseFloat(total().toFixed(2))}€ </h5>
+                                    <h5 className="text-center feature-title py-2 m-0"> Order Total:
+                                        <span className="text-dark ms-3">{parseFloat(total().toFixed(2))}€</span>
+                                    </h5>
                                 </div>
 
                             </div>
-                            <Elements stripe={promise}>
-                                <Stripe />
-                            </Elements>
-
-
 
                         </div>
                         <div className="d-flex justify-content-end pe-0 mt-3">
-                            <button className="btn custom-button text-center me-2" onClick={createCheckoutSession}><i className="fa-solid">Stripe Redirect &nbsp;</i><i className="fa-solid fa-arrow-right"></i></button>
+                            <button className="btn custom-button text-center me-2" onClick={createCheckoutSession}><i className="fa-solid">PAY &nbsp;</i><i className="fa-solid fa-arrow-right"></i></button>
                         </div>
                     </> : (
                         <div>Add a book to purchase!</div>

@@ -116,9 +116,7 @@ function closeNav() {
 
 										<button className="btn me-2 custom-button"><i className="fa-solid fa-heart"></i></button>
 									</Link>
-									<Link to="/support">
-										<button className="btn me-2 custom-button"><i className="fa-solid fa-envelope"></i></button>
-									</Link>
+
 
 									<ProfileBtn />
 

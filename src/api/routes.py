@@ -23,7 +23,7 @@ stripe_keys = {
 stripe.api_key = stripe_keys["secret_key"]
 
 
-from api.models import db, User, Book, Review, Wishlist, Transaction, Support, PaymentMethod, TransactionItem, BookFormat
+from api.models import db, User, Book, Review, Wishlist, Transaction, Support, TransactionItem, BookFormat
 from api.utils import APIException, generate_sitemap
 
 
