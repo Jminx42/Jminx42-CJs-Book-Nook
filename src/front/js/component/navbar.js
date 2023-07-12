@@ -4,6 +4,7 @@ import { Context } from "../store/appContext";
 import { ProfileBtn } from "../component/profileBtn";
 import "../../styles/index.css"
 import CJBookNookNoLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/CJBookNookNoLogoWhite.png";
+import { SideNavigation } from "./sideNavigation";
 
 export const Navbar = () => {
 	const { store, actions } = useContext(Context);
@@ -17,8 +18,15 @@ export const Navbar = () => {
 		}
 		return totalCheckout
 	}
+	const [isOpen, setIsOpen] = useState(false);
 
+	const openNav = () => {
+		setIsOpen(true);
+	};
 
+	const closeNav = () => {
+		setIsOpen(false);
+	};
 
 
 	return (
@@ -27,26 +35,7 @@ export const Navbar = () => {
 				<Link to="/" className="navbar-brand">
 					<img src={CJBookNookNoLogo} height={50} alt="CJBookNookLogo" />
 				</Link>
-				{/* <div id="mySidenav" className="sidenav">
-					<a href="javascript:void(0)" className="closebtn" onclick="closeNav()">&times;</a>
-					<a href="#">About</a>
-					<a href="#">Services</a>
-					<a href="#">Clients</a>
-					<a href="#">Contact</a>
-				</div>
-
-				<h2>Animated Sidenav Example</h2>
-				<p>Click on the element below to open the side navigation menu.</p>
-				<span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; open</span>
-				<script>
-function openNav() {
-  document.getElementById("mySidenav").style.width = "250px";
-}
-
-function closeNav() {
-  document.getElementById("mySidenav").style.width = "0";
-}
-</script> */}
+				<SideNavigation />
 
 				<ul className="navbar-nav">
 					<li className="nav-item ">

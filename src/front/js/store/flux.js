@@ -17,16 +17,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 		},
 		actions: {
 
-			// clearItems: () => {
-			// 	setStore(prevStore => ({
-			// 		...prevStore,
-			// 		user: {
-			// 			...prevStore.user,
-			// 			items: []  // Clear the items array, it's not working!
-			// 		}
-			// 	}));
-			// },
-
 			updateUserItems: () => {
 				const updatedItems = getStore().user.items.map((item) => {
 					return {

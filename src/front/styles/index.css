@@ -258,6 +258,14 @@
     font-size: 12px;
 }
 
+.sidenav-open {
+    width: 250px;
+}
+
+.sidenav {
+    width: 0px;
+}
+
 .img-responsive,
 .profile-responsive {
     width: auto;
