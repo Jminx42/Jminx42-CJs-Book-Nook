@@ -94,8 +94,8 @@ export const Navbar = () => {
 													showOffCanvas ? (
 														<>
 															<li className="nav-item mb-2" >
-																<Link to="/explore" onClick={() => setShowOffCanvas(false)} data-bs-dismiss="offcanvas">
-																	<button className="btn custom-button"><i className="bi bi-book-fill"></i></button>
+																<Link to="/explore" onClick={() => setShowOffCanvas(false)} >
+																	<button className="btn custom-button"><i className="bi bi-book-fill" data-bs-dismiss="offcanvas"></i></button>
 																	<label className="ms-4 filter-link">Explore</label>
 																</Link>
 															</li>

@@ -142,21 +142,21 @@ export const BookPage = () => {
 			}
 
 			<div className="card container mt-3 border-0">
-				<div className="row p-4 text-center bg-body-tertiary rounded-3 ">
-					<div className="col-5">
-						<img src={store.book.book_cover == null || store.book.book_cover == "" ? store.book.book_cover_b : store.book.book_cover} className="img-fluid float-start" alt="Book cover" />
+				<div className="row p-4 text-center">
+					<div className="col-lg-5 d-flex justify-content-end">
+						<img src={store.book.book_cover == null || store.book.book_cover == "" ? store.book.book_cover_b : store.book.book_cover} className="img-fluid" alt="Book cover" />
 					</div>
-					<div className="col-7 p-0">
-						<h2 className="feature-title">{actions.capitalizeWords(store.book.title)}</h2>
-						<h4>By {store.book.author}</h4>
+					<div className="col-lg-7 p-0 text-start">
+						<h2 className="filter-link">{actions.capitalizeWords(store.book.title)}</h2>
+						<h4>{store.book.author}</h4>
 					</div>
 
 				</div>
 				<div className="row text-start">
-					<div className="container-fluid">
+					<div className="container-fluid m-1">
 						<div className="row">
-							<div className="col-2 fw-bold">Book Format:</div>
-							<div className="col-8">
+							<div className="col-lg-2 fw-bold">Book Format:</div>
+							<div className="col-lg-8">
 
 								<select className="form-select" aria-label="Default select example" defaultValue="" onChange={(e) => setFormat(e.target.value)}>
 									<option value="" disabled>Select your format</option>
@@ -165,7 +165,7 @@ export const BookPage = () => {
 									))}
 								</select>
 							</div>
-							<div className="col-2 g-0">
+							<div className="col-lg-2 g-0">
 								{
 									sessionStorage.getItem("token") ?
 										<button type="button" disabled={!format} className="btn me-2 custom-button" onClick={() => actions.postCheckout(format)}>
@@ -173,7 +173,7 @@ export const BookPage = () => {
 										</button>
 										:
 										<div>
-											<p>Want to add to your cart?&nbsp;
+											<p className="p-0 m-0">Want to add to your cart?&nbsp;
 												<Link to="/login">
 													<sup><button
 														type="button"
@@ -188,39 +188,39 @@ export const BookPage = () => {
 							</div>
 						</div>
 						<div className="row">
-							<div className="col-2 fw-bold">Publisher:</div>
-							<div className="col-10">{!store.book.publisher ? "Not available" : store.book.publisher}</div>
+							<div className="col-lg-2 fw-bold">Publisher:</div>
+							<div className="col-lg-10">{!store.book.publisher ? "Not available" : store.book.publisher}</div>
 						</div>
 						<div className="row">
-							<div className="col-2 fw-bold">Published Date:</div>
-							<div className="col-10">{store.book.year}</div>
+							<div className="col-lg-2 fw-bold">Published Date:</div>
+							<div className="col-lg-10">{store.book.year}</div>
 						</div>
 						<div className="row">
-							<div className="col-2 fw-bold">Genre:</div>
-							<div className="col-10">{store.book.genre}</div>
+							<div className="col-lg-2 fw-bold">Genre:</div>
+							<div className="col-lg-10">{store.book.genre}</div>
 
 						</div>
 						<div className="row">
-							<div className="col-2 fw-bold">Pages:</div>
-							<div className="col-10">{store.book.pages == 0 ? "Not available" : store.book.pages}</div>
+							<div className="col-lg-2 fw-bold">Pages:</div>
+							<div className="col-lg-10">{store.book.pages == 0 ? "Not available" : store.book.pages}</div>
 						</div>
 
 						<div className="row">
-							<div className="col-2 fw-bold">ISBN:</div>
-							<div className="col-10">{params.theisbn}</div>
+							<div className="col-lg-2 fw-bold">ISBN:</div>
+							<div className="col-lg-10">{params.theisbn}</div>
 						</div>
 						<div className="row">
-							<div className="col-2 fw-bold">Rating: </div>
-							<div className="col-10">{store.book.average_rating ? store.book.average_rating + " (out of " + store.book.ratings_count + " votes)" : "Not available"} </div>
+							<div className="col-lg-2 fw-bold">Rating: </div>
+							<div className="col-lg-10">{store.book.average_rating ? store.book.average_rating + " (out of " + store.book.ratings_count + " votes)" : "Not available"} </div>
 						</div>
 
 
 						<div className="row">
-							<div className="col-2 fw-bold">Description:</div>
-							<div className="col-10">{store.book.description}</div>
+							<div className="col-lg-2 fw-bold">Description:</div>
+							<div className="col-lg-10">{store.book.description}</div>
 						</div>
 					</div>
-					<div className="row ms-5">
+					<div className="row">
 						{
 							isGooglePreview ?
 								<Link to={`/googlePreview/${params.theisbn}`} className="link-like">
@@ -229,14 +229,14 @@ export const BookPage = () => {
 								:
 								null
 						}
-
+						<hr></hr>
 					</div>
 				</div>
 
 
 
 			</div>
-			<div className="container">
+			<div className="container m-2">
 
 				{store.nytReview && Object.keys(store.nytReview).length > 0 ? (
 					<div className="row my-3">
@@ -258,7 +258,7 @@ export const BookPage = () => {
 					</div>
 				) : null}
 				<div className="row my-3">
-					<hr></hr>
+
 					<h4 className="background-custom p-3 rounded">Reviews & Ratings</h4>
 					{store.book.reviews.map((review) => (
 						<div className="card mb-5" key={review.id}>
