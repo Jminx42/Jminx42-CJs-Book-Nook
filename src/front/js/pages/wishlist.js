@@ -89,7 +89,7 @@ export const Wishlist = () => {
                                 </Link>
                             </li>
                         </ul>
-                        <hr />
+
                     </div>) :
                     (
                         <div className="d-flex flex-column flex-shrink-0 bg-body-tertiary" style={{ width: "3rem" }}>
@@ -175,7 +175,7 @@ export const Wishlist = () => {
                                 {store.user.wishlist && store.user.wishlist.length !== 0 ? store.user.wishlist.map((book) => {
                                     return <WishlistCard key={book.id} item={book.book_id} />
                                 }) :
-                                    <div>
+                                    <div className="text-center">
                                         Add books to your wishlist!
                                     </div>}
                             </div>

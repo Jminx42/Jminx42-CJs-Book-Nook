@@ -110,7 +110,7 @@ export const ProfileReviews = () => {
                                 </Link>
                             </li>
                         </ul>
-                        <hr />
+
                     </div>) :
                     (
                         <div className="d-flex flex-column flex-shrink-0 bg-body-tertiary" style={{ width: "3rem" }}>
@@ -191,7 +191,7 @@ export const ProfileReviews = () => {
                         <div className="container mt-4">
                             <div className="row d-flex g-3">
                                 {store.user.review.length === 0 ? (
-                                    <div>
+                                    <div className="text-center">
                                         Add a review to your latest read now!
                                     </div>
                                 ) : (

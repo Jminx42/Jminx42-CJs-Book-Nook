@@ -143,7 +143,7 @@ export const Profile = () => {
 								</button>
 							</li>
 						</ul>
-						<hr />
+
 					</div>) :
 					(
 						<div className="d-flex flex-column flex-shrink-0 bg-body-tertiary" style={{ width: "3rem" }}>
@@ -329,7 +329,7 @@ export const Profile = () => {
 									{store.user.wishlist && store.user.wishlist.length !== 0 ? store.user.wishlist.map((book) => {
 										return <Card key={book.id} item={book.book_id} />
 									}) :
-										<div>
+										<div className="text-center">
 											Add books to your wishlist!
 										</div>}
 								</div>
@@ -340,7 +340,7 @@ export const Profile = () => {
 							<div className="container mt-4">
 								<div className="row d-flex g-3">
 									{store.user.review.length === 0 ? (
-										<div>
+										<div className="text-center">
 											Add a review to your latest read now!
 										</div>
 									) : (
@@ -368,7 +368,7 @@ export const Profile = () => {
 							<div className="container mt-4">
 								{store.user.support && store.user.support.length !== 0 ? store.user.support.map((ticket) => {
 									return <SupportCard key={ticket.ticket_id} item={ticket} />
-								}) : <div>
+								}) : <div className="text-center">
 									Want to contact us? Go to our <Link to="/support">
 										<button className="btn link-like">
 											support

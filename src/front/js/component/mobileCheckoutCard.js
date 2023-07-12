@@ -15,7 +15,7 @@ export const MobileCheckoutCard = ({ item }) => {
 
     }, []);
 
-    const handleAddUnit = async (transaction_id) => {
+    const handleAddUnit = async () => {
         const opts = {
             method: 'PUT',
             headers: {

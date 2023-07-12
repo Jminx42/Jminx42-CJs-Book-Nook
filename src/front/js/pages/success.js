@@ -8,14 +8,14 @@ import { Footer } from "../component/footer";
 
 export const Success = () => {
     const { store, actions } = useContext(Context);
-    const [alert, setAlert] = useState("");
     const [error, setError] = useState("");
 
     useEffect(() => {
         createTransaction();
-    }, [])
+
+    }, []);
+
     const createTransaction = async () => {
-        const items = store.user.items;
         try {
             const response = await fetch(process.env.BACKEND_URL + 'api/createTransaction', {
                 method: 'POST',
@@ -28,15 +28,16 @@ export const Success = () => {
 
             if (response.status === 200) {
                 const data = await response.json();
-                console.log(data)
-
-                console.log("response was okay")
-                await actions.validate_user()
+                await actions.validate_user();
+                console.log(data);
+                actions.createAlertMsg("Payment was successful!");
+                console.log("response was okay");
             } else {
                 throw new Error('Failed to create transaction');
             }
         } catch (error) {
             console.error('Error:', error);
+            setError(error);
         }
     }
 
@@ -44,13 +45,13 @@ export const Success = () => {
         <div>
             <Navbar />
             {
-                alert && alert !== ""
+                store.alert && store.alert !== ""
                     ?
                     <div className="container">
                         <div className="alert alert-success alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
                             <i className="bi bi-check-circle-fill me-2"></i>
                             <div>
-                                {alert}
+                                {store.alert}
                             </div>
                             <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>

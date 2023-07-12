@@ -14,7 +14,6 @@ export const Checkout = () => {
     const [editAddress, setEditAddress] = useState(false);
     const [editBilling, setEditBilling] = useState(false);
     const [checked, setChecked] = useState(false);
-    const [alert, setAlert] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
@@ -22,6 +21,11 @@ export const Checkout = () => {
     const isMobile = window.innerWidth <= 582;
 
     useEffect(() => {
+        if (sessionStorage.getItem("token")) {
+            actions.validate_user()
+        } else {
+            navigate("/")
+        };
 
         const handleResize = () => {
             setWindowWidth(window.innerWidth);
@@ -35,9 +39,6 @@ export const Checkout = () => {
 
         setActiveTab(params)
     }, []);
-
-
-
 
     const handleSave = async () => {
         setEditAddress(false);
@@ -53,7 +54,7 @@ export const Checkout = () => {
         });
         if (response.ok) {
             await actions.validate_user()
-            setAlert("Profile successfully updated");
+            actions.createAlertMsg("Profile successfully updated");
         } else {
             const data = await response.json()
             setError(data.error)
@@ -66,20 +67,14 @@ export const Checkout = () => {
 
     };
 
-    useEffect(() => {
-        if (sessionStorage.getItem("token")) {
-            actions.validate_user()
-        } else {
-            navigate("/")
-        };
-    }, []);
     const total = () => {
         let totalCheckout = 0;
         for (let x = 0; x < store.user.items.length; x++) {
             totalCheckout += store.user.items[x].book_format_id.book_price * store.user.items[x].unit
         }
         return totalCheckout
-    }
+    };
+
     const createCheckoutSession = async () => {
         const priceIdsAndUnits = [];
         store.user.items.forEach(item => {
@@ -99,25 +94,55 @@ export const Checkout = () => {
                 body: JSON.stringify(priceIdsAndUnits)
             });
             if (response.status === 303) {
-                console.log("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
                 const data = await response.json();
                 console.log(data)
                 const checkout_url = data.checkout_session.url;
-
                 window.location.replace(checkout_url)
-                console.log("response was okay")
             } else {
                 throw new Error('Failed to create checkout session');
             }
         } catch (error) {
             console.error('Error:', error);
+            setError(error)
         }
-    }
+    };
 
 
     return (
         <div>
             <Navbar />
+            {
+                store.alert && store.alert !== ""
+                    ?
+                    <div className="container">
+                        <div className="alert alert-success alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+                            <i className="bi bi-check-circle-fill me-2"></i>
+                            <div>
+                                {store.alert}
+                            </div>
+                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    :
+                    null
+
+            }
+            {
+                error && error !== ""
+                    ?
+                    <div className="container">
+                        <div className="alert alert-danger alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+                            <i className="bi bi-exclamation-triangle-fill"></i>
+                            <div>
+                                {error}
+                            </div>
+                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    :
+                    null
+
+            }
             <div className="container mt-4 border rounded p-3">
                 <h1 className="feature-title m-5">CHECKOUT</h1>
                 {store.user.items && store.user.items.length > 0 ?
@@ -238,21 +263,27 @@ export const Checkout = () => {
 
                             }))}
 
-                            <div className="row ps-0">
-                                <div className="col-md-6 col-lg-6 d-flex justify-content-start pe-0">
-                                    <h5 className="text-center feature-title py-2"> Order Total:
-                                        <span className="text-dark ms-3">{parseFloat(total().toFixed(2))}€</span>
-                                    </h5>
+                            <div className="row d-flex justify-content-between ps-0 my-2">
+                                <div className="col-md-2 col-lg-2">
+                                    <h5 className="text-center feature-title py-2"> Order Total:</h5>
                                 </div>
-                                <div className="col-md-6 col-lg-6 d-flex justify-content-end pe-0">
-                                    <button className="btn custom-button text-center" onClick={createCheckoutSession}><i className="fa-solid">PAY &nbsp;</i><i className="fa-solid fa-arrow-right"></i></button>
+                                <div className="col-md-3 col-lg-4">
                                 </div>
+                                <div className="col-md-2 col-lg-2 d-flex h-25 align-items-center">
+                                </div>
+                                <div className="col-md-2 col-lg-1 text-center">
+                                    {parseFloat(total().toFixed(2))}€
+                                </div>
+                                <div className="col-md-1 col-lg-1 d-flex  justify-content-end p-0">
+                                    <button className="btn custom-button text-center h-75" onClick={createCheckoutSession}><i className="fa-solid">PAY &nbsp;</i><i className="fa-solid fa-arrow-right"></i></button>
+                                </div>
+
                             </div>
 
                         </div>
 
                     </> : (
-                        <div>Add a book to purchase!</div>
+                        <div className="text-center">Add a book to purchase!</div>
                     )}
 
             </div>

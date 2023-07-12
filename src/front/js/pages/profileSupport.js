@@ -89,7 +89,7 @@ export const ProfileSupport = () => {
                                 </Link>
                             </li>
                         </ul>
-                        <hr />
+
                     </div>) :
                     (
                         <div className="d-flex flex-column flex-shrink-0 bg-body-tertiary" style={{ width: "3rem" }}>
@@ -170,7 +170,7 @@ export const ProfileSupport = () => {
                         <div className="container mt-4">
                             {store.user.support && store.user.support.length !== 0 ? store.user.support.map((ticket) => {
                                 return <SupportCard key={ticket.ticket_id} item={ticket} />
-                            }) : <div>
+                            }) : <div className="text-center">
                                 Want to contact us? Go to our <Link to="/support">
                                     <button className="btn px-0 pt-0 link-like">
                                         support

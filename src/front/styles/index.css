@@ -6,6 +6,10 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Merriweather&display=swap');
 
+.navbar-brand img {
+    height: 50px;
+}
+
 
 .custom-button {
     background-color: #cdeeec;
@@ -208,29 +212,6 @@
 }
 
 /* Increase the size of the dots*/
-.carousel-arrow {
-    font-size: 30px !important;
-    color: #0c6e68 !important;
-}
-
-.slick-arrow:before {
-    content: "\2192";
-}
-
-.custom-arrow {
-    color: #0c6e68;
-    border-radius: 10px;
-}
-
-.slick-arrow:before,
-.slick-arrow:before {
-    font-family: slick;
-    font-size: 20px;
-    line-height: 1;
-    opacity: .75;
-    color: #0c6e68;
-    -webkit-font-smoothing: antialiased;
-}
 
 .slick-dots li button:before {
     font-size: 30px !important;
@@ -293,6 +274,10 @@
     .landing-text {
         font-size: 2.4rem;
     }
+
+    .navbar-brand img {
+        height: 35px;
+    }
 }
 
 @media (min-width: 583px) and (max-width: 659px) {
@@ -302,6 +287,9 @@
 }
 
 @media (min-width: 415px) and (max-width: 768px) {
+    .navbar-brand img {
+        height: 35px;
+    }
 
     .img-responsive,
     .profile-responsive {

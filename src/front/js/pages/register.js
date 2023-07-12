@@ -101,7 +101,7 @@ export const Register = () => {
 
     return (
 
-        <div className="container-lg container-md container-sm p-5">
+        <div className="container p-5">
             {
                 alert && alert !== ""
                     ?
@@ -145,29 +145,38 @@ export const Register = () => {
                     </div>
                 </div>
             ) : (
-                <div className="card p-4">
-                    <div className="card-body">
-                        <form className="Auth-form container" onSubmit={handleRegisterSubmit}>
-                            <Link to="/">
-                                <div className="text-center custom-bg-img rounded">
-                                    <LazyLoadImage
-                                        src={CJBookNookLogo}
-                                        alt="CJ Book Nook Logo"
-                                        className="my-2 border rounded-circle img-responsive"
-                                        effect="blur"
-                                        style={{ width: '150px' }} />
-                                </div>
-                            </Link>
-                            <h3 className="Auth-form-title text-center mt-3">Sign Up</h3>
-                            <div className="text-center">
-                                Already registered?{" "}
-                                <Link to="/login">
-                                    <span className="link-like">
-                                        Login
-                                    </span>
+                <div className="card border-0">
+
+                    <form className="Auth-form container-fluid m-1" onSubmit={handleRegisterSubmit}>
+                        <div className='row d-flex justify-content-center mb-2'>
+                            <div className='col-md-10 col-lg-9 text-center'>
+                                <Link to="/">
+                                    <div className="text-center custom-bg-img rounded">
+                                        <LazyLoadImage
+                                            src={CJBookNookLogo}
+                                            alt="CJ Book Nook Logo"
+                                            className="my-2 border rounded-circle"
+                                            effect="blur"
+                                            style={{ width: '150px' }} />
+                                    </div>
                                 </Link>
                             </div>
-                            <div className="mb-3">
+                        </div>
+                        <div className='row d-flex justify-content-center mb-3'>
+                            <div className='col-md-10 col-lg-9 text-center'>
+                                <h3 className="Auth-form-title">Sign Up</h3>
+                                <div className="text-center">
+                                    Already registered?{" "}
+                                    <Link to="/login">
+                                        <span className="link-like">
+                                            Login
+                                        </span>
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='row d-flex justify-content-center mb-3'>
+                            <div className='col-md-10 col-lg-9'>
                                 <label htmlFor="full_name" className="form-label">
                                     Full Name
                                 </label>
@@ -184,7 +193,9 @@ export const Register = () => {
                                 />
                                 {errors.full_name && <div className="invalid-feedback">{errors.full_name}</div>}
                             </div>
-                            <div className="mb-3">
+                        </div>
+                        <div className='row d-flex justify-content-center mb-3'>
+                            <div className='col-md-10 col-lg-9'>
                                 <label htmlFor="email" className="form-label">
                                     Email address
                                 </label>
@@ -201,7 +212,9 @@ export const Register = () => {
                                 />
                                 {errors.email && <div className="invalid-feedback">{errors.email}</div>}
                             </div>
-                            <div className="mb-3">
+                        </div>
+                        <div className='row d-flex justify-content-center mb-3'>
+                            <div className='col-md-10 col-lg-9'>
                                 <label htmlFor="password" className="form-label">
                                     Password
                                 </label>
@@ -218,7 +231,9 @@ export const Register = () => {
                                 />
                                 {errors.password && <div className="invalid-feedback">{errors.password}</div>}
                             </div>
-                            <div className="mb-3">
+                        </div>
+                        <div className='row d-flex justify-content-center mb-3'>
+                            <div className='col-md-10 col-lg-9'>
                                 <label htmlFor="confirmPassword" className="form-label">
                                     Confirm Password
                                 </label>
@@ -235,40 +250,47 @@ export const Register = () => {
                                 />
                                 {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
                             </div>
-                            <div className="mb-3 form-check">
-                                <input
-                                    type="checkbox"
-                                    className={`form-check-input ${errors.termsAndConditions && 'is-invalid'}`}
-                                    id="termsAndConditions"
-                                    name="termsAndConditions"
-                                    checked={formData.termsAndConditions}
-                                    onChange={handleChange}
-                                    required
-                                />
-                                <label className="form-check-label" htmlFor="termsAndConditions">
-                                    I have read and accept the{' '}
-                                    <a
-                                        className="link-like"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal"
-                                        href="#"
-                                    >
-                                        terms and conditions and the privacy policy.
-                                    </a>{' '}
+                        </div>
+                        <div className='row d-flex justify-content-center mb-3'>
+                            <div className='col-md-10 col-lg-9'>
+                                <div className="mb-3 form-check">
+                                    <input
+                                        type="checkbox"
+                                        className={`form-check-input ${errors.termsAndConditions && 'is-invalid'}`}
+                                        id="termsAndConditions"
+                                        name="termsAndConditions"
+                                        checked={formData.termsAndConditions}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                    <label className="form-check-label" htmlFor="termsAndConditions">
+                                        I have read and accept the{' '}
+                                        <a
+                                            className="link-like"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#exampleModal"
+                                            href="#"
+                                        >
+                                            terms and conditions and the privacy policy.
+                                        </a>{' '}
 
-                                </label>
-                                {errors.termsAndConditions && <div className="invalid-feedback">{errors.termsAndConditions}</div>}
+                                    </label>
+                                    {errors.termsAndConditions && <div className="invalid-feedback">{errors.termsAndConditions}</div>}
+                                </div>
                             </div>
-
-                            <div className="d-grid gap-2 mt-3">
-                                <button type="submit" className="btn custom-button" onClick={handleRegisterSubmit}>
-                                    Register
-                                </button>
+                        </div>
+                        <div className='row d-flex justify-content-center mb-3'>
+                            <div className='col-md-10 col-lg-9'>
+                                <div className="d-grid gap-2 mt-3">
+                                    <button type="submit" className="btn custom-button" onClick={handleRegisterSubmit}>
+                                        Register
+                                    </button>
+                                </div>
                             </div>
+                        </div>
+                    </form>
 
-                        </form>
-                    </div>
-                </div>
+                </div >
 
             )}
 

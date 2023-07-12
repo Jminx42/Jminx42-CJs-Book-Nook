@@ -147,7 +147,7 @@ export const PersonalInformation = () => {
                                 </Link>
                             </li>
                         </ul>
-                        <hr />
+
                     </div>) :
                     (
                         <div className="d-flex flex-column flex-shrink-0 bg-body-tertiary" style={{ width: "3rem" }}>
