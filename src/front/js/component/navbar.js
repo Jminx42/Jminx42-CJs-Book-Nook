@@ -4,6 +4,7 @@ import { Context } from "../store/appContext";
 import { ProfileBtn } from "../component/profileBtn";
 import "../../styles/index.css"
 import CJBookNookNoLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/CJBookNookNoLogoWhite.png";
+import { SideNavigation } from "./sideNavigation";
 
 export const Navbar = () => {
 	const { store, actions } = useContext(Context);
@@ -18,6 +19,8 @@ export const Navbar = () => {
 		}
 		return totalCheckout
 	}
+	const [isOpen, setIsOpen] = useState(false);
+
 
 	return (
 		<nav className="navbar navbar-expand-lg background-custom px-md-5 px-lg-5 py-0">
@@ -120,6 +123,7 @@ export const Navbar = () => {
 															</li>
 														</>
 													)
+
 												}
 											</>
 										) : (

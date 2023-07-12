@@ -17,6 +17,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 		},
 		actions: {
 
+       //Check if we are using this function!!!
 			// updateUserItems: () => {
 			// 	const updatedItems = getStore().user.items.map((item) => {
 			// 		return {
@@ -27,6 +28,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			// 	console.log(updatedItems)
 			// 	setStore({ ...getStore().user, user: { items: updatedItems } });
 			// },
+
 
 			setActiveTab: (tab) => {
 				setStore({ activeTab: tab })
