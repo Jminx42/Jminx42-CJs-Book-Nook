@@ -67,8 +67,19 @@
 
 .filter-link {
     color: #0c6e68;
+    text-decoration: none;
 
+}
 
+.filter-link:hover {
+    color: #0c6e68;
+    text-decoration: underline;
+
+}
+
+.preview {
+    padding: 16px 20px;
+    margin-bottom: 0px
 }
 
 .custom-bg-img {
