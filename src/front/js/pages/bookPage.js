@@ -24,6 +24,10 @@ export const BookPage = () => {
 		review: review.review
 	});
 
+	// useEffect(() => {
+	// 	setRating(0)
+
+	// }, [store.book.reviews]);
 
 	useEffect(() => {
 		actions.getBooks();
@@ -51,7 +55,6 @@ export const BookPage = () => {
 
 	}, []);
 
-
 	const submitReview = async (book_id) => {
 		const response = await fetch(process.env.BACKEND_URL + 'api/review', {
 			method: "POST",
@@ -71,10 +74,10 @@ export const BookPage = () => {
 			// console.log(reviewData);
 			actions.getOneBook(params.theisbn)
 			setReview({
-				rating: review.rating,
-				review: review.review
+				rating: 0,
+				review: ""
 			});
-
+			setRating(0)
 
 		} else {
 			const data = await response.json();
