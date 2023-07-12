@@ -64,7 +64,7 @@ export const SideNavigation = () => {
                             <i className="fa-solid fa-right-from-bracket custom-text"></i>
                         </ListItemIcon>
                         <ListItemText className="custom-text" >
-                            Logout
+                            Logout user
                         </ListItemText>
                     </ListItemButton>
                 </ListItem>
