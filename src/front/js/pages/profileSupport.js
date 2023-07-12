@@ -2,22 +2,15 @@ import React, { useState, useEffect, useContext } from "react";
 import { Navbar } from "../component/navbar";
 import { Link } from "react-router-dom";
 import "../../styles/index.css"
-import { HomeCard } from "../component/homeCard";
-import { Review } from "../component/review";
-
-import { TransactionCard } from "../component/transactionCard";
-
 import { Context } from "../store/appContext";
-import { InputProfilePic } from "../component/inputProfilePic";
 import { SupportCard } from "../component/supportCard";
+import { Footer } from "../component/footer";
 
 
 export const ProfileSupport = () => {
     const { store, actions } = useContext(Context);
     const [alert, setAlert] = useState("");
     const [error, setError] = useState("");
-    const [reviews, setReviews] = useState([]);
-    const [showForm, setShowForm] = useState(false)
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     useEffect(() => {
@@ -96,7 +89,7 @@ export const ProfileSupport = () => {
                                 </Link>
                             </li>
                         </ul>
-                        <hr />
+
                     </div>) :
                     (
                         <div className="d-flex flex-column flex-shrink-0 bg-body-tertiary" style={{ width: "3rem" }}>
@@ -177,7 +170,7 @@ export const ProfileSupport = () => {
                         <div className="container mt-4">
                             {store.user.support && store.user.support.length !== 0 ? store.user.support.map((ticket) => {
                                 return <SupportCard key={ticket.ticket_id} item={ticket} />
-                            }) : <div>
+                            }) : <div className="text-center">
                                 Want to contact us? Go to our <Link to="/support">
                                     <button className="btn px-0 pt-0 link-like">
                                         support
@@ -189,6 +182,7 @@ export const ProfileSupport = () => {
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
     );
 };

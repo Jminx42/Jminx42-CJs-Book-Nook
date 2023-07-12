@@ -4,12 +4,11 @@ import { Link } from "react-router-dom";
 import "../../styles/index.css"
 import { Card } from "../component/card";
 import { Review } from "../component/review";
-import { PaymentMethod } from "../component/paymentMethod";
 import { TransactionCard } from "../component/transactionCard";
-import { EmptyPaymentMethod } from "../component/emptyPaymentMethod";
 import { Context } from "../store/appContext";
 import { InputProfilePic } from "../component/inputProfilePic";
 import { SupportCard } from "../component/supportCard";
+import { Footer } from "../component/footer";
 
 
 export const Profile = () => {
@@ -17,16 +16,10 @@ export const Profile = () => {
 	const [user, setUser] = useState(store.user);
 	const [editClicked, setEditClicked] = useState(false);
 	const [reviews, setReviews] = useState([]);
-	const [showForm, setShowForm] = useState(false)
 	const [alert, setAlert] = useState("");
 	const [error, setError] = useState("");
 	const [activeTab, setActiveTab] = useState('personal')
 
-
-	// useEffect(() => {
-	// 	setUser(store.user)
-
-	// }, [store.user]);
 
 	const handleSave = async () => {
 		setEditClicked(false);
@@ -150,13 +143,11 @@ export const Profile = () => {
 								</button>
 							</li>
 						</ul>
-						<hr />
+
 					</div>) :
 					(
 						<div className="d-flex flex-column flex-shrink-0 bg-body-tertiary" style={{ width: "3rem" }}>
-							{/* <a href="/" className="d-block p-3 link-body-emphasis text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Icon-only">
-        Profile
-    </a> */}
+
 							<ul className="nav nav-pills nav-flush flex-column mb-auto text-center">
 								<li className="nav-item">
 									<button className={`py-3 border-bottom rounded-0 nav-link btn ${activeTab === 'personal' ? 'active' : ''}`} onClick={() => setActiveTab('personal')} aria-current="page" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Personal" data-bs-original-title="Personal">
@@ -334,13 +325,11 @@ export const Profile = () => {
 						<div className={`tab-pane fade ${activeTab === 'wishlist' ? 'show active' : ''}`} id="wishlist-tab-pane" role="tabpanel" aria-labelledby="wishlist-tab" tabIndex="0">
 							<div className="container mt-4">
 								<div className="row d-flex">
-									{/* {store.user.wishlist && store.user.wishlist.length !== 0 ? store.user.wishlist.filter((book) => book.title.toLowerCase().includes(store.search)).map((book) => {
-								return <Card key={book.isbn} item={book} />
-							}) : null} */}
+
 									{store.user.wishlist && store.user.wishlist.length !== 0 ? store.user.wishlist.map((book) => {
 										return <Card key={book.id} item={book.book_id} />
 									}) :
-										<div>
+										<div className="text-center">
 											Add books to your wishlist!
 										</div>}
 								</div>
@@ -351,7 +340,7 @@ export const Profile = () => {
 							<div className="container mt-4">
 								<div className="row d-flex g-3">
 									{store.user.review.length === 0 ? (
-										<div>
+										<div className="text-center">
 											Add a review to your latest read now!
 										</div>
 									) : (
@@ -379,7 +368,7 @@ export const Profile = () => {
 							<div className="container mt-4">
 								{store.user.support && store.user.support.length !== 0 ? store.user.support.map((ticket) => {
 									return <SupportCard key={ticket.ticket_id} item={ticket} />
-								}) : <div>
+								}) : <div className="text-center">
 									Want to contact us? Go to our <Link to="/support">
 										<button className="btn link-like">
 											support
@@ -393,6 +382,7 @@ export const Profile = () => {
 					</div>
 				</div>
 			</div>
+			<Footer />
 		</div>
 
 	);

@@ -23,7 +23,7 @@ stripe_keys = {
 stripe.api_key = stripe_keys["secret_key"]
 
 
-from api.models import db, User, Book, Review, Wishlist, Transaction, Support, PaymentMethod, TransactionItem, BookFormat
+from api.models import db, User, Book, Review, Wishlist, Transaction, Support, TransactionItem, BookFormat
 from api.utils import APIException, generate_sitemap
 
 
@@ -431,7 +431,8 @@ def create_transaction():
 @jwt_required()
 def create_checkout_session():
     user_id = get_jwt_identity()
-    domain_url = "https://carolina-hora-curly-engine-44679qp76gxfj6rq-3000.preview.app.github.dev/"
+    # domain_url = "https://carolina-hora-curly-engine-44679qp76gxfj6rq-3000.preview.app.github.dev/"
+    domain_url = os.getenv('FRONTEND_URL')
     stripe.api_key = stripe_keys["secret_key"]
     
     try:

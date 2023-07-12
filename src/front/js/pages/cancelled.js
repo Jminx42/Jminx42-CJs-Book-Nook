@@ -1,22 +1,15 @@
-import React, { useState, useEffect, useContext } from "react";
-import PropTypes from "prop-types";
-import { Link, useParams } from "react-router-dom";
-import { Context } from "../store/appContext";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Navbar } from "../component/navbar";
 import { Footer } from "../component/footer";
 
 
 
 export const Cancelled = () => {
-    const { store, actions } = useContext(Context);
-    const [formData, setFormData] = useState({ subject: "", message: "" });
     const [alert, setAlert] = useState("");
     const [error, setError] = useState("");
 
-    useEffect(() => {
-        s
-    }, [])
-
+    // are we going to remove the items from the cart??
     return (
         <div>
             <Navbar />

@@ -11,11 +11,8 @@ export const ReviewBook = ({ item }) => {
     const params = useParams();
     const { store, actions } = useContext(Context);
     const [editClicked, setEditClicked] = useState(false);
-    const [editReview, setEditReview] = useState({
-        rating: item.rating,
-        review: item.review
-    });
-    const [rating, setRating] = useState(item.rating);
+    const [editReview, setEditReview] = useState(item.review);
+    const [editRating, setEditRating] = useState(item.rating);
 
     useEffect(() => {
         setTimeout(() => {
@@ -42,7 +39,7 @@ export const ReviewBook = ({ item }) => {
                         <button
                             className="btn custom-button"
                             onClick={async () => {
-                                await actions.editReview(item.book_id, editReview.review, rating);
+                                await actions.editReview(item.book_id, editReview, editRating);
                                 setEditClicked(false);
                                 actions.getOneBook(params.theisbn);
                             }}
@@ -55,14 +52,14 @@ export const ReviewBook = ({ item }) => {
             <h6 className="card-subtitle mb-2 text-muted">Posted on {item.created_at}</h6>
 
             {!editClicked ? (
-                <StarRating rating={item.rating} editable={false} />
+                <StarRating rating={editRating} editable={false} />
             ) : (
                 <>
                     <label className="text-start mb-1">Rating:&nbsp; </label>
                     <StarRating
-                        rating={rating}
+                        rating={editRating}
                         editable={true}
-                        onRatingChange={(newRating) => setRating(newRating)}
+                        onRatingChange={(newRating) => setEditRating(newRating)}
                     />
                 </>
             )}
@@ -77,8 +74,8 @@ export const ReviewBook = ({ item }) => {
                         id="review"
                         aria-describedby="review"
                         rows="5"
-                        defaultValue={editReview.review}
-                        onChange={(e) => setEditReview({ ...editReview, review: e.target.value })}
+                        defaultValue={editReview}
+                        onChange={(e) => setEditReview(e.target.value)}
                     />
                 </>
             )}
