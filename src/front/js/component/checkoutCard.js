@@ -43,7 +43,7 @@ export const CheckoutCard = ({ item }) => {
         }
     }
 
-    const handleRemoveUnit = async (id) => {
+    const handleRemoveUnit = async () => {
         const opts = {
             method: 'PUT',
             headers: {
@@ -106,7 +106,7 @@ export const CheckoutCard = ({ item }) => {
             <div className="row mb-2 d-flex justify-content-between" >
                 <div className="col-6 col-sm-4 col-md-2 col-lg-2 flex-shrink-1">
                     <Link to={`/book/${item.book_id.isbn}`}>
-                        <img src={item.book_id.book_cover} className="card-img-top" alt="..." />
+                        <img src={item.book_id.book_cover} className="img-responsive" alt="..." />
                     </Link>
                 </div>
                 <div className="col-md-3 col-lg-4">

@@ -15,6 +15,10 @@ export const PurchaseHistory = () => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     useEffect(() => {
+        setTimeout(() => {
+            actions.clearError();
+            actions.clearAlert();
+        }, 3000);
         getUserReviews()
         const handleResize = () => {
             setWindowWidth(window.innerWidth);
@@ -56,6 +60,38 @@ export const PurchaseHistory = () => {
     return (
         <div>
             <Navbar />
+            {
+                store.alert && store.alert !== ""
+                    ?
+                    <div className="container">
+                        <div className="alert alert-success alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+                            <i className="bi bi-check-circle-fill me-2"></i>
+                            <div>
+                                {store.alert}
+                            </div>
+                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    :
+                    null
+
+            }
+            {
+                error && error !== ""
+                    ?
+                    <div className="container">
+                        <div className="alert alert-danger alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+                            <i className="bi bi-exclamation-triangle-fill"></i>
+                            <div>
+                                {error}
+                            </div>
+                            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    :
+                    null
+
+            }
             <div className="d-flex">
                 {!isMobile ?
                     (<div className="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary">
@@ -156,38 +192,7 @@ export const PurchaseHistory = () => {
                     )}
                 {/* Creating the different tabs: */}
                 <div className="flex-grow-1 m-0">
-                    {
-                        alert && alert !== ""
-                            ?
-                            <div className="container">
-                                <div className="alert alert-success alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
-                                    <i className="bi bi-check-circle-fill me-2"></i>
-                                    <div>
-                                        {alert}
-                                    </div>
-                                    <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            </div>
-                            :
-                            null
 
-                    }
-                    {
-                        error && error !== ""
-                            ?
-                            <div className="container">
-                                <div className="alert alert-danger alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
-                                    <i className="bi bi-exclamation-triangle-fill"></i>
-                                    <div>
-                                        {error}
-                                    </div>
-                                    <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            </div>
-                            :
-                            null
-
-                    }
                     <div className={`tab-content ${isMobile ? 'mt-0' : 'profile-container'}`} >
                         <div className="container mt-4">
                             <div className="container mt-4">

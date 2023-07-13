@@ -17,7 +17,10 @@ export const Login = () => {
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
-        actions.clearError();
+        setTimeout(() => {
+            actions.clearError();
+            actions.clearAlert();
+        }, 3000);
     }, []);
 
     const validateForm = () => {

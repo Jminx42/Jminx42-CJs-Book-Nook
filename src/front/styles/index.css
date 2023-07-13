@@ -6,6 +6,10 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Merriweather&display=swap');
 
+.modal-open {
+    overflow: hidden;
+}
+
 .navbar-brand img {
     height: 50px;
 }
@@ -275,7 +279,11 @@
     height: auto;
 }
 
-
+.checkout-img {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+}
 
 /* Media Queries!!! Define different styles for different screen sizes */
 @media (max-width: 414px) {
@@ -298,6 +306,12 @@
     font-size: calc(1.525rem + 3.3vw);
 }
 
+@media (max-width: 375px) {
+    .checkout-img {
+        width: 100px !important;
+    }
+}
+
 @media (max-width: 582px) {
     .landing-text {
         font-size: 2.4rem;
@@ -306,6 +320,8 @@
     .navbar-brand img {
         height: 35px;
     }
+
+
 }
 
 @media (min-width: 583px) and (max-width: 659px) {

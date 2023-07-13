@@ -31,6 +31,8 @@ export const BookPage = () => {
 			setIsLoading(false);
 			setShowBookDetails(true);
 			actions.clearAlert();
+			actions.clearError();
+
 		}, 3000);
 
 	}, [params.isbn, store.alert]);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Navbar } from "../component/navbar";
 import { CheckoutCard } from "../component/checkoutCard";
@@ -16,13 +16,17 @@ export const Checkout = () => {
     const [checked, setChecked] = useState(false);
     const [error, setError] = useState("");
     const navigate = useNavigate();
-
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
+        setTimeout(() => {
+            actions.clearError();
+            actions.clearAlert();
+        }, 3000);
+
         const handleResize = () => {
-            setIsMobile(window.matchMedia("(max-width: 767px)").matches);
+            setIsMobile(window.matchMedia("(max-width: 767px)").matches ||
+                window.matchMedia("(max-width: 375px)").matches);
         };
 
         handleResize(); // Initial check on component mount
@@ -32,7 +36,11 @@ export const Checkout = () => {
         return () => {
             window.removeEventListener('resize', handleResize);
         };
+
+
     }, []);
+
+
 
     const handleSave = async () => {
         setEditAddress(false);
@@ -137,7 +145,7 @@ export const Checkout = () => {
                     null
 
             }
-            <div className="container mt-4 border rounded p-3">
+            <div className="container mt-4 p-3">
                 <h1 className="feature-title m-5">CHECKOUT</h1>
                 {store.user.items && store.user.items.length > 0 ?
                     <>
@@ -148,7 +156,12 @@ export const Checkout = () => {
 
                                 {!editAddress ? (
                                     <>
-                                        {store.user.address}
+                                        {
+                                            store.user.billing_address === null && checked ?
+                                                store.user.billing_address
+                                                :
+                                                store.user.address
+                                        }
                                     </>
                                 ) : (
                                     <input
@@ -190,8 +203,8 @@ export const Checkout = () => {
                                 {!editBilling ? (
                                     <>
                                         {
-                                            checked ?
-                                                user.billing_address
+                                            store.user.billing_address === null && checked ?
+                                                store.user.address
                                                 :
                                                 store.user.billing_address
                                         }
@@ -217,25 +230,26 @@ export const Checkout = () => {
                             </div>
 
                             <div className="col-md-2 col-lg-3 d-flex justify-content-end">
+                                <div>
+                                    {!editBilling ? (
 
-                                {!editBilling ? (
-
-                                    <button className="btn btn-secondary custom-button" onClick={() => setEditBilling(true)}>
-                                        <i className="fa-solid fa-pen-to-square"></i>
-                                    </button>
-
-                                ) : (
-                                    <div className="d-flex">
-                                        <button className="btn btn-secondary me-2 custom-button" onClick={handleSave}>
-                                            <i className="fa-solid fa-floppy-disk"></i>
+                                        <button className="btn btn-secondary custom-button" onClick={() => setEditBilling(true)}>
+                                            <i className="fa-solid fa-pen-to-square"></i>
                                         </button>
-                                        <button className="btn btn-secondary " onClick={() => setEditBilling(false)}>
-                                            <i className="fa-solid fa-x"></i>
-                                        </button>
-                                    </div>
+
+                                    ) : (
+                                        <div className="d-flex">
+                                            <button className="btn btn-secondary me-2 custom-button" onClick={handleSave}>
+                                                <i className="fa-solid fa-floppy-disk"></i>
+                                            </button>
+                                            <button className="btn btn-secondary " onClick={() => setEditBilling(false)}>
+                                                <i className="fa-solid fa-x"></i>
+                                            </button>
+                                        </div>
 
 
-                                )}
+                                    )}
+                                </div>
                             </div>
 
                         </div>
@@ -257,19 +271,19 @@ export const Checkout = () => {
 
                             }))}
 
-                            <div className="row d-flex justify-content-between ps-0 my-2">
-                                <div className="col-sm-4 col-md-2 col-lg-2">
-                                    <h5 className="text-center feature-title py-2"> Order Total:</h5>
+                            <div className="row d-flex justify-content-between align-items-center ps-0 my-2">
+                                <div className="col-4 col-sm-4 col-md-2 col-lg-2 pe-0">
+                                    <h5 className="text-center feature-title py-2 m-0"> Order Total:</h5>
                                 </div>
-                                <div className="col-sm-0 col-md-3 col-lg-4">
+                                <div className="col-1 col-md-3 col-lg-4">
                                 </div>
-                                <div className="col-sm-0 col-md-2 col-lg-2 d-flex h-25 align-items-center">
+                                <div className="col-1 col-md-2 col-lg-2 d-flex h-25 align-items-center">
                                 </div>
-                                <div className="col-sm-2 col-md-2 col-lg-1 text-center">
+                                <div className="col-3 col-sm-2 col-md-2 col-lg-1 text-center">
                                     {parseFloat(total().toFixed(2))}€
                                 </div>
-                                <div className="col-sm-1 col-md-1 col-lg-1 d-flex  justify-content-end p-0">
-                                    <button className="btn custom-button text-center h-75" onClick={createCheckoutSession}><i className="fa-solid">PAY &nbsp;</i><i className="fa-solid fa-arrow-right"></i></button>
+                                <div className="col-3 col-sm-1 col-md-1 col-lg-1 d-flex text-center justify-content-end p-0 ">
+                                    <button className="btn custom-button d-flex " onClick={createCheckoutSession}><i className="fa-solid">PAY &nbsp;</i><i className="fa-solid fa-arrow-right"></i></button>
                                 </div>
 
                             </div>
@@ -277,7 +291,12 @@ export const Checkout = () => {
                         </div>
 
                     </> : (
-                        <div className="text-center">Add a book to purchase!</div>
+                        <>
+                            <Link to="/explore" className="link-like">
+                                <div className="text-center">Add a book to purchase!</div>
+                            </Link>
+
+                        </>
                     )}
 
             </div>

@@ -32,7 +32,10 @@ export const Explore = () => {
 	useEffect(() => {
 		actions.getBooks();
 		actions.emptyBook();
-		actions.clearAlert();
+		setTimeout(() => {
+			actions.clearError();
+			actions.clearAlert();
+		}, 3000);
 	}, []);
 
 	const handleGenreCheckboxChange = (value) => {

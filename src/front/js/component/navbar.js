@@ -1,10 +1,10 @@
-import React, { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useContext, useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { ProfileBtn } from "../component/profileBtn";
 import "../../styles/index.css"
 import CJBookNookNoLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/CJBookNookNoLogoWhite.png";
-import { SideNavigation } from "./sideNavigation";
+
 
 export const Navbar = () => {
 	const { store, actions } = useContext(Context);
@@ -19,13 +19,15 @@ export const Navbar = () => {
 		}
 		return totalCheckout
 	}
-	const [isOpen, setIsOpen] = useState(false);
+
+	const removeStyles = () => {
+		document.getElementsByTagName('body')[0].style = ''
+	}
 
 
 	return (
 		<nav className="navbar navbar-expand-md navbar-expand-lg background-custom px-md-5 px-lg-5 py-0">
 			<div className="container-fluid">
-
 
 				<div className="navbar-brand">
 					<Link to="/" >
@@ -48,7 +50,7 @@ export const Navbar = () => {
 
 				<div className="offcanvas offcanvas-start" id="navbarNav" tabIndex="-1" aria-labelledby="navbarNavLabel">
 					<div className="offcanvas-header justify-content-end">
-						<button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" onClick={() => setShowOffCanvas(false)}></button>
+						<button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" onClick={() => { setShowOffCanvas(false) }}></button>
 					</div>
 					{
 						showOffCanvas ? (
@@ -66,7 +68,12 @@ export const Navbar = () => {
 															aria-describedby="button-addon2"
 															value={store.search}
 															onChange={(e) => actions.handleSearch(e.target.value)}
-															onKeyUp={(e) => { e.key === 'Enter' && navigate('/explore') }}
+															onKeyUp={(e) => {
+																if (e.key === 'Enter') {
+																	navigate('/explore');
+																	removeStyles();
+																}
+															}}
 															placeholder="Search" />
 														<button
 															type="button"
@@ -75,9 +82,11 @@ export const Navbar = () => {
 															onClick={() => {
 																if (visibleSearchBar && store.search !== "") {
 																	setVisibleSearchBar(false);
+																	removeStyles();
 																} else {
 																	setVisibleSearchBar(false);
 																	navigate('/explore');
+																	removeStyles();
 																}
 
 															}}>
@@ -97,13 +106,14 @@ export const Navbar = () => {
 													showOffCanvas ? (
 														<>
 															<li className="nav-item mb-2" >
-																<Link to="/explore" onClick={() => setShowOffCanvas(false)} >
+
+																<div onClick={() => { navigate('/explore'); setShowOffCanvas(false); removeStyles(); }} >
 																	<button className="btn custom-button"><i className="bi bi-book-fill" ></i></button>
 																	<label className="ms-4 filter-link">Explore</label>
-																</Link>
+																</div>
 															</li>
 															<li className="nav-item mb-2" >
-																<Link to="/login" onClick={() => setShowOffCanvas(false)} >
+																<Link to="/login" onClick={() => { setShowOffCanvas(false); removeStyles(); }} >
 																	<button className="btn btn-secondary custom-button "><i className="fa-solid fa-right-to-bracket"></i></button>
 																	<label className="ms-4 filter-link">Login</label>
 																</Link>
@@ -112,12 +122,12 @@ export const Navbar = () => {
 													) : (
 														<>
 															<li className="nav-item mb-2 me-2">
-																<Link to="/explore">
+																<Link to="/explore" onClick={() => { setShowOffCanvas(false); removeStyles(); }}>
 																	<button className="btn custom-button"><i className="bi bi-book-fill"></i></button>
 																</Link>
 															</li>
 															<li className="nav-item mb-2 me-2">
-																<Link to="/login">
+																<Link to="/login" onClick={() => { setShowOffCanvas(false); removeStyles(); }}>
 																	<button className="btn custom-button "><i className="fa-solid fa-right-to-bracket"></i></button>
 																</Link>
 															</li>
@@ -133,14 +143,14 @@ export const Navbar = () => {
 													showOffCanvas ? (
 														<>
 															<li className="nav-item mb-2">
-																<Link to="/explore" onClick={() => setShowOffCanvas(false)}>
+																<Link to="/explore" onClick={() => { setShowOffCanvas(false); removeStyles(); }}>
 																	<button className="btn custom-button"><i className="bi bi-book-fill"></i></button>
 																	<label className="ms-4 filter-link">Explore</label>
 																</Link>
 
 															</li>
 															<li className="nav-item mb-2">
-																<Link to="/checkout" onClick={() => setShowOffCanvas(false)}>
+																<Link to="/checkout" onClick={() => { setShowOffCanvas(false); removeStyles(); }}>
 																	<button type="button" className="btn btn-secondary custom-button position-relative">
 																		<i className="fas fa-shopping-cart"></i>
 																		<span className="position-absolute top-0 start-100 translate-middle badge rounded-pill background-dark">
@@ -152,13 +162,13 @@ export const Navbar = () => {
 
 															</li>
 															<li className="nav-item mb-2">
-																<Link to="/wishlist" onClick={() => setShowOffCanvas(false)} >
+																<Link to="/wishlist" onClick={() => { setShowOffCanvas(false); removeStyles(); }} >
 																	<button className="btn custom-button"><i className="fa-solid fa-heart"></i></button>
 																	<label className="ms-4 filter-link">Wishlist</label>
 																</Link>
 															</li>
 															<li className="nav-item mb-2">
-																<Link to="/profile" onClick={() => setShowOffCanvas(false)}>
+																<Link to="/profile" onClick={() => { setShowOffCanvas(false); removeStyles(); }}>
 																	<button className="btn custom-button"><i className="fa-solid fa-user"></i></button>
 																	<label className="ms-4 filter-link">Profile</label>
 																</Link>
@@ -166,8 +176,10 @@ export const Navbar = () => {
 															</li>
 															<li className="nav-item mb-2">
 																<button className="btn custom-button" onClick={async () => {
-																	await actions.logout()
-																	navigate("/")
+																	await actions.logout();
+																	removeStyles();
+																	navigate("/");
+
 																}}><i className="fa-solid fa-right-from-bracket"></i></button>
 																<label className="ms-4 filter-link">Logout</label>
 
@@ -177,12 +189,12 @@ export const Navbar = () => {
 													) : (
 														<>
 															<li className="nav-item mb-2 me-2">
-																<Link to="/explore">
+																<Link to="/explore" onClick={() => { setShowOffCanvas(false); removeStyles(); }}>
 																	<button className="btn custom-button"><i className="bi bi-book-fill"></i></button>
 																</Link>
 															</li>
 															<li className="nav-item mb-2 me-2">
-																<Link to="/checkout">
+																<Link to="/checkout" onClick={() => { setShowOffCanvas(false); removeStyles(); }}>
 																	<button type="button" className="btn btn-secondary custom-button position-relative">
 																		<i className="fas fa-shopping-cart"></i>
 																		<span className="position-absolute top-0 start-100 translate-middle badge rounded-pill background-dark">
@@ -194,7 +206,7 @@ export const Navbar = () => {
 																</Link>
 															</li>
 															<li className="nav-item mb-2 me-2">
-																<Link to="/wishlist">
+																<Link to="/wishlist" onClick={() => { setShowOffCanvas(false); removeStyles(); }}>
 
 																	<button className="btn custom-button"><i className="fa-solid fa-heart"></i></button>
 																</Link>

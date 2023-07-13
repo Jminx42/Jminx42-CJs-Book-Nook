@@ -103,13 +103,13 @@ export const MobileCheckoutCard = ({ item }) => {
     return (
         <div className="container">
 
-            <div className="row mb-2">
-                <div className="col-sm-2 col-md-2 col-lg-2">
+            <div className="row mb-2 d-flex">
+                <div className="col-4 col-sm-3 col-md-2 col-lg-2">
                     <Link to={`/book/${item.book_id.isbn}`}>
-                        <img src={item.book_id.book_cover} className="card-img-top" alt="..." />
+                        <img src={item.book_id.book_cover} className="img-responsive" alt="..." />
                     </Link>
                 </div>
-                <div className="col-sm-8">
+                <div className="col-8 col-sm-8 ps-0">
                     <h4 className="text-start">{actions.capitalizeWords(item.book_id.title)}</h4>
                     <p className="text-start mb-0">{item.book_format_id.book_format}</p>
                     <div className="d-flex justify-content-between align-items-center">
