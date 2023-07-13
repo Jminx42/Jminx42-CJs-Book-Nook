@@ -7,15 +7,17 @@ import "../../styles/home.css";
 
 export const CheckoutCard = ({ item }) => {
     const { store, actions } = useContext(Context);
-    const [errorMessage, setErrorMessage] = useState("");
-    const [alertMsg, setAlertMsg] = useState("");
+
 
     useEffect(() => {
-        actions.clearError();
+        setTimeout(() => {
+            actions.clearError();
+            actions.clearAlert();
+        }, 3000);
 
     }, []);
 
-    const handleAddUnit = async (transaction_id) => {
+    const handleAddUnit = async () => {
         const opts = {
             method: 'PUT',
             headers: {
@@ -31,11 +33,11 @@ export const CheckoutCard = ({ item }) => {
             if (resp.status !== 200) {
                 const data = await resp.json();
                 const errorMessage = data.error || "Something went wrong";
-                setErrorMessage(errorMessage);
+                actions.createErrorMsg(errorMessage);
                 return false;
             } else {
                 await actions.validate_user();
-                setAlertMsg("Your cart was updated successfully");
+                actions.createAlertMsg("Your cart was updated successfully");
                 return true;
             }
         } catch (error) {
@@ -59,11 +61,12 @@ export const CheckoutCard = ({ item }) => {
             if (resp.status !== 200) {
                 const data = await resp.json();
                 const errorMessage = data.error || "Something went wrong";
-                setErrorMessage(errorMessage);
+                actions.createErrorMsg(errorMessage);
                 return false;
             } else {
                 await actions.validate_user();
-                setAlertMsg("Your cart was updated successfully");
+                const data = await resp.json();
+                actions.createAlertMsg(data.item);
                 return true;
             }
         } catch (error) {
@@ -71,7 +74,7 @@ export const CheckoutCard = ({ item }) => {
         }
     }
 
-    const handleRemove = async (id) => {
+    const handleRemove = async () => {
         const opts = {
             method: 'DELETE',
             headers: {
@@ -87,11 +90,11 @@ export const CheckoutCard = ({ item }) => {
             if (resp.status !== 200) {
                 const data = await resp.json();
                 const errorMessage = data.error || "Something went wrong";
-                setErrorMessage(errorMessage);
+                actions.createErrorMsg(errorMessage);
                 return false;
             } else {
                 await actions.validate_user();
-                setAlertMsg("Your item was deleted successfully");
+                actions.createAlertMsg("Your item was deleted successfully");
                 return true;
             }
         } catch (error) {

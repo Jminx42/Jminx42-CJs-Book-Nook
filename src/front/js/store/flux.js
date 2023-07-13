@@ -32,6 +32,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 				//Not working for only one word like GENRE!!
 			},
 
+			createErrorMsg: (msg) => {
+				setStore({ errorMsg: msg })
+			},
+
 			createAlertMsg: (msg) => {
 				setStore({ alert: msg })
 			},

@@ -11,8 +11,8 @@ export const ReviewBook = ({ item }) => {
     const params = useParams();
     const { store, actions } = useContext(Context);
     const [editClicked, setEditClicked] = useState(false);
-    const [editReview, setEditReview] = useState("");
-    const [editRating, setEditRating] = useState(0);
+    const [editReview, setEditReview] = useState(item.review);
+    const [editRating, setEditRating] = useState(item.rating);
 
     useEffect(() => {
         setTimeout(() => {

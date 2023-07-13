@@ -169,14 +169,14 @@ export const BookPage = () => {
 					<div className="col-lg-7 p-0 text-start">
 						<h2 className="filter-link">{actions.capitalizeWords(store.book.title)}</h2>
 						<h4>by {store.book.author}</h4>
-						<div className="d-flex mt-4">
+						{/* <div className="d-flex mt-4">
 							<div className="me-2">
 								<StarRating rating={store.book.average_rating ? store.book.average_rating : 0}
 									editable={store.book.average_rating ? false : true}
 									onRatingChange={setRating}
 								/> </div>
 							{store.book.average_rating ? " (out of " + store.book.ratings_count + " votes)" : "Be the first to rate this book"}
-						</div>
+						</div> */}
 						<div className="row">
 							<h4 className="filter-link fs-5 mt-4">Book Format:</h4>
 							<div className="col-lg-8">

@@ -134,7 +134,7 @@ def update_user():
 
     db.session.commit()
 
-    return jsonify({"message": "User updated"}), 200
+    return jsonify({"message": "User has successfully been updated."}), 200
 
 @api.route('/user/image', methods=['POST'])
 @jwt_required()
@@ -253,7 +253,7 @@ def delete_review():
 
     db.session.delete(review)
     db.session.commit()
-    return jsonify({"review": "review deleted"}), 200
+    return jsonify({"review": "Review was removed successfully"}), 200
 
 
 @api.route("/wishlist", methods=["POST"])
@@ -284,7 +284,7 @@ def create_wishlist():
         else:
             db.session.delete(wishlist)
             db.session.commit()
-            return jsonify({"wishlist": "book deleted from wishlist"}), 200
+            return jsonify({"wishlist": "Book was successfully removed from wishlist"}), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -501,7 +501,7 @@ def add_item_to_cart():
             item.unit =item.unit+1
             item.total_price_per_book = item.unit*price
             db.session.commit()
-            return jsonify({"item": "book was added to cart"}), 200
+            return jsonify({"item": "Book was successfully added to the cart"}), 200
 
         return jsonify({"transaction": new_item.serialize()}), 200
 
@@ -527,7 +527,7 @@ def add_unit():
             item.unit =item.unit+1
             item.total_price_per_book = item.unit*price
             db.session.commit()
-            return jsonify({"item": "book was added to cart"}), 200
+            return jsonify({"item": "Book was added successfully to the cart"}), 200
        
         return jsonify({"transaction": item.serialize()}), 200
            
@@ -551,11 +551,11 @@ def remove_unit():
             item.unit =item.unit-1
             item.total_price_per_book = item.unit*price
             db.session.commit()
-            return jsonify({"item": "book was removed from cart"}), 200
+            return jsonify({"item": "Book was removed successfully from the cart"}), 200
         elif item.unit == 1:
             db.session.delete(item)
             db.session.commit()
-            return jsonify({"item": "Book deleted from cart"}), 200
+            return jsonify({"item": "Book was removed successfully from the cart"}), 200
 
         return jsonify({"transaction": item.serialize()}), 200
            
@@ -587,103 +587,6 @@ def get_book_format():
     return jsonify({"book_formats": serialized_book_formats}), 200 
 
 
-@api.route("/user/payment-method", methods=["POST"])
-@jwt_required()
-def create_payment_method():
-    user_id = get_jwt_identity()
-    data = request.json
-
-
-    required_fields = ["card_type", "card_number", "card_name", "cvc", "expiry_date"]
-    for field in required_fields:
-        if field not in data:
-            return jsonify({"error": f"Missing required field: {field}"}), 400
-
-
-    card_number = data["card_number"]
-    first_four_numbers = card_number[:4]
-    cvc = data["cvc"]
-
-  
-    card_number_hash = bcrypt.hashpw(card_number.encode("utf-8"), bcrypt.gensalt())
-    cvc_hash = bcrypt.hashpw(cvc.encode("utf-8"), bcrypt.gensalt())
-
-
-    new_payment_method = PaymentMethod(
-        user_id=user_id,
-        card_type=data["card_type"],
-        card_number_hash=card_number_hash,
-        card_name=data["card_name"],
-        cvc_hash=cvc_hash,
-        expiry_date=data["expiry_date"],
-        first_four_numbers=first_four_numbers,
-    )
-
-    try:
-        db.session.add(new_payment_method)
-        db.session.commit()
-        return jsonify({"payment_method": first_four_numbers}), 200
-    except Exception as e:
-         return jsonify({"error": str(e)}), 500
-    
-@api.route("/user/payment-method/update", methods=["PUT"])
-@jwt_required()
-def update_payment_method():
-    user_id = get_jwt_identity()
-    data = request.get_json()
-
-    payment_method = PaymentMethod.query.filter_by( user_id=user_id).first()
-
-    if not payment_method:
-        return jsonify({"error": "Payment method not found or unauthorized"}), 404
-
-    if "card_type" in data:
-        payment_method.card_type = data["card_type"]
-    if "card_number" in data:
-
-        payment_method.card_number_hash = bcrypt.hashpw(data["card_number"].encode("utf-8"), bcrypt.gensalt())
-    if "card_name" in data:
-        payment_method.card_name = data["card_name"]
-    if "cvc" in data:
-        payment_method.cvc_hash = bcrypt.hashpw(data["cvc"].encode("utf-8"), bcrypt.gensalt())
-
-    if "expiry_date" in data:
-        payment_method.expiry_date = data["expiry_date"]
-
-    try:
-        db.session.commit()
-        return jsonify({"message": "Payment method updated successfully"}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@api.route("/user/payment-method/remove", methods=["DELETE"])
-@jwt_required()
-def delete_payment_method():
-    user_id = get_jwt_identity()
-    payment_method = PaymentMethod.query.filter_by( user_id=user_id).first()
-    if not payment_method:
-        return jsonify({"error": "No payment method found for this user id"}), 400
-
-    db.session.delete(payment_method)
-    db.session.commit()
-    return jsonify("payment method deleted"), 200
-
-@api.route("/support", methods=['GET'])
-def get_all_support():
-    support = Support.query.all()
-    serialized_support = [support.serialize() for support in support]
-
-    return jsonify(serialized_support), 200  
-
-@api.route("/support/<int:ticket_id>", methods=['GET'])
-def get_one_support_by_id(ticket_id):
-    support = Support.query.get(ticket_id)
-
-    if not support:
-        return jsonify({"error": "No support found for this ticket id"}), 400
-
-    return jsonify(support.serialize()), 200 
-
 @api.route("/support", methods=["POST"])
 @jwt_required()
 def create_support():
@@ -703,5 +606,5 @@ def create_support():
         db.session.add(new_support)
         db.session.commit()
 
-        return jsonify({"support": "created"}), 200
+        return jsonify({"support": "Your message has successfully been submitted"}), 200
     
