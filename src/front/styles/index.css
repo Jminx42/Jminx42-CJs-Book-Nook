@@ -6,6 +6,15 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Merriweather&display=swap');
 
+.modal-open {
+    overflow: hidden;
+}
+
+.navbar-brand img {
+    height: 50px;
+}
+
+
 .custom-button {
     background-color: #cdeeec;
     border-color: #cdeeec;
@@ -15,7 +24,16 @@
 .input-custom:focus {
     box-shadow: 0 0 0 0.25rem #cdeeec;
     border-color: #bce4e2;
+    color: #68B0AB;
 }
+
+.input-custom:active {
+    box-shadow: 0 0 0 0.25rem #cdeeec;
+    border-color: #bce4e2;
+    color: #68B0AB;
+}
+
+
 
 .dark-button {
     background-color: #68B0AB;
@@ -53,8 +71,19 @@
 
 .filter-link {
     color: #0c6e68;
+    text-decoration: none;
 
+}
 
+.filter-link:hover {
+    color: #0c6e68;
+    text-decoration: underline;
+
+}
+
+.preview {
+    padding: 16px 20px;
+    margin-bottom: 0px
 }
 
 .custom-bg-img {
@@ -207,6 +236,7 @@
 }
 
 /* Increase the size of the dots*/
+
 .slick-dots li button:before {
     font-size: 30px !important;
 }
@@ -223,7 +253,7 @@
 
 .legal-title {
     color: #68B0AB;
-    /* font-family: 'Merriweather', serif; */
+    font-family: 'Merriweather', serif;
 }
 
 .legal-text {
@@ -234,7 +264,22 @@
     font-size: 12px;
 }
 
-.img-responsive {
+.sidenav-open {
+    width: 250px;
+}
+
+.sidenav {
+    width: 0px;
+}
+
+.img-responsive,
+.profile-responsive {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+}
+
+.checkout-img {
     width: auto;
     max-width: 100%;
     height: auto;
@@ -242,13 +287,15 @@
 
 /* Media Queries!!! Define different styles for different screen sizes */
 @media (max-width: 414px) {
-    .img-responsive {
-        max-height: 100px;
 
+    .img-responsive,
+    .profile-responsive {
+        max-height: 100px;
     }
 }
 
-/* @media (max-width: 570px) {
+/*  If we wanted to show the logo on the landing page on mobile view
+@media (max-width: 570px) {
     .div-landing {
         flex-direction: column-reverse;
 
@@ -259,10 +306,22 @@
     font-size: calc(1.525rem + 3.3vw);
 }
 
+@media (max-width: 375px) {
+    .checkout-img {
+        width: 100px !important;
+    }
+}
+
 @media (max-width: 582px) {
     .landing-text {
         font-size: 2.4rem;
     }
+
+    .navbar-brand img {
+        height: 35px;
+    }
+
+
 }
 
 @media (min-width: 583px) and (max-width: 659px) {
@@ -272,7 +331,12 @@
 }
 
 @media (min-width: 415px) and (max-width: 768px) {
-    .img-responsive {
+    .navbar-brand img {
+        height: 35px;
+    }
+
+    .img-responsive,
+    .profile-responsive {
         max-height: 200px;
 
     }
@@ -281,6 +345,13 @@
 @media (min-width: 769px) and (max-width: 1024px) {
     .img-responsive {
         max-height: 300px;
+
+    }
+}
+
+@media (min-width: 769px) {
+    .profile-responsive {
+        max-height: 250px;
 
     }
 }

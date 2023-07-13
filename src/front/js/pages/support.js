@@ -1,6 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
-import PropTypes from "prop-types";
-import { Link, useParams } from "react-router-dom";
+import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import { Navbar } from "../component/navbar";
 import { Footer } from "../component/footer";
@@ -13,6 +11,12 @@ export const Support = () => {
     const [alert, setAlert] = useState("");
     const [error, setError] = useState("");
 
+    useEffect(() => {
+        setTimeout(() => {
+            actions.clearError();
+            actions.clearAlert();
+        }, 3000);
+    }, []);
     const submitSupport = async () => {
         if (formData.message.trim() === "") {
             setError("Please enter a message");
@@ -165,7 +169,7 @@ export const Support = () => {
                         value={formData.message || ""}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     />
-                    <button className="btn custom-button text-white mt-3 mb-4" type="submit">
+                    <button className="btn custom-button mt-3 mb-4" type="submit">
                         Submit
                     </button>
 

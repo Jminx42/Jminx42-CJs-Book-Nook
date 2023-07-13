@@ -1,20 +1,21 @@
 import React, { useContext, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Navbar } from "../component/navbar";
-import { GoogleBooksViewer } from "../component/googleBooksViewer";
 import { Footer } from "../component/footer";
-import "../../styles/index.css"
 
-export const GooglePreview = () => {
-    const params = useParams();
+
+
+export const Cancelled = () => {
     const { store, actions } = useContext(Context);
+
     useEffect(() => {
         setTimeout(() => {
             actions.clearError();
             actions.clearAlert();
         }, 3000);
     }, []);
+
     return (
         <div>
             <Navbar />
@@ -50,18 +51,24 @@ export const GooglePreview = () => {
                     null
 
             }
+            <div className="container mt-5 mx-auto">
+                <h1 className='fs-1 mt-5 fw-bold legal-title my-3 text-center'>Your order was cancelled.</h1>
 
-            <div className="container mt-4">
-                <h1 className="text-center">Where Magic Happens!</h1>
-                <div className="text-center mt-3">
-                    <button className="btn custom-button" onClick={() => window.location.reload(true)}>Want to see some magic! Click here to reload the page!</button>
-                </div>
+                <p className="text-center my-5">Keep Exploring and Find New Books!</p>
+                <img src="https://www.liveabout.com/thmb/A17WsoyH1xnIsJnT15yOL60-OBg=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/bookmemecover-5c520a8ec9e77c0001d764a1.png" className="img-fluid" alt="book meme" />
 
-                <div className="row d-flex justify-content-center">
-                    <GoogleBooksViewer isbn={params.theisbn} />
-                </div>
+                <Link to="/explore">
+                    <button className="btn custom-button text-center mt-5 mb-5"><i className="fa-solid fa-arrow-left">&nbsp; Go Back</i></button>
+                </Link>
             </div>
+
+
+
+
+
+
             <Footer />
         </div>
+
     );
 }
