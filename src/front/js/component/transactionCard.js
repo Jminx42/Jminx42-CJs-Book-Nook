@@ -39,10 +39,10 @@ export const TransactionCard = ({ item }) => {
             >
                 <div className="card-body">
                     <p className="card-text text-start mb-1">
-                        Date Created: {item.transaction_created}
+                        <strong>Date Created:</strong> {item.transaction_created}
                     </p>
                     <p className="card-text text-start">
-                        Total Order Price: {parseFloat(item.total_price.toFixed(2))}€
+                        <strong>Total Order Price:</strong> {parseFloat(item.total_price.toFixed(2))}€
                     </p>
                     <table className="table">
                         <thead>

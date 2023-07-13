@@ -38,7 +38,7 @@ export const Review = ({ item }) => {
                             style={{ width: '200px' }} />
                     </Link>
                 </div>
-                <div className="col-sm-6 col-md-9 col-lg-9">
+                <div className="col-sm-8 col-md-9 col-lg-9">
                     <h4 className="card-title">{actions.capitalizeWords(item.book_id.title)}</h4>
                     <h5 className="card-subtitle mb-2 text-muted">by {item.book_id.author}</h5>
                     <div className="d-flex justify-content-between align-items-center mb-2">
@@ -74,18 +74,21 @@ export const Review = ({ item }) => {
                         )}
                     </div>
                     <div className="d-flex align-items-center"> {/* Wrap label and input in a flex container */}
-                        <label className="text-start mb-1">Review:&nbsp;</label>
+
                         {!editClicked ? (
-                            <p className="mb-1">{item.review}</p>
+                            <p className="mb-1">Review: {item.review}</p>
                         ) : (
-                            <textarea
-                                className="form-control p-0 mb-1"
-                                id="review"
-                                aria-describedby="review"
-                                rows="5"
-                                defaultValue={editReview.review}
-                                onChange={(e) => setEditReview({ ...editReview, review: e.target.value })}
-                            />
+                            <>
+                                <label className="text-start mb-1">Review:&nbsp;</label>
+                                <textarea
+                                    className="form-control p-0 mb-1"
+                                    id="review"
+                                    aria-describedby="review"
+                                    rows="5"
+                                    defaultValue={editReview.review}
+                                    onChange={(e) => setEditReview({ ...editReview, review: e.target.value })}
+                                />
+                            </>
                         )}
                     </div>
                 </div>

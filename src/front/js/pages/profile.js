@@ -234,7 +234,7 @@ export const Profile = () => {
                         <div>
                             <div className="container mt-3">
                                 <div className="row d-flex">
-                                    <div className="col-9 col-sm-5 col-md-5 col-lg-4 col-xl-4">
+                                    <div className="col-9 col-sm-5 col-md-5 col-lg-4 col-xl-3">
                                         {!editClicked ? (
                                             !user.profile_picture
                                                 ?
@@ -256,16 +256,14 @@ export const Profile = () => {
                                             </div>
                                         )}
                                     </div>
-                                    <div className="col-12 col-sm-7 col-md-7 col-lg-5">
-                                        <div className="d-flex align-items-center my-2">
-                                            <label htmlFor="full_name" className="form-floating fw-bold custom-text my-auto">Email:</label>
-                                            <p className="ms-2 my-auto">{user.email}</p>
+                                    <div className="col-12 col-sm-7 col-md-7 col-lg-7 col-xl-6">
+                                        <div className="d-flex align-items-center my-2 ">
+                                            <p className="my-auto"><strong>Email: </strong>{user.email}</p>
                                         </div>
 
                                         {!editClicked ? (
                                             <div className="d-flex align-items-center my-2">
-                                                <label htmlFor="full_name" className="form-floating fw-bold custom-text my-auto">Name:</label>
-                                                <p className="ms-2 my-auto">{user.full_name}</p>
+                                                <p className="my-auto"><strong>Name: </strong>{user.full_name}</p>
                                             </div>
                                         ) : (
                                             <div className="form-floating">
@@ -285,8 +283,7 @@ export const Profile = () => {
 
                                         {!editClicked ? (
                                             <div className="d-flex align-items-center my-2 my-auto">
-                                                <label htmlFor="password" className="form-floating fw-bold custom-text">Password:</label>
-                                                <p className="ms-2 my-auto">{user.password}***</p>
+                                                <p className="my-auto"><strong>Password: </strong>{user.password}***</p>
                                             </div>
                                         ) : (
                                             <div className="form-floating">
@@ -304,8 +301,7 @@ export const Profile = () => {
 
                                         {!editClicked ? (
                                             <div className="d-flex align-items-center my-2">
-                                                <label htmlFor="shipping" className="form-floating fw-bold custom-text my-auto">Shipping Address:</label>
-                                                <p className="ms-2 my-auto">{user.address}</p>
+                                                <p className="my-auto"><strong>Shipping Address: </strong>{user.address}</p>
                                             </div>
                                         ) : (
                                             <div className="form-floating">
@@ -323,8 +319,7 @@ export const Profile = () => {
 
                                         {!editClicked ? (
                                             <div className="d-flex align-items-center my-2">
-                                                <label htmlFor="billing_address" className="form-floating fw-bold custom-text my-auto">Billing Address:</label>
-                                                <p className="ms-2 my-auto">{user.billing_address}</p>
+                                                <p className="my-auto"><strong>Billing Address: </strong>{user.billing_address}</p>
                                             </div>
                                         ) : (
                                             <div className="form-floating">

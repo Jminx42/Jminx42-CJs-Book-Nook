@@ -112,7 +112,7 @@ export const CheckoutCard = ({ item }) => {
                         <img src={item.book_id.book_cover} className="img-responsive" alt="..." />
                     </Link>
                 </div>
-                <div className="col-md-3 col-lg-4">
+                <div className="col-md-5 col-lg-4">
                     <h4 className="text-start">{actions.capitalizeWords(item.book_id.title)}</h4>
                     <p className="text-start mb-0">{item.book_format_id.book_format}</p>
                 </div>

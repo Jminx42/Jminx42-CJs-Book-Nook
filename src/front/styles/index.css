@@ -235,6 +235,10 @@
     color: #68B0AB;
 }
 
+.dark-text {
+    color: #0c6e68;
+}
+
 /* Increase the size of the dots*/
 
 .slick-dots li button:before {

@@ -181,7 +181,7 @@ export const BookPage = () => {
 
 						</div>
 						<div className="row ">
-							<h4 className="filter-link fs-5 mt-2 mt-md-4 mt-lg-4 mb-2 mb-md-3 mb-lg-3">Book Format:</h4>
+							<h4 className="dark-text fs-5 mt-2 mt-md-4 mt-lg-4 mb-2 mb-md-3 mb-lg-3">Book Format:</h4>
 							<div className="col-6 col-sm-6 col-md-6 col-lg-7 d-flex align-items-center">
 								<select className="form-select input-custom " aria-label="Default select example" defaultValue="" onChange={(e) => setFormat(e.target.value)}>
 
@@ -325,7 +325,7 @@ export const BookPage = () => {
 												onChange={(e) => setReview({ ...review, review: e.target.value })}
 											/>
 										</div>
-										<button className="btn custom-button mt-2" type="submit">
+										<button className="btn custom-button mt-2 mb-3" type="submit">
 											Submit
 										</button>
 									</form>

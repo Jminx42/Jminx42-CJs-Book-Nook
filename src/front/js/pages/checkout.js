@@ -208,12 +208,7 @@ export const Checkout = () => {
                                                 :
                                                 store.user.billing_address
                                         }
-                                        <div className="form-check">
-                                            <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked={checked} onChange={handleBillingAddressChange} />
-                                            <label className="form-check-label" htmlFor="flexCheckDefault">
-                                                Is the billing address the same as the shipping address?
-                                            </label>
-                                        </div>
+
                                     </>
                                 ) : (
                                     <input
@@ -272,18 +267,12 @@ export const Checkout = () => {
                             }))}
 
                             <div className="row d-flex justify-content-between align-items-center ps-0 my-2">
-                                <div className="col-4 col-sm-4 col-md-2 col-lg-2 pe-0">
+                                <div className="col-9 col-sm-6 col-md-4 col-lg-4 pe-0 d-flex align-items-center">
                                     <h5 className="text-center feature-title py-2 m-0"> Order Total:</h5>
+                                    <p className="ms-1 mb-0">{parseFloat(total().toFixed(2))}€</p>
                                 </div>
-                                <div className="col-1 col-md-3 col-lg-4">
-                                </div>
-                                <div className="col-1 col-md-2 col-lg-2 d-flex h-25 align-items-center">
-                                </div>
-                                <div className="col-3 col-sm-2 col-md-2 col-lg-1 text-center">
-                                    {parseFloat(total().toFixed(2))}€
-                                </div>
-                                <div className="col-3 col-sm-1 col-md-1 col-lg-1 d-flex text-center justify-content-end p-0 ">
-                                    <button className="btn custom-button d-flex " onClick={createCheckoutSession}><i className="fa-solid">PAY &nbsp;</i><i className="fa-solid fa-arrow-right"></i></button>
+                                <div className="col-3 col-sm-2 col-md-2 col-lg-3 d-flex text-center justify-content-end p-0 ">
+                                    <button className="btn custom-button d-flex py-2" onClick={createCheckoutSession}><i className="fa-solid">PAY &nbsp;</i><i className="fa-solid fa-arrow-right"></i></button>
                                 </div>
 
                             </div>

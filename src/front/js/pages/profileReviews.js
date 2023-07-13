@@ -193,7 +193,7 @@ export const ProfileReviews = () => {
                 <div className="flex-grow-1 m-0">
 
                     <div className={`tab-content ${isMobile ? 'mt-0' : 'profile-container'}`} >
-                        <div className="container mt-4">
+                        <div className="container-fluid mt-4">
                             <div className="row d-flex g-3">
                                 {store.user.review.length === 0 ? (
                                     <>
@@ -205,7 +205,7 @@ export const ProfileReviews = () => {
                                     </>
                                 ) : (
 
-                                    <div className="col-10 m-1">
+                                    <div className="col-12 col-sm-12 col-md-12 col-lg-10 m-1">
                                         {
                                             store.user.review.sort((a, b) => a.id - b.id).map((review) => {
                                                 return <Review key={review.id} item={review} />

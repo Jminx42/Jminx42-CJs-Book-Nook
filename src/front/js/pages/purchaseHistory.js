@@ -194,16 +194,18 @@ export const PurchaseHistory = () => {
                 <div className="flex-grow-1 m-0">
 
                     <div className={`tab-content ${isMobile ? 'mt-0' : 'profile-container'}`} >
-                        <div className="container mt-4">
-                            <div className="container mt-4">
+                        <div className="container-fluid mt-4">
 
-                                <div className="row d-flex mx-1 gap-2">
+
+                            <div className="row d-flex mx-1 gap-2">
+                                <div className="col-12 col-sm-12 col-md-12 col-lg-10 col-xl-9">
                                     {store.user.transaction && store.user.transaction.map((transaction) => {
                                         return <TransactionCard key={transaction.id} item={transaction} />
                                     })}
                                 </div>
-
                             </div>
+
+
                         </div>
                     </div>
                 </div>
