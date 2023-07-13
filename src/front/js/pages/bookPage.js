@@ -149,10 +149,10 @@ export const BookPage = () => {
 
 			}
 
-			<div className="card container mt-4 border-0">
-				<div className="row mt-3 text-center">
-					<div className="col-lg-4 d-flex justify-content-end">
-						<img src={store.book.book_cover == null || store.book.book_cover == "" ? store.book.book_cover_b : store.book.book_cover} className="img-fluid" alt="Book cover" />
+			<div className="container-fluid mt-4 border-0">
+				<div className="row mt-3 text-center d-flex justify-content-center">
+					<div className="col-8 col-sm-4 col-md-3 col-lg-3 d-flex justify-content-end">
+						<img src={store.book.book_cover == null || store.book.book_cover == "" ? store.book.book_cover_b : store.book.book_cover} className="img-fluid mb-2" alt="Book cover" />
 						<button
 							type="button"
 							className="btn position-absolute top-0 start-0 bg-blue border-0 text-white dark-button rounded-circle mt-2 ms-4"
@@ -166,28 +166,32 @@ export const BookPage = () => {
 							)}
 						</button>
 					</div>
-					<div className="col-lg-7 p-0 text-start">
+					<div className="col-11 col-sm-8 col-md-7 col-lg-6 p-0 text-start">
 						<h2 className="filter-link">{actions.capitalizeWords(store.book.title)}</h2>
 						<h4>by {store.book.author}</h4>
-						{/* <div className="d-flex mt-4">
+
+						<div className="d-flex mt-2 mt-md-4 mt-lg-4">
+
 							<div className="me-2">
 								<StarRating rating={store.book.average_rating ? store.book.average_rating : 0}
 									editable={store.book.average_rating ? false : true}
 									onRatingChange={setRating}
 								/> </div>
 							{store.book.average_rating ? " (out of " + store.book.ratings_count + " votes)" : "Be the first to rate this book"}
-						</div> */}
-						<div className="row">
-							<h4 className="filter-link fs-5 mt-4">Book Format:</h4>
-							<div className="col-lg-8">
-								<select className="form-select input-custom mt-1" aria-label="Default select example" defaultValue="" onChange={(e) => setFormat(e.target.value)}>
+
+						</div>
+						<div className="row ">
+							<h4 className="filter-link fs-5 mt-2 mt-md-4 mt-lg-4 mb-2 mb-md-3 mb-lg-3">Book Format:</h4>
+							<div className="col-6 col-sm-6 col-md-6 col-lg-7 d-flex align-items-center">
+								<select className="form-select input-custom " aria-label="Default select example" defaultValue="" onChange={(e) => setFormat(e.target.value)}>
+
 									<option value="" disabled>Select your format</option>
 									{store.bookFormats.map((format) => (
 										<option key={format.id} value={format.id}>{format.book_format} - {format.book_price}€ </option>
 									))}
 								</select>
 							</div>
-							<div className="col-lg-2 g-0">
+							<div className="col-6 col-sm-6 col-md-6 col-lg-5 g-0 d-flex align-items-center">
 								{
 									sessionStorage.getItem("token") ?
 										!format ?
@@ -209,13 +213,14 @@ export const BookPage = () => {
 												<i className="fas fa-shopping-cart"></i>
 											</button>
 										:
-										<div>
+										<div className="">
 											<p className="p-0 m-0">
+
 												Want to add to your cart?&nbsp;
 												<Link to="/login">
-													<sup>
-														<button type="button" className="btn link-like p-0">Login</button>
-													</sup>
+
+													<button type="button" className="btn px-0 pt-0 link-like">Login</button>
+
 												</Link>
 												&nbsp;first!
 											</p>
@@ -227,8 +232,8 @@ export const BookPage = () => {
 						</div>
 					</div>
 				</div>
-				<div className="row text-start mt-3">
-					<div className="">
+				<div className="row text-start mt-3 d-flex justify-content-center">
+					<div className="col-12 col-sm-12 col-md-10 col-lg-9">
 						<h2 className="accordion-header">
 							<button
 								className="accordion-button collapsed input-custom filter-link fs-5 fw-bold"
@@ -251,95 +256,94 @@ export const BookPage = () => {
 								{params.theisbn ? <p className="mb-1"><strong>ISBN:</strong> {params.theisbn}</p> : null}
 							</div>
 						</div>
+						{
+							isGooglePreview ?
+								<Link to={`/googlePreview/${params.theisbn}`} className="filter-link">
+									<p className="fs-5 filter-link fw-bold preview">Click here to preview the book</p>
+								</Link>
+								:
+								null
+						}
+						<hr></hr>
 					</div>
-					{
-						isGooglePreview ?
-							<Link to={`/googlePreview/${params.theisbn}`} className="filter-link">
-								<p className="fs-5 filter-link fw-bold preview">Click here to preview the book</p>
-							</Link>
-							:
-							null
-					}
-
-
 				</div>
-
 			</div>
-			<div className="card container mt-0 border-0"><hr></hr>
+			<div className="container-fluid mt-0 border-0">
 				{store.nytReview && Object.keys(store.nytReview).length > 0 ? (
-					<div className="row my-0">
-
-						<h4 className="background-custom p-3 rounded">New York Times' Reviews</h4>
-						<div className="card-body border">
-							<h5 className="card-title">
-								{store.nytReview.byline
-									.split(' ')
-									.map((name) => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase())
-									.join(' ')}
-							</h5>
-							<h6 className="card-subtitle mb-2 text-muted">Reviewed in {store.nytReview.publication_dt}</h6>
-							<p className="card-text">Excerpt: {store.nytReview.summary}</p>
-							<p className="card-text">
-								Review Link: <a href={store.nytReview.url} target="_blank" rel="noopener noreferrer" className="link-like">Click here</a>
-							</p>
+					<div className="row my-0 d-flex justify-content-center">
+						<div className="col-12 col-sm-12 col-md-9 col-lg-9">
+							<h4 className="background-custom p-3 rounded">New York Times' Reviews</h4>
+							<div className="card-body border">
+								<h5 className="card-title">
+									{store.nytReview.byline
+										.split(' ')
+										.map((name) => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase())
+										.join(' ')}
+								</h5>
+								<h6 className="card-subtitle mb-2 text-muted">Reviewed in {store.nytReview.publication_dt}</h6>
+								<p className="card-text">Excerpt: {store.nytReview.summary}</p>
+								<p className="card-text">
+									Review Link: <a href={store.nytReview.url} target="_blank" rel="noopener noreferrer" className="link-like">Click here</a>
+								</p>
+							</div>
 						</div>
 					</div>
 				) : null}
-				<div className="row my-0">
-
-					<h4 className="background-custom p-3 rounded">Reviews & Ratings</h4>
-					{store.book.reviews.map((review) => (
-						<div className="card mb-5" key={review.id}>
-							<ReviewBook item={review} />
-						</div>
-					))}
-
+				<div className="row my-0 d-flex justify-content-center">
+					<div className="col-12 col-sm-12 col-md-10 col-lg-9">
+						<h4 className="background-custom p-3 rounded">Reviews & Ratings</h4>
+						{store.book.reviews.map((review) => (
+							<div className="card mb-5" key={review.id}>
+								<ReviewBook item={review} />
+							</div>
+						))}
+					</div>
 				</div>
 				{!store.book.reviews.find((item) => item.user_id === store.user.id) && (
-					<div className="row mb-5 mt-2 border p-2">
-						<h4>Submit your review</h4>
-						<p className="fst-italic">Submit either a rating, a review or both!</p>
-						{sessionStorage.getItem('token') ? (
-							<div>
-								<form onSubmit={handleSubmit}>
-									<div className="form-group">
-										<label htmlFor="rating">Rating</label>
-										<StarRating
-											rating={rating}
-											editable={true}
-											onRatingChange={setRating}
-										/>
-									</div>
-									<div className="form-group m-1">
-										<label htmlFor="review">Review</label>
-										<textarea
-											className="form-control"
-											id="review"
-											rows="5"
-											value={review.review || ''}
-											onChange={(e) => setReview({ ...review, review: e.target.value })}
-										/>
-									</div>
-									<button className="btn custom-button mt-2" type="submit">
-										Submit
-									</button>
-								</form>
-							</div>
-						) : (
-							<div>
-								<p>
-									Want to submit your review?&nbsp;
-									<Link to="/login">
-										<sup>
-											<button type="button" className="btn link-like p-0">
+					<div className="row mb-5 mt-2 p-2 d-flex justify-content-center">
+						<div className="col-12 col-sm-12 col-md-10 col-lg-9 border">
+							<h4 className="mt-3">Submit your review</h4>
+							<p className="fst-italic">Submit either a rating, a review or both!</p>
+							{sessionStorage.getItem('token') ? (
+								<div>
+									<form onSubmit={handleSubmit}>
+										<div className="form-group">
+											<label htmlFor="rating">Rating</label>
+											<StarRating
+												rating={rating}
+												editable={true}
+												onRatingChange={setRating}
+											/>
+										</div>
+										<div className="form-group m-1">
+											<label htmlFor="review">Review</label>
+											<textarea
+												className="form-control"
+												id="review"
+												rows="5"
+												value={review.review || ''}
+												onChange={(e) => setReview({ ...review, review: e.target.value })}
+											/>
+										</div>
+										<button className="btn custom-button mt-2" type="submit">
+											Submit
+										</button>
+									</form>
+								</div>
+							) : (
+								<div>
+									<p>
+										Want to submit your review?&nbsp;
+										<Link to="/login">
+											<button type="button" className="btn link-like px-0 pt-0">
 												Login
 											</button>
-										</sup>
-									</Link>
-									&nbsp;first!
-								</p>
-							</div>
-						)}
+										</Link>
+										&nbsp;first!
+									</p>
+								</div>
+							)}
+						</div>
 					</div>
 				)}
 			</div>
