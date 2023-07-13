@@ -104,7 +104,7 @@ export const CheckoutCard = ({ item }) => {
         <div className="container">
 
             <div className="row mb-2 d-flex justify-content-between" >
-                <div className="col-md-2 col-lg-2">
+                <div className="col-6 col-sm-4 col-md-2 col-lg-2 flex-shrink-1">
                     <Link to={`/book/${item.book_id.isbn}`}>
                         <img src={item.book_id.book_cover} className="card-img-top" alt="..." />
                     </Link>

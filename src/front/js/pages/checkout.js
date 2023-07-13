@@ -18,26 +18,20 @@ export const Checkout = () => {
     const navigate = useNavigate();
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-    const isMobile = window.innerWidth <= 582;
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
-        if (sessionStorage.getItem("token")) {
-            actions.validate_user()
-        } else {
-            navigate("/")
+        const handleResize = () => {
+            setIsMobile(window.matchMedia("(max-width: 767px)").matches);
         };
 
-        const handleResize = () => {
-            setWindowWidth(window.innerWidth);
-        };
+        handleResize(); // Initial check on component mount
 
         window.addEventListener('resize', handleResize);
 
         return () => {
             window.removeEventListener('resize', handleResize);
         };
-
-        setActiveTab(params)
     }, []);
 
     const handleSave = async () => {
@@ -149,7 +143,7 @@ export const Checkout = () => {
                     <>
                         <div className="row mb-2">
                             <h5 className="text-start feature-title">1. Shipping Address:</h5>
-                            <div className="col-md-10 col-lg-9">
+                            <div className="col-11 col-md-10 col-lg-9">
 
 
                                 {!editAddress ? (
@@ -191,7 +185,7 @@ export const Checkout = () => {
                         </div>
                         <div className="row">
                             <h5 className="text-start feature-title">2. Billing Address:</h5>
-                            <div className=" col-md-10 col-lg-9">
+                            <div className="col-11 col-md-10 col-lg-9">
 
                                 {!editBilling ? (
                                     <>
@@ -264,17 +258,17 @@ export const Checkout = () => {
                             }))}
 
                             <div className="row d-flex justify-content-between ps-0 my-2">
-                                <div className="col-md-2 col-lg-2">
+                                <div className="col-sm-4 col-md-2 col-lg-2">
                                     <h5 className="text-center feature-title py-2"> Order Total:</h5>
                                 </div>
-                                <div className="col-md-3 col-lg-4">
+                                <div className="col-sm-0 col-md-3 col-lg-4">
                                 </div>
-                                <div className="col-md-2 col-lg-2 d-flex h-25 align-items-center">
+                                <div className="col-sm-0 col-md-2 col-lg-2 d-flex h-25 align-items-center">
                                 </div>
-                                <div className="col-md-2 col-lg-1 text-center">
+                                <div className="col-sm-2 col-md-2 col-lg-1 text-center">
                                     {parseFloat(total().toFixed(2))}€
                                 </div>
-                                <div className="col-md-1 col-lg-1 d-flex  justify-content-end p-0">
+                                <div className="col-sm-1 col-md-1 col-lg-1 d-flex  justify-content-end p-0">
                                     <button className="btn custom-button text-center h-75" onClick={createCheckoutSession}><i className="fa-solid">PAY &nbsp;</i><i className="fa-solid fa-arrow-right"></i></button>
                                 </div>
 

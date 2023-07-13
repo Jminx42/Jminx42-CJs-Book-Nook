@@ -19,10 +19,7 @@ export const BookPage = () => {
 	const [error, setError] = useState("");
 	const [isGooglePreview, setIsGooglePreview] = useState(false);
 	const [rating, setRating] = useState(0)
-	const [editReview, setEditReview] = useState({
-		rating: rating,
-		review: review.review
-	});
+
 
 
 	useEffect(() => {
@@ -71,9 +68,10 @@ export const BookPage = () => {
 			// console.log(reviewData);
 			actions.getOneBook(params.theisbn)
 			setReview({
-				rating: review.rating,
-				review: review.review
+				rating: 0,
+				review: "",
 			});
+			setRating(0);
 
 
 		} else {
@@ -168,7 +166,7 @@ export const BookPage = () => {
 							<div className="col-lg-2 g-0">
 								{
 									sessionStorage.getItem("token") ?
-										<button type="button" disabled={!format} className="btn me-2 custom-button" onClick={() => actions.postCheckout(format)}>
+										<button type="button" disabled={!format} className="btn me-2 mt-2 custom-button" onClick={() => actions.postCheckout(format)}>
 											<i className="fas fa-shopping-cart"></i>
 										</button>
 										:
@@ -236,7 +234,7 @@ export const BookPage = () => {
 
 
 			</div>
-			<div className="container m-2">
+			<div className="container">
 
 				{store.nytReview && Object.keys(store.nytReview).length > 0 ? (
 					<div className="row my-3">

@@ -49,7 +49,7 @@ export const Explore = () => {
 					null
 
 			}
-			<div className="container-fluid text-center mt-5">
+			<div className="container text-center mt-5">
 
 				<div className="row">
 					{store.books && store.books.length !== 0 ? (

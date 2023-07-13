@@ -11,8 +11,8 @@ export const ReviewBook = ({ item }) => {
     const params = useParams();
     const { store, actions } = useContext(Context);
     const [editClicked, setEditClicked] = useState(false);
-    const [editReview, setEditReview] = useState(item.review);
-    const [editRating, setEditRating] = useState(item.rating);
+    const [editReview, setEditReview] = useState("");
+    const [editRating, setEditRating] = useState(0);
 
     useEffect(() => {
         setTimeout(() => {
@@ -31,7 +31,12 @@ export const ReviewBook = ({ item }) => {
                             <button className="btn custom-button me-2" onClick={() => setEditClicked(true)}>
                                 <i className="fa-solid fa-pen-to-square"></i>
                             </button>
-                            <button className="btn custom-button" onClick={() => actions.removeFromReviews(item.id)}>
+                            <button className="btn custom-button" onClick={async () => {
+                                await actions.removeFromReviews(item.id)
+                                await actions.getOneBook(params.theisbn)
+                                setEditReview("")
+                                setEditRating(0)
+                            }}>
                                 <i className="fa-solid fa-trash"></i>
                             </button>
                         </>
@@ -52,7 +57,7 @@ export const ReviewBook = ({ item }) => {
             <h6 className="card-subtitle mb-2 text-muted">Posted on {item.created_at}</h6>
 
             {!editClicked ? (
-                <StarRating rating={editRating} editable={false} />
+                <StarRating rating={item.rating} editable={false} />
             ) : (
                 <>
                     <label className="text-start mb-1">Rating:&nbsp; </label>
