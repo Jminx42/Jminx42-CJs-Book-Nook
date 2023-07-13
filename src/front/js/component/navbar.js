@@ -24,6 +24,10 @@ export const Navbar = () => {
 		document.getElementsByTagName('body')[0].style = ''
 	}
 
+	const handleClick = (e) => {
+		e.target.setAttribute('data-bs-dismiss', 'offcanvas')
+		removeStyles();
+	}
 
 	return (
 		<nav className="navbar navbar-expand-md navbar-expand-lg background-custom px-md-5 px-lg-5 py-0">
@@ -106,14 +110,13 @@ export const Navbar = () => {
 													showOffCanvas ? (
 														<>
 															<li className="nav-item mb-2" >
-
-																<div onClick={() => { navigate('/explore'); setShowOffCanvas(false); removeStyles(); }} >
-																	<button className="btn custom-button"><i className="bi bi-book-fill" ></i></button>
+																<Link to="/explore" onClick={(e) => { handleClick(e) }} >
+																	<button className="btn custom-button "><i className="bi bi-book-fill"></i></button>
 																	<label className="ms-4 filter-link">Explore</label>
-																</div>
+																</Link>
 															</li>
 															<li className="nav-item mb-2" >
-																<Link to="/login" onClick={() => { setShowOffCanvas(false); removeStyles(); }} >
+																<Link to="/login" onClick={(e) => { handleClick(e) }} >
 																	<button className="btn btn-secondary custom-button "><i className="fa-solid fa-right-to-bracket"></i></button>
 																	<label className="ms-4 filter-link">Login</label>
 																</Link>
@@ -122,12 +125,13 @@ export const Navbar = () => {
 													) : (
 														<>
 															<li className="nav-item mb-2 me-2">
-																<Link to="/explore" onClick={() => { setShowOffCanvas(false); removeStyles(); }}>
-																	<button className="btn custom-button"><i className="bi bi-book-fill"></i></button>
+																<Link to="/explore" onClick={(e) => { handleClick(e) }} >
+																	<button className="btn custom-button "><i className="bi bi-book-fill"></i></button>
+
 																</Link>
 															</li>
 															<li className="nav-item mb-2 me-2">
-																<Link to="/login" onClick={() => { setShowOffCanvas(false); removeStyles(); }}>
+																<Link to="/login" onClick={(e) => { handleClick(e) }}>
 																	<button className="btn custom-button "><i className="fa-solid fa-right-to-bracket"></i></button>
 																</Link>
 															</li>
@@ -143,14 +147,14 @@ export const Navbar = () => {
 													showOffCanvas ? (
 														<>
 															<li className="nav-item mb-2">
-																<Link to="/explore" onClick={() => { setShowOffCanvas(false); removeStyles(); }}>
-																	<button className="btn custom-button"><i className="bi bi-book-fill"></i></button>
+																<Link to="/explore" onClick={(e) => { handleClick(e) }} >
+																	<button className="btn custom-button "><i className="bi bi-book-fill"></i></button>
 																	<label className="ms-4 filter-link">Explore</label>
 																</Link>
 
 															</li>
 															<li className="nav-item mb-2">
-																<Link to="/checkout" onClick={() => { setShowOffCanvas(false); removeStyles(); }}>
+																<Link to="/checkout" onClick={(e) => { handleClick(e) }}>
 																	<button type="button" className="btn btn-secondary custom-button position-relative">
 																		<i className="fas fa-shopping-cart"></i>
 																		<span className="position-absolute top-0 start-100 translate-middle badge rounded-pill background-dark">
@@ -162,13 +166,13 @@ export const Navbar = () => {
 
 															</li>
 															<li className="nav-item mb-2">
-																<Link to="/wishlist" onClick={() => { setShowOffCanvas(false); removeStyles(); }} >
+																<Link to="/wishlist" onClick={(e) => { handleClick(e) }} >
 																	<button className="btn custom-button"><i className="fa-solid fa-heart"></i></button>
 																	<label className="ms-4 filter-link">Wishlist</label>
 																</Link>
 															</li>
 															<li className="nav-item mb-2">
-																<Link to="/profile" onClick={() => { setShowOffCanvas(false); removeStyles(); }}>
+																<Link to="/profile" onClick={(e) => { handleClick(e) }}>
 																	<button className="btn custom-button"><i className="fa-solid fa-user"></i></button>
 																	<label className="ms-4 filter-link">Profile</label>
 																</Link>
@@ -189,12 +193,13 @@ export const Navbar = () => {
 													) : (
 														<>
 															<li className="nav-item mb-2 me-2">
-																<Link to="/explore" onClick={() => { setShowOffCanvas(false); removeStyles(); }}>
-																	<button className="btn custom-button"><i className="bi bi-book-fill"></i></button>
+																<Link to="/explore" onClick={(e) => { handleClick(e) }} >
+																	<button className="btn custom-button "><i className="bi bi-book-fill"></i></button>
+
 																</Link>
 															</li>
 															<li className="nav-item mb-2 me-2">
-																<Link to="/checkout" onClick={() => { setShowOffCanvas(false); removeStyles(); }}>
+																<Link to="/checkout" onClick={(e) => { handleClick(e) }}>
 																	<button type="button" className="btn btn-secondary custom-button position-relative">
 																		<i className="fas fa-shopping-cart"></i>
 																		<span className="position-absolute top-0 start-100 translate-middle badge rounded-pill background-dark">
@@ -206,7 +211,7 @@ export const Navbar = () => {
 																</Link>
 															</li>
 															<li className="nav-item mb-2 me-2">
-																<Link to="/wishlist" onClick={() => { setShowOffCanvas(false); removeStyles(); }}>
+																<Link to="/wishlist" onClick={(e) => { handleClick(e) }}>
 
 																	<button className="btn custom-button"><i className="fa-solid fa-heart"></i></button>
 																</Link>
@@ -273,9 +278,9 @@ export const Navbar = () => {
 													showOffCanvas ? (
 														<>
 															<li className="nav-item mb-2" >
-																<Link to="/explore" onClick={() => setShowOffCanvas(false)} >
-																	<button className="btn custom-button"><i className="bi bi-book-fill"></i></button>
-																	<label className="ms-4 filter-link">Explore</label>
+																<Link to="/explore" onClick={(e) => { handleClick(e) }} >
+																	<button className="btn custom-button "><i className="bi bi-book-fill"></i></button>
+
 																</Link>
 															</li>
 															<li className="nav-item mb-2" >
@@ -288,8 +293,9 @@ export const Navbar = () => {
 													) : (
 														<>
 															<li className="nav-item mb-2 me-2">
-																<Link to="/explore">
-																	<button className="btn custom-button"><i className="bi bi-book-fill"></i></button>
+																<Link to="/explore" onClick={(e) => { handleClick(e) }} >
+																	<button className="btn custom-button "><i className="bi bi-book-fill"></i></button>
+
 																</Link>
 															</li>
 															<li className="nav-item mb-2 me-2">
@@ -308,8 +314,8 @@ export const Navbar = () => {
 													showOffCanvas ? (
 														<>
 															<li className="nav-item mb-2">
-																<Link to="/explore" onClick={() => setShowOffCanvas(false)} >
-																	<button className="btn custom-button"><i className="bi bi-book-fill"></i></button>
+																<Link to="/explore" onClick={(e) => { handleClick(e) }} >
+																	<button className="btn custom-button "><i className="bi bi-book-fill"></i></button>
 																	<label className="ms-4 filter-link">Explore</label>
 																</Link>
 
@@ -343,8 +349,9 @@ export const Navbar = () => {
 													) : (
 														<>
 															<li className="nav-item mb-2 me-2">
-																<Link to="/explore">
-																	<button className="btn custom-button"><i className="bi bi-book-fill"></i></button>
+																<Link to="/explore" onClick={(e) => { handleClick(e) }} >
+																	<button className="btn custom-button "><i className="bi bi-book-fill"></i></button>
+
 																</Link>
 															</li>
 															<li className="nav-item mb-2 me-2">

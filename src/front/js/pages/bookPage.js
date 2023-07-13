@@ -173,11 +173,11 @@ export const BookPage = () => {
 						<div className="d-flex mt-2 mt-md-4 mt-lg-4">
 
 							<div className="me-2">
-								<StarRating rating={store.book.average_rating ? store.book.average_rating : 0}
+								<StarRating rating={store.book.average_rating ? store.book.average_rating : 4}
 									editable={store.book.average_rating ? false : true}
 									onRatingChange={setRating}
 								/> </div>
-							{store.book.average_rating ? " (out of " + store.book.ratings_count + " votes)" : "Be the first to rate this book"}
+							{store.book.average_rating ? " (out of " + store.book.ratings_count + " votes)" : null}
 
 						</div>
 						<div className="row ">

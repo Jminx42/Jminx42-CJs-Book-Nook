@@ -257,7 +257,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						setStore({ errorMsg: errorMessage });
 						return false;
 					} else {
-						await actions.validate_user();
+						await getActions().validate_user();
 						getActions().createAlertMsg("Your review was deleted successfully");
 						return true;
 					}
