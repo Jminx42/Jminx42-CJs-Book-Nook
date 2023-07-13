@@ -12,7 +12,6 @@ import { GooglePreview } from "./pages/googlePreview.js";
 import { Checkout } from "./pages/checkout";
 import { LegalNotice } from "./pages/legalNotice";
 import { DataProtection } from "./pages/dataProtection";
-import { PersonalInformation } from "./pages/personalInformation";
 import { Wishlist } from "./pages/wishlist";
 import { ProfileReviews } from "./pages/profileReviews";
 import { ProfileSupport } from "./pages/profileSupport";
@@ -47,7 +46,6 @@ const Layout = () => {
                     <Route element={<Explore />} path="/explore" />
                     <Route element={<Landing />} path="/" />
                     <Route element={<Profile />} path="/profile" />
-                    <Route element={<PersonalInformation />} path="/personalInformation" />
                     <Route element={<Wishlist />} path="/wishlist" />
                     <Route element={<ProfileReviews />} path="/profileReviews" />
                     <Route element={<PurchaseHistory />} path="/purchaseHistory" />

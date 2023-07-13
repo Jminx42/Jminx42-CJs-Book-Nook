@@ -7,10 +7,10 @@ import "../../styles/index.css"
 export const Footer = () => (
 	<footer className="footer">
 		<hr></hr>
-		<div className="d-flex p-3">
-			<div className="container">
-				<div className="row align-items-center ">
-					<div className="col-4 justify-content-start">
+		<div className="d-flex">
+			<div className="container-fluid">
+				<div className="row align-items-center px-md-5 px-lg-5">
+					<div className="col-4 justify-content-start ">
 						<img src={CJBookNookLogo} height={100} alt="CJBookNookLogo" />
 					</div>
 					<div className="col-8 text-end">
@@ -20,7 +20,7 @@ export const Footer = () => (
 						<i className="fa-brands fa-linkedin-in fs-2"></i>
 					</div>
 				</div>
-				<div className="row align-items-end">
+				<div className="row align-items-end px-md-5 px-lg-5">
 					<div className="col-12 d-flex justify-content-start">
 						<Link to="/support">
 							<button className="btn link-like">

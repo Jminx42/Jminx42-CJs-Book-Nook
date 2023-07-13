@@ -24,6 +24,10 @@ export const BookPage = () => {
 		review: review.review
 	});
 
+	// useEffect(() => {
+	// 	setRating(0)
+
+	// }, [store.book.reviews]);
 
 	useEffect(() => {
 		actions.getBooks();
@@ -51,7 +55,6 @@ export const BookPage = () => {
 
 	}, []);
 
-
 	const submitReview = async (book_id) => {
 		const response = await fetch(process.env.BACKEND_URL + 'api/review', {
 			method: "POST",
@@ -71,10 +74,10 @@ export const BookPage = () => {
 			// console.log(reviewData);
 			actions.getOneBook(params.theisbn)
 			setReview({
-				rating: review.rating,
-				review: review.review
+				rating: 0,
+				review: ""
 			});
-
+			setRating(0)
 
 		} else {
 			const data = await response.json();
@@ -87,6 +90,15 @@ export const BookPage = () => {
 		submitReview(store.book.id, review.review, rating)
 	};
 
+	const handleAddToWishlist = () => {
+		if (sessionStorage.getItem("token") && store.user) {
+			actions.postWishlist(store.book.id);
+		} else {
+			actions.createAlertMsg("Please log in to add to your wishlist.");
+			navigate("/login");
+
+		}
+	};
 	if (isLoading || !showBookDetails) {
 		return (
 			<div>
@@ -141,24 +153,38 @@ export const BookPage = () => {
 
 			}
 
-			<div className="card container mt-3 border-0">
-				<div className="row p-4 text-center">
-					<div className="col-lg-5 d-flex justify-content-end">
+			<div className="card container mt-4 border-0">
+				<div className="row mt-3 text-center">
+					<div className="col-lg-4 d-flex justify-content-end">
 						<img src={store.book.book_cover == null || store.book.book_cover == "" ? store.book.book_cover_b : store.book.book_cover} className="img-fluid" alt="Book cover" />
+						<button
+							type="button"
+							className="btn position-absolute top-0 start-0 bg-blue border-0 text-white dark-button rounded-circle mt-2 ms-4"
+							onClick={handleAddToWishlist}
+							style={{ zIndex: 1 }}
+						>
+							{store.user.wishlist.some((wishlistItem) => wishlistItem.book_id.id === store.book.id) ? (
+								<i className="fas fa-heart"></i>
+							) : (
+								<i className="far fa-heart"></i>
+							)}
+						</button>
 					</div>
 					<div className="col-lg-7 p-0 text-start">
 						<h2 className="filter-link">{actions.capitalizeWords(store.book.title)}</h2>
-						<h4>{store.book.author}</h4>
-					</div>
-
-				</div>
-				<div className="row text-start">
-					<div className="container-fluid m-1">
+						<h4>by {store.book.author}</h4>
+						<div className="d-flex mt-4">
+							<div className="me-2">
+								<StarRating rating={store.book.average_rating ? store.book.average_rating : 0}
+									editable={store.book.average_rating ? false : true}
+									onRatingChange={setRating}
+								/> </div>
+							{store.book.average_rating ? " (out of " + store.book.ratings_count + " votes)" : "Be the first to rate this book"}
+						</div>
 						<div className="row">
-							<div className="col-lg-2 fw-bold">Book Format:</div>
+							<h4 className="filter-link fs-5 mt-4">Book Format:</h4>
 							<div className="col-lg-8">
-
-								<select className="form-select" aria-label="Default select example" defaultValue="" onChange={(e) => setFormat(e.target.value)}>
+								<select className="form-select input-custom mt-1" aria-label="Default select example" defaultValue="" onChange={(e) => setFormat(e.target.value)}>
 									<option value="" disabled>Select your format</option>
 									{store.bookFormats.map((format) => (
 										<option key={format.id} value={format.id}>{format.book_format} - {format.book_price}€ </option>
@@ -168,79 +194,85 @@ export const BookPage = () => {
 							<div className="col-lg-2 g-0">
 								{
 									sessionStorage.getItem("token") ?
-										<button type="button" disabled={!format} className="btn me-2 custom-button" onClick={() => actions.postCheckout(format)}>
-											<i className="fas fa-shopping-cart"></i>
-										</button>
+										!format ?
+											<button
+												type="button"
+												className="btn me-2 custom-button"
+												disabled={!format} // How does the Alert message work?
+												onClick={() => setAlert("Select a format for the book first!")}
+											>
+												<i className="fas fa-shopping-cart"></i>
+											</button>
+											:
+											<button
+												type="button"
+												className="btn me-2 custom-button"
+												disabled={!format}
+												onClick={() => actions.postCheckout(format)}
+											>
+												<i className="fas fa-shopping-cart"></i>
+											</button>
 										:
 										<div>
-											<p className="p-0 m-0">Want to add to your cart?&nbsp;
+											<p className="p-0 m-0">
+												Want to add to your cart?&nbsp;
 												<Link to="/login">
-													<sup><button
-														type="button"
-														className="btn link-like p-0"
-													>Login
-													</button></sup></Link>
-												&nbsp;first!</p>
-
+													<sup>
+														<button type="button" className="btn link-like p-0">Login</button>
+													</sup>
+												</Link>
+												&nbsp;first!
+											</p>
 										</div>
 								}
 
+
 							</div>
 						</div>
-						<div className="row">
-							<div className="col-lg-2 fw-bold">Publisher:</div>
-							<div className="col-lg-10">{!store.book.publisher ? "Not available" : store.book.publisher}</div>
-						</div>
-						<div className="row">
-							<div className="col-lg-2 fw-bold">Published Date:</div>
-							<div className="col-lg-10">{store.book.year}</div>
-						</div>
-						<div className="row">
-							<div className="col-lg-2 fw-bold">Genre:</div>
-							<div className="col-lg-10">{store.book.genre}</div>
-
-						</div>
-						<div className="row">
-							<div className="col-lg-2 fw-bold">Pages:</div>
-							<div className="col-lg-10">{store.book.pages == 0 ? "Not available" : store.book.pages}</div>
-						</div>
-
-						<div className="row">
-							<div className="col-lg-2 fw-bold">ISBN:</div>
-							<div className="col-lg-10">{params.theisbn}</div>
-						</div>
-						<div className="row">
-							<div className="col-lg-2 fw-bold">Rating: </div>
-							<div className="col-lg-10">{store.book.average_rating ? store.book.average_rating + " (out of " + store.book.ratings_count + " votes)" : "Not available"} </div>
-						</div>
-
-
-						<div className="row">
-							<div className="col-lg-2 fw-bold">Description:</div>
-							<div className="col-lg-10">{store.book.description}</div>
-						</div>
-					</div>
-					<div className="row">
-						{
-							isGooglePreview ?
-								<Link to={`/googlePreview/${params.theisbn}`} className="link-like">
-									<p className="mt-3 fs-5 ">Click here to preview the book</p>
-								</Link>
-								:
-								null
-						}
-						<hr></hr>
 					</div>
 				</div>
+				<div className="row text-start mt-3">
+					<div className="">
+						<h2 className="accordion-header">
+							<button
+								className="accordion-button collapsed input-custom filter-link fs-5 fw-bold"
+								type="button"
+								data-bs-toggle="collapse"
+								data-bs-target="#flush-collapseThree"
+								aria-expanded="false"
+								aria-controls="flush-collapseThree"
+							>
+								Book Details
+							</button>
+						</h2>
+						<div id="flush-collapseThree" className="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+							<div className="accordion-body">
+								{store.book.description ? <p className="mb-1"><strong>Sinopse:</strong> {store.book.description}</p> : null}
+								{store.book.publisher ? <p className="mb-1"><strong>Publisher:</strong> {store.book.publisher}</p> : null}
+								{store.book.year ? <p className="mb-1"><strong>Year:</strong> {store.book.year}</p> : null}
+								{store.book.genre ? <p className="mb-1"><strong>Genre:</strong> {store.book.genre}</p> : null}
+								{store.book.pages ? <p className="mb-1"><strong>Pages:</strong> {store.book.pages}</p> : null}
+								{params.theisbn ? <p className="mb-1"><strong>ISBN:</strong> {params.theisbn}</p> : null}
+							</div>
+						</div>
+					</div>
+					{
+						isGooglePreview ?
+							<Link to={`/googlePreview/${params.theisbn}`} className="filter-link">
+								<p className="fs-5 filter-link fw-bold preview">Click here to preview the book</p>
+							</Link>
+							:
+							null
+					}
 
 
+				</div>
 
 			</div>
-			<div className="container m-2">
-
+			<div className="card container mt-0 border-0"><hr></hr>
 				{store.nytReview && Object.keys(store.nytReview).length > 0 ? (
-					<div className="row my-3">
-						<hr></hr>
+					<div className="row my-0">
+
 						<h4 className="background-custom p-3 rounded">New York Times' Reviews</h4>
 						<div className="card-body border">
 							<h5 className="card-title">
@@ -257,7 +289,7 @@ export const BookPage = () => {
 						</div>
 					</div>
 				) : null}
-				<div className="row my-3">
+				<div className="row my-0">
 
 					<h4 className="background-custom p-3 rounded">Reviews & Ratings</h4>
 					{store.book.reviews.map((review) => (
@@ -268,7 +300,7 @@ export const BookPage = () => {
 
 				</div>
 				{!store.book.reviews.find((item) => item.user_id === store.user.id) && (
-					<div className="row mb-5 mt-3 border p-2">
+					<div className="row mb-5 mt-2 border p-2">
 						<h4>Submit your review</h4>
 						<p className="fst-italic">Submit either a rating, a review or both!</p>
 						{sessionStorage.getItem('token') ? (

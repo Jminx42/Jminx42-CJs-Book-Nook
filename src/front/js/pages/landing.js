@@ -27,8 +27,6 @@ export const Landing = () => {
         infinite: true,
         slidesToShow: 5,
         slidesToScroll: 2,
-        nextArrow: <CarouselNextArrow />,
-        prevArrow: <CarouselPrevArrow />,
         draggable: true,
         autoplay: false,
         speed: 2500,
@@ -96,7 +94,11 @@ export const Landing = () => {
                 userGenres?.some((userGenre) => book.genre.includes(userGenre))
             );
         })
-        .slice(0, 10);
+        .filter((book) => {
+            // Exclude books that are already in store.user.items (not working at the moment)
+            return !store.user.items.some((item) => item.isbn === book.isbn);
+        })
+        .slice(0, 5);
 
     return (
         <div>

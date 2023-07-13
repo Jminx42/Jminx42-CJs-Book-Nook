@@ -116,10 +116,8 @@ def update_user():
         return jsonify({"error": "No user found with this id"}), 404
 
     body = request.json
-
-    if "password" in body:
-        password = body.get("password", "").strip()
-
+    password = body.get("password", "").strip()
+    if password:
         if len(password) < 5 or not password:
             return jsonify({"error": "Your password should be at least 5 characters long and not be empty"}), 400
 
@@ -249,7 +247,7 @@ def delete_review():
     user_id = get_jwt_identity()
     body = request.json 
 
-    review = Review.query.get(body["review_id"])
+    review = Review.query.filter_by(id = body["review_id"], user_id=user_id).first()
     if not review:
         return jsonify({"error": "No review found with this ID"}), 400
 
@@ -431,8 +429,8 @@ def create_transaction():
 @jwt_required()
 def create_checkout_session():
     user_id = get_jwt_identity()
-    # domain_url = "https://carolina-hora-curly-engine-44679qp76gxfj6rq-3000.preview.app.github.dev/"
-    domain_url = os.getenv('FRONTEND_URL')
+    domain_url = "https://carolina-hora-curly-engine-44679qp76gxfj6rq-3000.preview.app.github.dev/"
+    # domain_url = os.getenv('FRONTEND_URL')
     stripe.api_key = stripe_keys["secret_key"]
     
     try:
