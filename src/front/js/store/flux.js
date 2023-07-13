@@ -17,6 +17,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 		},
 		actions: {
 
+			//Check if we are using this function!!!
 			// updateUserItems: () => {
 			// 	const updatedItems = getStore().user.items.map((item) => {
 			// 		return {
@@ -28,15 +29,21 @@ const getState = ({ getStore, getActions, setStore }) => {
 			// 	setStore({ ...getStore().user, user: { items: updatedItems } });
 			// },
 
+
 			setActiveTab: (tab) => {
 				setStore({ activeTab: tab })
 			},
 
 			capitalizeWords: (str) => {
-				return str
-					.split(' ')
-					.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-					.join(' ');
+				if (str.includes(' ')) {
+					return str
+						.split(' ')
+						.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+						.join(' ');
+				} else {
+					return str[0].toUpperCase() + str.slice(1).toLowerCase();
+				}
+				//Not working for only one word like GENRE!!
 			},
 
 			createAlertMsg: (msg) => {
@@ -268,7 +275,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error(`Error during fetch: ${process.env.BACKEND_URL}api/removeReview`, error);
 				}
 			},
-			
+
 
 			getBookFormats: async () => {
 				const response = await fetch(process.env.BACKEND_URL + 'api/bookformat');

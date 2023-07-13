@@ -57,7 +57,10 @@ export const ReviewBook = ({ item }) => {
             <h6 className="card-subtitle mb-2 text-muted">Posted on {item.created_at}</h6>
 
             {!editClicked ? (
-                <StarRating rating={item.rating} editable={false} />
+                <>
+
+                    <StarRating rating={editRating} editable={false} />
+                </>
             ) : (
                 <>
                     <label className="text-start mb-1">Rating:&nbsp; </label>
@@ -70,7 +73,7 @@ export const ReviewBook = ({ item }) => {
             )}
 
             {!editClicked ? (
-                <p className="mb-1">{item.review}</p>
+                <p className="mb-1">{editReview}</p>
             ) : (
                 <>
                     <label className="text-start mb-1">Review:&nbsp;</label>

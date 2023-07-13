@@ -64,7 +64,7 @@ export const ProfileReviews = () => {
                         <hr />
                         <ul className="nav nav-pills flex-column mb-auto profile-li">
                             <li className="nav-item">
-                                <Link to={`/personalInformation`}>
+                                <Link to={`/profile`}>
                                     <button
                                         className="btn link-like w-100 text-start"
 
@@ -116,7 +116,7 @@ export const ProfileReviews = () => {
                         <div className="d-flex flex-column flex-shrink-0 bg-body-tertiary" style={{ width: "3rem" }}>
                             <ul className="nav nav-pills nav-flush flex-column mb-auto text-center">
                                 <li className="nav-item">
-                                    <Link to={`/personalInformation`}>
+                                    <Link to={`/profile`}>
                                         <button className="py-3 border-bottom rounded-0 btn link-like" aria-current="page" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Personal" data-bs-original-title="Personal">
                                             <i className="fa-solid fa-user"></i>
                                         </button>

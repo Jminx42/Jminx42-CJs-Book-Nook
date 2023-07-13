@@ -4,6 +4,7 @@ import { Context } from "../store/appContext";
 import { ProfileBtn } from "../component/profileBtn";
 import "../../styles/index.css"
 import CJBookNookNoLogo from "/workspaces/Jminx42-CJs-Book-Nook/images/CJBookNookNoLogoWhite.png";
+import { SideNavigation } from "./sideNavigation";
 
 export const Navbar = () => {
 	const { store, actions } = useContext(Context);
@@ -18,9 +19,11 @@ export const Navbar = () => {
 		}
 		return totalCheckout
 	}
+	const [isOpen, setIsOpen] = useState(false);
+
 
 	return (
-		<nav className="navbar navbar-expand-lg background-custom px-md-5 px-lg-5 py-0">
+		<nav className="navbar navbar-expand-md navbar-expand-lg background-custom px-md-5 px-lg-5 py-0">
 			<div className="container-fluid">
 
 
@@ -95,14 +98,14 @@ export const Navbar = () => {
 														<>
 															<li className="nav-item mb-2" >
 																<Link to="/explore" onClick={() => setShowOffCanvas(false)} >
-																	<button className="btn custom-button"><i className="bi bi-book-fill" data-bs-dismiss="offcanvas"></i></button>
+																	<button className="btn custom-button"><i className="bi bi-book-fill" ></i></button>
 																	<label className="ms-4 filter-link">Explore</label>
 																</Link>
 															</li>
 															<li className="nav-item mb-2" >
-																<Link to="/login" onClick={() => setShowOffCanvas(false)} data-bs-dismiss="offcanvas">
-																	<button className="btn btn-secondary custom-button "> Login <i className="fa-solid fa-right-to-bracket"></i></button>
-
+																<Link to="/login" onClick={() => setShowOffCanvas(false)} >
+																	<button className="btn btn-secondary custom-button "><i className="fa-solid fa-right-to-bracket"></i></button>
+																	<label className="ms-4 filter-link">Login</label>
 																</Link>
 															</li>
 														</>
@@ -115,11 +118,12 @@ export const Navbar = () => {
 															</li>
 															<li className="nav-item mb-2 me-2">
 																<Link to="/login">
-																	<button className="btn btn-secondary custom-button "> Login <i className="fa-solid fa-right-to-bracket"></i></button>
+																	<button className="btn custom-button "><i className="fa-solid fa-right-to-bracket"></i></button>
 																</Link>
 															</li>
 														</>
 													)
+
 												}
 											</>
 										) : (
@@ -129,14 +133,14 @@ export const Navbar = () => {
 													showOffCanvas ? (
 														<>
 															<li className="nav-item mb-2">
-																<Link to="/explore" onClick={() => setShowOffCanvas(false)} data-bs-dismiss="offcanvas">
+																<Link to="/explore" onClick={() => setShowOffCanvas(false)}>
 																	<button className="btn custom-button"><i className="bi bi-book-fill"></i></button>
 																	<label className="ms-4 filter-link">Explore</label>
 																</Link>
 
 															</li>
 															<li className="nav-item mb-2">
-																<Link to="/checkout" onClick={() => setShowOffCanvas(false)} data-bs-dismiss="offcanvas">
+																<Link to="/checkout" onClick={() => setShowOffCanvas(false)}>
 																	<button type="button" className="btn btn-secondary custom-button position-relative">
 																		<i className="fas fa-shopping-cart"></i>
 																		<span className="position-absolute top-0 start-100 translate-middle badge rounded-pill background-dark">
@@ -148,16 +152,25 @@ export const Navbar = () => {
 
 															</li>
 															<li className="nav-item mb-2">
-																<Link to="/wishlist" onClick={() => setShowOffCanvas(false)} data-bs-dismiss="offcanvas">
+																<Link to="/wishlist" onClick={() => setShowOffCanvas(false)} >
 																	<button className="btn custom-button"><i className="fa-solid fa-heart"></i></button>
 																	<label className="ms-4 filter-link">Wishlist</label>
 																</Link>
 															</li>
 															<li className="nav-item mb-2">
-																<div className="d-flex" onClick={() => setShowOffCanvas(false)} data-bs-dismiss="offcanvas">
-																	<ProfileBtn />
-																	<label className="ms-2 filter-link">Profile</label>
-																</div>
+																<Link to="/profile" onClick={() => setShowOffCanvas(false)}>
+																	<button className="btn custom-button"><i className="fa-solid fa-user"></i></button>
+																	<label className="ms-4 filter-link">Profile</label>
+																</Link>
+
+															</li>
+															<li className="nav-item mb-2">
+																<button className="btn custom-button" onClick={async () => {
+																	await actions.logout()
+																	navigate("/")
+																}}><i className="fa-solid fa-right-from-bracket"></i></button>
+																<label className="ms-4 filter-link">Logout</label>
+
 
 															</li>
 														</>
@@ -248,15 +261,15 @@ export const Navbar = () => {
 													showOffCanvas ? (
 														<>
 															<li className="nav-item mb-2" >
-																<Link to="/explore" onClick={() => setShowOffCanvas(false)} data-bs-dismiss="offcanvas">
+																<Link to="/explore" onClick={() => setShowOffCanvas(false)} >
 																	<button className="btn custom-button"><i className="bi bi-book-fill"></i></button>
 																	<label className="ms-4 filter-link">Explore</label>
 																</Link>
 															</li>
 															<li className="nav-item mb-2" >
-																<Link to="/login" onClick={() => setShowOffCanvas(false)} data-bs-dismiss="offcanvas">
-																	<button className="btn btn-secondary custom-button "> Login <i className="fa-solid fa-right-to-bracket"></i></button>
-																	<label className="ms-4 filter-link">Login</label>
+																<Link to="/login" onClick={() => setShowOffCanvas(false)} >
+																	<button className="btn btn-secondary custom-button "><i className="fa-solid fa-right-to-bracket"></i></button>
+
 																</Link>
 															</li>
 														</>
@@ -283,14 +296,14 @@ export const Navbar = () => {
 													showOffCanvas ? (
 														<>
 															<li className="nav-item mb-2">
-																<Link to="/explore" onClick={() => setShowOffCanvas(false)} data-bs-dismiss="offcanvas">
+																<Link to="/explore" onClick={() => setShowOffCanvas(false)} >
 																	<button className="btn custom-button"><i className="bi bi-book-fill"></i></button>
 																	<label className="ms-4 filter-link">Explore</label>
 																</Link>
 
 															</li>
 															<li className="nav-item mb-2">
-																<Link to="/checkout" onClick={() => setShowOffCanvas(false)} data-bs-dismiss="offcanvas">
+																<Link to="/checkout" onClick={() => setShowOffCanvas(false)} >
 																	<button type="button" className="btn btn-secondary custom-button position-relative">
 																		<i className="fas fa-shopping-cart"></i>
 																		<span className="position-absolute top-0 start-100 translate-middle badge rounded-pill background-dark">
@@ -302,13 +315,13 @@ export const Navbar = () => {
 
 															</li>
 															<li className="nav-item mb-2">
-																<Link to="/wishlist" onClick={() => setShowOffCanvas(false)} data-bs-dismiss="offcanvas">
+																<Link to="/wishlist" onClick={() => setShowOffCanvas(false)} >
 																	<button className="btn custom-button"><i className="fa-solid fa-heart"></i></button>
 																	<label className="ms-4 filter-link">Wishlist</label>
 																</Link>
 															</li>
 															<li className="nav-item mb-2">
-																<div className="d-flex" onClick={() => setShowOffCanvas(false)} data-bs-dismiss="offcanvas">
+																<div className="d-flex" onClick={() => setShowOffCanvas(false)} >
 																	<ProfileBtn />
 																	<label className="ms-2 filter-link">Profile</label>
 																</div>
