@@ -13,6 +13,11 @@ export const Success = () => {
     useEffect(() => {
         createTransaction();
 
+        setTimeout(() => {
+            actions.clearError();
+            actions.clearAlert();
+        }, 3000);
+
     }, []);
 
     const createTransaction = async () => {

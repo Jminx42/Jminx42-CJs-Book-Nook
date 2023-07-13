@@ -14,10 +14,18 @@ export const Footer = () => (
 						<img src={CJBookNookLogo} height={100} alt="CJBookNookLogo" />
 					</div>
 					<div className="col-8 text-end">
-						<i className="fa-brands fa-instagram fs-2 me-4"></i>
-						<i className="fa-brands fa-facebook-f fs-2 me-4"></i>
-						<i className="fa-brands fa-twitter fs-2 me-4"></i>
-						<i className="fa-brands fa-linkedin-in fs-2"></i>
+						<a href="https://www.instagram.com/4GeeksAcademy/" className="link-like" target="_blank">
+							<i className="fa-brands fa-instagram fs-2 me-4"></i>
+						</a>
+						<a href="https://web.facebook.com/4geeksacademy/" className="link-like" target="_blank">
+							<i className="fa-brands fa-facebook-f fs-2 me-4"></i>
+						</a>
+						<a href="https://twitter.com/4GeeksAcademy" className="link-like" target="_blank">
+							<i className="fa-brands fa-twitter fs-2 me-4"></i>
+						</a>
+						<a href="https://www.linkedin.com/school/4geeksacademy/" className="link-like" target="_blank">
+							<i className="fa-brands fa-linkedin-in fs-2"></i>
+						</a>
 					</div>
 				</div>
 				<div className="row align-items-end px-md-5 px-lg-5">

@@ -34,8 +34,8 @@ export const ReviewBook = ({ item }) => {
                             <button className="btn custom-button" onClick={async () => {
                                 await actions.removeFromReviews(item.id)
                                 await actions.getOneBook(params.theisbn)
-                                setEditReview(item.review)
-                                setEditRating(item.rating)
+                                setEditReview("")
+                                setEditRating(0)
                             }}>
                                 <i className="fa-solid fa-trash"></i>
                             </button>

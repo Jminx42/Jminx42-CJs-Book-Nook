@@ -1,26 +1,32 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Context } from "../store/appContext";
 import { Navbar } from "../component/navbar";
 import { Footer } from "../component/footer";
 
 
 
 export const Cancelled = () => {
-    const [alert, setAlert] = useState("");
-    const [error, setError] = useState("");
+    const { store, actions } = useContext(Context);
 
-    // are we going to remove the items from the cart??
+    useEffect(() => {
+        setTimeout(() => {
+            actions.clearError();
+            actions.clearAlert();
+        }, 3000);
+    }, []);
+
     return (
         <div>
             <Navbar />
             {
-                alert && alert !== ""
+                store.alert && store.alert !== ""
                     ?
                     <div className="container">
                         <div className="alert alert-success alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
                             <i className="bi bi-check-circle-fill me-2"></i>
                             <div>
-                                {alert}
+                                {store.alert}
                             </div>
                             <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
@@ -30,13 +36,13 @@ export const Cancelled = () => {
 
             }
             {
-                error && error !== ""
+                store.errorMsg && store.errorMsg !== ""
                     ?
                     <div className="container">
                         <div className="alert alert-danger alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
                             <i className="bi bi-exclamation-triangle-fill"></i>
                             <div>
-                                {error}
+                                {store.errorMsg}
                             </div>
                             <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>

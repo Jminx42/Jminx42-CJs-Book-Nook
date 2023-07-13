@@ -13,22 +13,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			alert: '',
 
 
-
 		},
 		actions: {
-
-			//Check if we are using this function!!!
-			// updateUserItems: () => {
-			// 	const updatedItems = getStore().user.items.map((item) => {
-			// 		return {
-			// 			...item,
-			// 			in_progress: false
-			// 		};
-			// 	});
-			// 	console.log(updatedItems)
-			// 	setStore({ ...getStore().user, user: { items: updatedItems } });
-			// },
-
 
 			setActiveTab: (tab) => {
 				setStore({ activeTab: tab })
@@ -44,6 +30,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return str[0].toUpperCase() + str.slice(1).toLowerCase();
 				}
 				//Not working for only one word like GENRE!!
+			},
+
+			createErrorMsg: (msg) => {
+				setStore({ errorMsg: msg })
 			},
 
 			createAlertMsg: (msg) => {

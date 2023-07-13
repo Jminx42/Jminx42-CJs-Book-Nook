@@ -19,6 +19,8 @@ export const Register = () => {
     const [alert, setAlert] = useState("");
     const [errorSubmit, setErrorSubmit] = useState("");
 
+
+
     const validateForm = (formData) => {
         const { full_name, email, password, confirmPassword, termsAndConditions } =
             formData;

@@ -19,15 +19,8 @@ export const BookPage = () => {
 	const [error, setError] = useState("");
 	const [isGooglePreview, setIsGooglePreview] = useState(false);
 	const [rating, setRating] = useState(0)
-	const [editReview, setEditReview] = useState({
-		rating: rating,
-		review: review.review
-	});
 
-	// useEffect(() => {
-	// 	setRating(0)
 
-	// }, [store.book.reviews]);
 
 	useEffect(() => {
 		actions.getBooks();
@@ -38,6 +31,8 @@ export const BookPage = () => {
 			setIsLoading(false);
 			setShowBookDetails(true);
 			actions.clearAlert();
+			actions.clearError();
+
 		}, 3000);
 
 	}, [params.isbn, store.alert]);
@@ -75,7 +70,8 @@ export const BookPage = () => {
 			actions.getOneBook(params.theisbn)
 			setReview({
 				rating: 0,
-				review: ""
+				review: "",
+
 			});
 			setRating(0)
 
@@ -173,18 +169,22 @@ export const BookPage = () => {
 					<div className="col-11 col-sm-8 col-md-7 col-lg-6 p-0 text-start">
 						<h2 className="filter-link">{actions.capitalizeWords(store.book.title)}</h2>
 						<h4>by {store.book.author}</h4>
+
 						<div className="d-flex mt-2 mt-md-4 mt-lg-4">
+
 							<div className="me-2">
 								<StarRating rating={store.book.average_rating ? store.book.average_rating : 0}
 									editable={store.book.average_rating ? false : true}
 									onRatingChange={setRating}
 								/> </div>
 							{store.book.average_rating ? " (out of " + store.book.ratings_count + " votes)" : "Be the first to rate this book"}
+
 						</div>
 						<div className="row ">
 							<h4 className="filter-link fs-5 mt-2 mt-md-4 mt-lg-4 mb-2 mb-md-3 mb-lg-3">Book Format:</h4>
 							<div className="col-6 col-sm-6 col-md-6 col-lg-7 d-flex align-items-center">
 								<select className="form-select input-custom " aria-label="Default select example" defaultValue="" onChange={(e) => setFormat(e.target.value)}>
+
 									<option value="" disabled>Select your format</option>
 									{store.bookFormats.map((format) => (
 										<option key={format.id} value={format.id}>{format.book_format} - {format.book_price}€ </option>

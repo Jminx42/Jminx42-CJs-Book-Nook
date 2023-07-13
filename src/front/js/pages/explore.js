@@ -32,7 +32,10 @@ export const Explore = () => {
 	useEffect(() => {
 		actions.getBooks();
 		actions.emptyBook();
-		actions.clearAlert();
+		setTimeout(() => {
+			actions.clearError();
+			actions.clearAlert();
+		}, 3000);
 	}, []);
 
 	const handleGenreCheckboxChange = (value) => {
@@ -78,7 +81,24 @@ export const Explore = () => {
 	return (
 		<div>
 			<Navbar />
+			{
+				store.alert && store.alert !== ""
+					?
+					<div className="container">
+						<div className="alert alert-success alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
+							<i className="bi bi-check-circle-fill me-2"></i>
+							<div>
+								{store.alert}
+							</div>
+							<button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>
+					</div>
+					:
+					null
+
+			}
 			<div className="container-fluid text-center mt-5">
+
 				<div className="row d-flex justify-content-center">
 					{store.books && store.books.length !== 0 ? (
 						<div className="container">
