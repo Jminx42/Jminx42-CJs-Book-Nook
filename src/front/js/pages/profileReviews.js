@@ -33,7 +33,7 @@ export const ProfileReviews = () => {
 
     }, []);
 
-    const isMobile = windowWidth <= 768;
+    const isMobile = windowWidth <= 900;
 
     const getUserReviews = async () => {
         try {
@@ -192,12 +192,11 @@ export const ProfileReviews = () => {
                 {/* Creating the different tabs: */}
                 <div className="flex-grow-1 m-0">
 
-                    <div className={`tab-content ${isMobile ? 'mt-0' : 'profile-container'}`} >
-                        <div className="container-fluid mt-4">
+                    <div className={`tab-content ${isMobile ? 'mt-2' : 'profile-container'}`} >
+                        <div className="container-fluid">
                             <div className="row d-flex g-3">
                                 {store.user.review.length === 0 ? (
                                     <>
-
                                         <div className="text-center">
                                             Add a review to your latest read now!
                                         </div>
@@ -205,7 +204,7 @@ export const ProfileReviews = () => {
                                     </>
                                 ) : (
 
-                                    <div className="col-12 col-sm-12 col-md-12 col-lg-10 m-1">
+                                    <div className="col-12 col-sm-12 col-md-12 col-lg-11 col-xl-10 m-1">
                                         {
                                             store.user.review.sort((a, b) => a.id - b.id).map((review) => {
                                                 return <Review key={review.id} item={review} />

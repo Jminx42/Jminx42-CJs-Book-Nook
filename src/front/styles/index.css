@@ -33,8 +33,6 @@
     color: #68B0AB;
 }
 
-
-
 .dark-button {
     background-color: #68B0AB;
     border-color: #68B0AB;
@@ -79,6 +77,10 @@
     color: #0c6e68;
     text-decoration: underline;
 
+}
+
+.justify-text {
+    text-align: justify;
 }
 
 .preview {
@@ -165,7 +167,7 @@
 }
 
 .profile-container {
-    margin-top: 8vw;
+    margin-top: 6vw;
 }
 
 .landing-background {

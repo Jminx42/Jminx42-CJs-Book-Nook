@@ -76,7 +76,7 @@ export const Review = ({ item }) => {
                     <div className="d-flex align-items-center"> {/* Wrap label and input in a flex container */}
 
                         {!editClicked ? (
-                            <p className="mb-1">Review: {item.review}</p>
+                            <p className="mb-1 justify-text">Review: {item.review}</p>
                         ) : (
                             <>
                                 <label className="text-start mb-1">Review:&nbsp;</label>
