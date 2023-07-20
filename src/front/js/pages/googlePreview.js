@@ -15,6 +15,9 @@ export const GooglePreview = () => {
             actions.clearAlert();
         }, 3000);
     }, []);
+
+    const book = store.books.find(item => item.isbn === params.theisbn);
+    const title = book ? book.title : 'Book not found';
     return (
         <div>
             <Navbar />
@@ -52,10 +55,13 @@ export const GooglePreview = () => {
             }
 
             <div className="container mt-4">
-                <h1 className="text-center">Where Magic Happens!</h1>
-                <div className="text-center mt-3">
+                <h1 className="text-center custom-text">Book Preview</h1>
+                {/* {title} */}
+                {/* {store.books.filter((item) => item.isbn === params.theisbn)[0].title} */}
+
+                {/* <div className="text-center mt-3">
                     <button className="btn custom-button" onClick={() => window.location.reload(true)}>Want to see some magic! Click here to reload the page!</button>
-                </div>
+                </div> */}
 
                 <div className="row d-flex justify-content-center">
                     <GoogleBooksViewer isbn={params.theisbn} />

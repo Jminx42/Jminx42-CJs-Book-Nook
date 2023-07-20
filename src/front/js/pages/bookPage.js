@@ -198,8 +198,8 @@ export const BookPage = () => {
 											<button
 												type="button"
 												className="btn me-2 custom-button"
-												disabled={!format} // How does the Alert message work?
-												onClick={() => setAlert("Select a format for the book first!")}
+												// How does the Alert message work? Why isn't this createErrorMsg working?
+												onClick={() => actions.createAlertMsg("Select a format for the book first!")}
 											>
 												<i className="fas fa-shopping-cart"></i>
 											</button>
