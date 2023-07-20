@@ -12,9 +12,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navbar } from "../component/navbar";
 import { Footer } from "../component/footer";
 import { LandingCard } from "../component/landingCard";
-import { CarouselNextArrow } from "../component/carouselArrow";
-import { CarouselPrevArrow } from "../component/carouselArrow";
-import MyCarousel from "../component/MyCarousel";
+
 
 export const Landing = () => {
     const { store } = useContext(Context);

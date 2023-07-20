@@ -10,6 +10,10 @@
     overflow: hidden;
 }
 
+body {
+    font-size: 1.2rem;
+}
+
 .navbar-brand img {
     height: 50px;
 }
@@ -19,6 +23,7 @@
     background-color: #207e78;
     border-color: #cdeeec;
     color: #f2f2f2;
+    font-size: 1.2rem;
 }
 
 .input-custom:focus {
@@ -308,8 +313,32 @@
     }
 } */
 
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    border-bottom: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
 .landing-text {
     font-size: calc(1.525rem + 3.3vw);
+}
+
+@media (max-width: 375px) {
+    .purchase-text {
+        font-size: 10px;
+    }
+
+    .table th,
+    .table td {
+        font-size: 8px;
+        /* Adjust the font size for smaller screens */
+    }
 }
 
 @media (max-width: 375px) {

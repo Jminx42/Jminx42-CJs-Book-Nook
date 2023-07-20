@@ -91,7 +91,7 @@ const CartCard = ({ item, setShowModal }) => {
                                     <div className="row">
                                         <h4 className="filter-link fs-5 mt-4">Book Format:</h4>
                                         <div className="col-lg-8">
-                                            <select className="form-select input-custom mt-1" aria-label="Default select example" defaultValue="" onChange={(e) => setFormat(e.target.value)}>
+                                            <select className="form-select input-custom my-1" aria-label="Default select example" defaultValue="" onChange={(e) => setFormat(e.target.value)}>
                                                 <option value="" disabled>Select your format</option>
                                                 {store.bookFormats.map((format) => (
                                                     <option key={format.id} value={format.id}>{format.book_format} - {format.book_price}€ </option>

@@ -9,9 +9,6 @@ import { Footer } from "../component/footer";
 
 export const PurchaseHistory = () => {
     const { store, actions } = useContext(Context);
-    const [alert, setAlert] = useState("");
-    const [error, setError] = useState("");
-    const [reviews, setReviews] = useState([]);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     useEffect(() => {
@@ -19,7 +16,6 @@ export const PurchaseHistory = () => {
             actions.clearError();
             actions.clearAlert();
         }, 3000);
-        getUserReviews()
         const handleResize = () => {
             setWindowWidth(window.innerWidth);
         };
@@ -35,28 +31,7 @@ export const PurchaseHistory = () => {
 
     const isMobile = windowWidth <= 768;
 
-    const getUserReviews = async () => {
-        try {
-            const response = await fetch(process.env.BACKEND_URL + "api/user_reviews", {
-                method: "GET",
-                headers: {
-                    Authorization: "Bearer " + sessionStorage.getItem("token"),
-                    "Content-Type": "application/json"
-                }
-            });
 
-            if (response.ok) {
-                const data = await response.json();
-                setReviews(data.reviews);
-                console.log(data.reviews)
-            } else {
-                const data = await response.json();
-                setError(data.error);
-            }
-        } catch (error) {
-            console.error("Error fetching reviews:", error);
-        }
-    };
     return (
         <div>
             <Navbar />
@@ -77,13 +52,13 @@ export const PurchaseHistory = () => {
 
             }
             {
-                error && error !== ""
+                store.errorMsg && store.errorMsg !== ""
                     ?
                     <div className="container">
                         <div className="alert alert-danger alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
                             <i className="bi bi-exclamation-triangle-fill"></i>
                             <div>
-                                {error}
+                                {store.errorMsg}
                             </div>
                             <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
@@ -150,7 +125,7 @@ export const PurchaseHistory = () => {
 
                     </div>) :
                     (
-                        <div className="d-flex flex-column flex-shrink-0 bg-body-tertiary" style={{ width: "3rem" }}>
+                        <div className="d-flex flex-column flex-shrink-0 bg-body-tertiary" >
                             <ul className="nav nav-pills nav-flush flex-column mb-auto text-center">
                                 <li className="nav-item">
                                     <Link to={`/profile`}>
@@ -190,19 +165,25 @@ export const PurchaseHistory = () => {
                             </ul>
                         </div>
                     )}
-                {/* Creating the different tabs: */}
-                <div className="flex-grow-1 m-0">
+
+                <div className="flex-grow-1 g-0">
 
                     <div className={`tab-content ${isMobile ? 'mt-0' : 'profile-container'}`} >
-                        <div className="container-fluid mt-4">
+                        <div className="container-fluid g-0">
 
+                            <div className="row m-1 gap-2">
 
-                            <div className="row d-flex mx-1 gap-2">
-                                <div className="col-12 col-sm-12 col-md-12 col-lg-10 col-xl-9">
-                                    {store.user.transaction && store.user.transaction.map((transaction) => {
-                                        return <TransactionCard key={transaction.id} item={transaction} />
-                                    })}
-                                </div>
+                                {store.user.transaction && store.user.transaction.map((transaction) => {
+                                    return (
+                                        <>
+                                            <div key={transaction.id} className="col-12 col-sm-12 col-md-12 col-lg-10 col-xl-9">
+                                                <TransactionCard key={transaction.id} item={transaction} />
+                                            </div>
+                                        </>
+
+                                    )
+                                })}
+
                             </div>
 
 

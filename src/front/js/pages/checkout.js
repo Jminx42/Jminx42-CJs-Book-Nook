@@ -145,8 +145,8 @@ export const Checkout = () => {
                     null
 
             }
-            <div className="container mt-4 p-3">
-                <h1 className="feature-title m-5">CHECKOUT</h1>
+            <div className="container my-3 p-3">
+                <h1 className="feature-title m-4">CHECKOUT</h1>
                 {store.user.items && store.user.items.length > 0 ?
                     <>
                         <div className="row mb-2">

@@ -27,7 +27,7 @@ export const TransactionCard = ({ item }) => {
                         aria-expanded={isCollapsed ? "true" : "false"}
                         aria-controls={`collapse-${item.id}`}
                     >
-                        Order Nº {item.id}
+                        Order #{item.id}
                     </button>
                 </h5>
             </div>
@@ -38,12 +38,12 @@ export const TransactionCard = ({ item }) => {
                 data-bs-parent="#accordion"
             >
                 <div className="card-body">
-                    <p className="card-text text-start mb-1">
+                    <div className="card-text purchase-text text-start mb-1">
                         <strong>Date Created:</strong> {item.transaction_created}
-                    </p>
-                    <p className="card-text text-start">
+                    </div>
+                    <div className="card-text purchase-text text-start">
                         <strong>Total Order Price:</strong> {parseFloat(item.total_price.toFixed(2))}€
-                    </p>
+                    </div>
                     <table className="table">
                         <thead>
                             <tr>

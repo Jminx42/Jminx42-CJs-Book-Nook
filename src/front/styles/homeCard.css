@@ -1,6 +1,7 @@
 .card-custom-button {
     background-color: #68B0AB;
     border-color: #68B0AB;
+
 }
 
 .card-custom-button:hover {
@@ -12,4 +13,3 @@
     text-decoration: none;
     color: black;
 }
-
