@@ -126,13 +126,13 @@ export const Navbar = () => {
 														<>
 															<li className="nav-item mb-2 me-2">
 																<Link to="/explore" onClick={(e) => { handleClick(e) }} >
-																	<button className="btn custom-button "><i className="bi bi-book-fill"></i></button>
+																	<button className="btn custom-button " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Explore"><i className="bi bi-book-fill"></i></button>
 
 																</Link>
 															</li>
 															<li className="nav-item mb-2 me-2">
 																<Link to="/login" onClick={(e) => { handleClick(e) }}>
-																	<button className="btn custom-button "><i className="fa-solid fa-right-to-bracket"></i></button>
+																	<button className="btn custom-button " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Login"><i className="fa-solid fa-right-to-bracket"></i></button>
 																</Link>
 															</li>
 														</>
@@ -194,13 +194,13 @@ export const Navbar = () => {
 														<>
 															<li className="nav-item mb-2 me-2">
 																<Link to="/explore" onClick={(e) => { handleClick(e) }} >
-																	<button className="btn custom-button "><i className="bi bi-book-fill"></i></button>
+																	<button className="btn custom-button " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Explore"><i className="bi bi-book-fill"></i></button>
 
 																</Link>
 															</li>
 															<li className="nav-item mb-2 me-2">
 																<Link to="/checkout" onClick={(e) => { handleClick(e) }}>
-																	<button type="button" className="btn btn-secondary custom-button position-relative">
+																	<button type="button" className="btn btn-secondary custom-button position-relative" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Checkout">
 																		<i className="fas fa-shopping-cart"></i>
 																		<span className="position-absolute top-0 start-100 translate-middle badge rounded-pill background-dark">
 																			{total()}
@@ -213,7 +213,7 @@ export const Navbar = () => {
 															<li className="nav-item mb-2 me-2">
 																<Link to="/wishlist" onClick={(e) => { handleClick(e) }}>
 
-																	<button className="btn custom-button"><i className="fa-solid fa-heart"></i></button>
+																	<button className="btn custom-button" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Wishlist"><i className="fa-solid fa-heart"></i></button>
 																</Link>
 															</li>
 															<li className="nav-item mb-2 me-2">
@@ -279,13 +279,13 @@ export const Navbar = () => {
 														<>
 															<li className="nav-item mb-2" >
 																<Link to="/explore" onClick={(e) => { handleClick(e) }} >
-																	<button className="btn custom-button "><i className="bi bi-book-fill"></i></button>
+																	<button className="btn custom-button " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Explore"><i className="bi bi-book-fill"></i></button>
 
 																</Link>
 															</li>
 															<li className="nav-item mb-2" >
 																<Link to="/login" onClick={() => setShowOffCanvas(false)} >
-																	<button className="btn btn-secondary custom-button "><i className="fa-solid fa-right-to-bracket"></i></button>
+																	<button className="btn custom-button " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Login"><i className="fa-solid fa-right-to-bracket"></i></button>
 
 																</Link>
 															</li>
@@ -294,7 +294,7 @@ export const Navbar = () => {
 														<>
 															<li className="nav-item mb-2 me-2">
 																<Link to="/explore" onClick={(e) => { handleClick(e) }} >
-																	<button className="btn custom-button "><i className="bi bi-book-fill"></i></button>
+																	<button className="btn custom-button " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Explore"><i className="bi bi-book-fill"></i></button>
 
 																</Link>
 															</li>
@@ -350,13 +350,13 @@ export const Navbar = () => {
 														<>
 															<li className="nav-item mb-2 me-2">
 																<Link to="/explore" onClick={(e) => { handleClick(e) }} >
-																	<button className="btn custom-button "><i className="bi bi-book-fill"></i></button>
+																	<button className="btn custom-button " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Explore"><i className="bi bi-book-fill"></i></button>
 
 																</Link>
 															</li>
 															<li className="nav-item mb-2 me-2">
 																<Link to="/checkout">
-																	<button type="button" className="btn btn-secondary custom-button position-relative">
+																	<button type="button" className="btn btn-secondary custom-button position-relative" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Checkout">
 																		<i className="fas fa-shopping-cart"></i>
 																		<span className="position-absolute top-0 start-100 translate-middle badge rounded-pill background-dark">
 																			{total()}
@@ -369,7 +369,7 @@ export const Navbar = () => {
 															<li className="nav-item mb-2 me-2">
 																<Link to="/wishlist">
 
-																	<button className="btn custom-button"><i className="fa-solid fa-heart"></i></button>
+																	<button className="btn custom-button" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Wishlist"><i className="fa-solid fa-heart"></i></button>
 																</Link>
 															</li>
 															<li className="nav-item mb-2 me-2">

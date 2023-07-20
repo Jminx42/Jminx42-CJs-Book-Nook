@@ -16,9 +16,9 @@
 
 
 .custom-button {
-    background-color: #cdeeec;
+    background-color: #207e78;
     border-color: #cdeeec;
-    color: #0c6e68;
+    color: #f2f2f2;
 }
 
 .input-custom:focus {
@@ -36,8 +36,8 @@
 
 
 .dark-button {
-    background-color: #68B0AB;
-    border-color: #68B0AB;
+    background-color: #418682;
+    border-color: #418682;
     color: white
 }
 
@@ -48,7 +48,7 @@
 } */
 
 .custom-button:hover {
-    background-color: #128179;
+    background-color: #40b0a8b9;
     border-color: #128179;
     color: white;
 }

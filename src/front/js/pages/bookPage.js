@@ -5,7 +5,8 @@ import { Navbar } from "../component/navbar";
 import { StarRating } from "../component/StarRating";
 import { Footer } from "../component/footer";
 import { ReviewBook } from "../component/reviewBook";
-import "../../styles/home.css";
+import "../../styles/index.css";
+
 
 export const BookPage = () => {
 	const params = useParams();

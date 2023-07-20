@@ -13,7 +13,7 @@ export const Cancelled = () => {
         setTimeout(() => {
             actions.clearError();
             actions.clearAlert();
-        }, 3000);
+        }, 6000);
     }, []);
 
     return (
@@ -54,7 +54,9 @@ export const Cancelled = () => {
             <div className="container mt-5 mx-auto">
                 <h1 className='fs-1 mt-5 fw-bold legal-title my-3 text-center'>Your order was cancelled.</h1>
 
-                <p className="text-center my-5">Keep Exploring and Find New Books!</p>
+                <Link to='/explore' className="link-like">
+                    <p className="text-center my-5">Keep Exploring and Find New Books!</p>
+                </Link>
                 <img src="https://www.liveabout.com/thmb/A17WsoyH1xnIsJnT15yOL60-OBg=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/bookmemecover-5c520a8ec9e77c0001d764a1.png" className="img-fluid" alt="book meme" />
 
                 <Link to="/explore">

@@ -50,6 +50,7 @@ export const TransactionCard = ({ item }) => {
                                 <th>Book</th>
                                 <th>Author</th>
                                 <th>Format</th>
+                                <th>Units</th>
                                 <th>Price</th>
                             </tr>
                         </thead>
@@ -59,6 +60,7 @@ export const TransactionCard = ({ item }) => {
                                     <td>{actions.capitalizeWords(transactionItem.book_id.title)}</td>
                                     <td>{transactionItem.book_id.author}</td>
                                     <td>{transactionItem.book_format_id.book_format}</td>
+                                    <td>{transactionItem.unit}</td>
                                     <td>{transactionItem.book_format_id.book_price} €</td>
                                 </tr>
                             ))}
