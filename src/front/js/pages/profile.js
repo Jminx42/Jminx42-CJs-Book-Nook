@@ -240,13 +240,13 @@ export const Profile = () => {
                                                 ?
                                                 <img
                                                     src="https://www.pngmart.com/files/10/User-Account-Person-PNG-Transparent-Image.png"
-                                                    className="profile-responsive"
+                                                    className="profile-responsive rounded-circle"
                                                     alt="Profile Picture"
                                                 />
                                                 :
                                                 <img
                                                     src={user.profile_picture}
-                                                    className="profile-responsive"
+                                                    className="profile-responsive rounded-circle"
                                                     id="profile-picture"
                                                     alt="Profile Picture"
                                                 />

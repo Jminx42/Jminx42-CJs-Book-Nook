@@ -80,17 +80,17 @@ const CartCard = ({ item, setShowModal }) => {
                     <div className="modal-body">
                         <div className="card container mt-4 border-0">
                             <div className="row mt-3 text-center">
-                                <div className="col-lg-4 d-flex justify-content-end">
+                                <div className="col-6 col-sm-4 col-md-3 col-lg-3 d-flex justify-content-end">
                                     <img src={store.book.book_cover == null || store.book.book_cover == "" ? store.book.book_cover_b : store.book.book_cover} className="img-fluid" alt="Book cover" />
 
                                 </div>
-                                <div className="col-lg-7 p-0 text-start">
-                                    <h2 className="filter-link">{actions.capitalizeWords(store.book.title)}</h2>
+                                <div className="col-11 col-sm-8 col-md-9 col-lg-6 p-0 text-start">
+                                    <h2 className="dark-text">{actions.capitalizeWords(store.book.title)}</h2>
                                     <h4>by {store.book.author}</h4>
 
                                     <div className="row">
-                                        <h4 className="filter-link fs-5 mt-4">Book Format:</h4>
-                                        <div className="col-lg-8">
+                                        <h4 className="dark-text fs-5 mt-4 mt-md-1 mt-sm-1">Book Format:</h4>
+                                        <div className="col-6 col-sm-6 col-md-6 col-lg-7 d-flex align-items-center">
                                             <select className="form-select input-custom mt-1" aria-label="Default select example" defaultValue="" onChange={(e) => setFormat(e.target.value)}>
                                                 <option value="" disabled>Select your format</option>
                                                 {store.bookFormats.map((format) => (
@@ -98,7 +98,7 @@ const CartCard = ({ item, setShowModal }) => {
                                                 ))}
                                             </select>
                                         </div>
-                                        <div className="col-lg-2 g-0">
+                                        <div className="col-6 col-sm-6 col-md-6 col-lg-5 g-0 d-flex align-items-center">
                                             {
                                                 sessionStorage.getItem("token") ?
                                                     !format ?
@@ -163,16 +163,6 @@ const CartCard = ({ item, setShowModal }) => {
                                         </div>
                                     </div>
                                 </div>
-                                {
-                                    isGooglePreview ?
-                                        <Link to={`/googlePreview/${store.book.isbn}`} className="filter-link">
-                                            <p className="fs-5 filter-link fw-bold preview">Click here to preview the book</p>
-                                        </Link>
-                                        :
-                                        null
-                                }
-
-
                             </div>
 
                         </div>

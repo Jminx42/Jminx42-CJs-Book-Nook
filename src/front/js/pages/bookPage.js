@@ -167,14 +167,14 @@ export const BookPage = () => {
 						</button>
 					</div>
 					<div className="col-11 col-sm-8 col-md-7 col-lg-6 p-0 text-start">
-						<h2 className="filter-link">{actions.capitalizeWords(store.book.title)}</h2>
+						<h2 className="dark-text">{actions.capitalizeWords(store.book.title)}</h2>
 						<h4>by {store.book.author}</h4>
 
 						<div className="d-flex mt-2 mt-md-4 mt-lg-4">
 
 							<div className="me-2">
 								<StarRating rating={store.book.average_rating ? store.book.average_rating : 4}
-									editable={store.book.average_rating ? false : true}
+									editable={false}
 									onRatingChange={setRating}
 								/> </div>
 							{store.book.average_rating ? " (out of " + store.book.ratings_count + " votes)" : null}
@@ -198,6 +198,7 @@ export const BookPage = () => {
 											<button
 												type="button"
 												className="btn me-2 custom-button"
+												disabled={!format}
 												// How does the Alert message work? Why isn't this createErrorMsg working?
 												onClick={() => actions.createAlertMsg("Select a format for the book first!")}
 											>

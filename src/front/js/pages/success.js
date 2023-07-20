@@ -85,7 +85,7 @@ export const Success = () => {
                 <h1 className='fs-1 mt-5 fw-bold legal-title my-3 text-center'>Thank you for your order</h1>
                 <div className="row d-flex ">
                     <div className="col-10 col-sm-9 col-md-7 col-lg-5 col-xl-5 d-flex align-items-baseline mt-5 mx-auto">
-                        <Link to="/explore" >
+                        <Link to="/purchaseHistory" >
                             <button className="btn custom-button "><i className="fa-regular fa-calendar-days"></i></button>
                         </Link>
                         <p className="text-center ms-2">You can check the details of your order here!</p>
