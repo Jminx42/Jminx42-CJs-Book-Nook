@@ -73,7 +73,7 @@ export const ReviewBook = ({ item }) => {
             )}
 
             {!editClicked ? (
-                <p className="mb-1">{editReview}</p>
+                <p className="mb-1 justify-text">{editReview}</p>
             ) : (
                 <>
                     <label className="text-start mb-1">Review:&nbsp;</label>
