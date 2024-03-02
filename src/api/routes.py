@@ -460,10 +460,12 @@ def create_checkout_session():
         ]
 
         checkout_session = stripe.checkout.Session.create(
+            line_items=formatted_line_items,
+            mode='payment',
             success_url=domain_url + "success?session_id={CHECKOUT_SESSION_ID}",
             cancel_url=domain_url + "cancelled",
-            mode='payment',
-            line_items=formatted_line_items,
+            
+            
  
             
         )
@@ -471,7 +473,7 @@ def create_checkout_session():
     except Exception as e:
         return str(e)
 
-    return jsonify({"checkout_session": checkout_session}), 303
+    return redirect(checkout_session.url, code=303)
 
 @api.route("/checkout", methods=["POST"])
 @jwt_required()

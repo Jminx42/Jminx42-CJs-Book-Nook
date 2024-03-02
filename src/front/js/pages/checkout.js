@@ -78,16 +78,20 @@ export const Checkout = () => {
     };
 
     const createCheckoutSession = async () => {
+        console.log("creating checkout session")
         const priceIdsAndUnits = [];
         store.user.items.forEach(item => {
             const priceId = item.book_format_id.price_id;
+            
             const quantity = item.unit;
             priceIdsAndUnits.push({ "price_id": priceId, "quantity": quantity })
 
         });
         console.log(priceIdsAndUnits)
         try {
+
             const response = await fetch(process.env.BACKEND_URL + 'api/create-checkout-session', {
+
                 method: 'POST',
                 headers: {
                     Authorization: "Bearer " + sessionStorage.getItem("token"),
@@ -96,10 +100,11 @@ export const Checkout = () => {
                 body: JSON.stringify(priceIdsAndUnits)
             });
             if (response.status === 303) {
+                console.log('response was 303')
                 const data = await response.json();
                 console.log(data)
-                const checkout_url = data.checkout_session.url;
-                window.location.replace(checkout_url)
+                // const checkout_url = data.checkout_session.url;
+                // window.location.replace(checkout_url)
             } else {
                 throw new Error('Failed to create checkout session');
             }
