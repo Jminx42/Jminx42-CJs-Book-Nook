@@ -44,8 +44,8 @@ def generate_sitemap(app):
         <ul style="text-align: left;">"""+links_html+"</ul></div>"
 def generate_formats():
     print ("aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-    list_formats = [{"book_format": "eBook", "book_price": 10.99, "prod_id": "prod_OBMg3hKovE9zSr", "price_id": "price_1NOzxBCNGifMZhYltBjHC6BI"},
-             {"book_format": "Paperback", "book_price": 15.99, "prod_id": " prod_OBMfUf2OjG34rW", "price_id": "price_1NOzwdCNGifMZhYl6FVJF7UT"},
+    list_formats = [{"book_format": "eBook", "book_price": 10.99, "prod_id": "prod_OBMg3hKovE9zSr", "price_id": "price_1NP0EICNGifMZhYlgDYqXpWJ"},
+             {"book_format": "Paperback", "book_price": 15.99, "prod_id": "prod_OBMfUf2OjG34rW", "price_id": "price_1NOzwdCNGifMZhYl6FVJF7UT"},
              {"book_format": "Hardcover", "book_price": 20.99, "prod_id": "prod_OBMgGwCqo6oySy", "price_id": "price_1NOzxZCNGifMZhYl6u0ULDSG"}, 
              {"book_format": "Audiobook", "book_price": 24.99, "prod_id": "prod_OBMhdjNO5UKpjl", "price_id": "price_1NOzy2CNGifMZhYl1FHUFrLZ"} ]
     

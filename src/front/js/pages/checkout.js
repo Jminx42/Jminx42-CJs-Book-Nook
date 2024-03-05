@@ -6,6 +6,8 @@ import { CheckoutCard } from "../component/checkoutCard";
 import { MobileCheckoutCard } from "../component/mobileCheckoutCard";
 import "../../styles/index.css"
 import { Footer } from "../component/footer";
+import { loadStripe } from "@stripe/stripe-js";
+const stripePromise = loadStripe('pk_test_51NOzT1CNGifMZhYllgDj565dXlpHBEf5Y7hMSjVYvYKHwNcwX5LyIXe1S2Ggrffd6ktOC6rB7BRCCTt9ReAlYa8300H2FUauRC');
 
 
 export const Checkout = () => {
@@ -77,12 +79,15 @@ export const Checkout = () => {
         return totalCheckout
     };
 
+
+
     const createCheckoutSession = async () => {
+        const stripe = await stripePromise;
         console.log("creating checkout session")
         const priceIdsAndUnits = [];
         store.user.items.forEach(item => {
             const priceId = item.book_format_id.price_id;
-            
+
             const quantity = item.unit;
             priceIdsAndUnits.push({ "price_id": priceId, "quantity": quantity })
 
@@ -91,7 +96,6 @@ export const Checkout = () => {
         try {
 
             const response = await fetch(process.env.BACKEND_URL + 'api/create-checkout-session', {
-
                 method: 'POST',
                 headers: {
                     Authorization: "Bearer " + sessionStorage.getItem("token"),
@@ -99,15 +103,18 @@ export const Checkout = () => {
                 },
                 body: JSON.stringify(priceIdsAndUnits)
             });
-            if (response.status === 303) {
-                console.log('response was 303')
-                const data = await response.json();
-                console.log(data)
-                // const checkout_url = data.checkout_session.url;
-                // window.location.replace(checkout_url)
-            } else {
-                throw new Error('Failed to create checkout session');
+
+            const session = await response.json();
+            console.log(session)
+
+            const result = await stripe.redirectToCheckout({
+                sessionId: session.id,
+            })
+
+            if (result.error) {
+                console.log(result.error.message);
             }
+           
         } catch (error) {
             console.error('Error:', error);
             setError(error)

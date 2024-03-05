@@ -29,6 +29,8 @@ from api.utils import APIException, generate_sitemap
 
 api = Blueprint('api', __name__)   
 
+
+
 @api.route("/create/user", methods=["POST"])
 def create_user():
     body = request.json
@@ -465,15 +467,12 @@ def create_checkout_session():
             success_url=domain_url + "success?session_id={CHECKOUT_SESSION_ID}",
             cancel_url=domain_url + "cancelled",
             
-            
- 
-            
         )
-        print(checkout_session["url"])
-    except Exception as e:
-        return str(e)
 
-    return redirect(checkout_session.url, code=303)
+        return jsonify({'id': checkout_session.id}), 303
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+   
 
 @api.route("/checkout", methods=["POST"])
 @jwt_required()
